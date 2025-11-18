@@ -20,6 +20,35 @@ export default function Services() {
     ordering: searchParams.get('ordering') || '-created_at',
   });
 
+  const cityOptions = [
+    { value: 'Бишкек', key: 'bishkek' },
+    { value: 'Ош', key: 'osh' },
+    { value: 'Токмок', key: 'tokmok' },
+    { value: 'Кант', key: 'kant' },
+    { value: 'Кара-Балта', key: 'karaBalta' },
+    { value: 'Шопоков', key: 'shopokov' },
+    { value: 'Каинды', key: 'kaindy' },
+    { value: 'Кара-Суу', key: 'karaSuu' },
+    { value: 'Ноокат', key: 'nookat' },
+    { value: 'Узген (Өзгөн)', key: 'uzgen' },
+    { value: 'Манас', key: 'manas' },
+    { value: 'Кара-Куль', key: 'karaKul' },
+    { value: 'Майлуу-Суу', key: 'mailuuSuu' },
+    { value: 'Таш-Кумыр', key: 'tashKumyr' },
+    { value: 'Кербен (Ала-Бука)', key: 'kerben' },
+    { value: 'Каракол', key: 'karakol' },
+    { value: 'Балыкчы', key: 'balykchy' },
+    { value: 'Чолпон-Ата', key: 'cholponAta' },
+    { value: 'Нарын', key: 'naryn' },
+    { value: 'Кочкор', key: 'kochkor' },
+    { value: 'Ат-Башы', key: 'atBashi' },
+    { value: 'Талас', key: 'talas' },
+    { value: 'Кызыл-Адыр', key: 'kyzylAdyr' },
+    { value: 'Баткен', key: 'batken' },
+    { value: 'Кызыл-Кыя', key: 'kyzylKiya' },
+    { value: 'Сулюкта', key: 'sulukta' }
+  ];
+
   useEffect(() => {
     fetchCategories();
   }, [i18n.language]);
@@ -44,13 +73,26 @@ export default function Services() {
     try {
       const data = await servicesAPI.getCategories(i18n.language);
       const allData = Array.isArray(data) ? data : (data.results || []);
+      
+      // Add parent categories to the list
+      const parentCategories = allData.map(parent => ({
+        id: parent.id,
+        name: parent.name,
+        parentName: null,
+        isParent: true
+      }));
+      
       const subcategories = allData.flatMap(parent => {
         return (parent.subcategories || []).map(sub => ({
           ...sub,
-          parentName: parent.name
+          parentName: parent.name,
+          isParent: false
         }));
       });
-      setCategories(subcategories);
+      
+      const allCategories = [...parentCategories, ...subcategories];
+      console.log('Fetched categories:', allCategories);
+      setCategories(allCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);
       setCategories([]);
@@ -64,7 +106,9 @@ export default function Services() {
       Object.keys(filters).forEach(key => {
         if (filters[key]) params[key] = filters[key];
       });
+      console.log('Fetching services with params:', params);
       const data = await servicesAPI.getServices(params);
+      console.log('Services data received:', data);
       setServices(data.results || data || []);
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -178,21 +222,16 @@ export default function Services() {
                 <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
                   {t('filters.city')}
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={filters.city}
-                    onChange={(e) => handleFilterChange('city', e.target.value)}
-                    placeholder={t('auth.city')}
-                    className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
-                  />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                </div>
+                <select
+                  value={filters.city}
+                  onChange={(e) => handleFilterChange('city', e.target.value)}
+                  className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A]"
+                >
+                  <option value="">{t('filters.allCities', 'Все города')}</option>
+                  {cityOptions.map(city => (
+                    <option key={city.value} value={city.value}>{t(`cities.${city.key}`)}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Price Range */}
@@ -264,13 +303,6 @@ export default function Services() {
                       {t('filters.activeFilters')}
                     </p>
                   )}
-                </div>
-                
-                {/* Mobile Filter Toggle */}
-                <div className="lg:hidden mt-4 sm:mt-0">
-                  <button className="bg-[#E9EEF4] text-[#1E2A3A] px-4 py-2 rounded-xl font-medium hover:bg-gray-200 transition-colors">
-                    {t('filters.showFilters')}
-                  </button>
                 </div>
               </div>
             </div>

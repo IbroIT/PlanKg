@@ -19,27 +19,18 @@ export default function UserProfile() {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const [userData, servicesData] = await Promise.all([
+      const [userData, servicesData, reviewsData] = await Promise.all([
         axios.get(`/users/${id}/`),
-        axios.get(`/services/?user=${id}`)
+        axios.get(`/services/?user=${id}`),
+        axios.get(`/reviews/?user=${id}`)
       ]);
       
       setUser(userData.data);
       const userServices = servicesData.data.results || servicesData.data;
       setServices(userServices);
       
-      // Получаем отзывы для каждой услуги пользователя
-      if (userServices.length > 0) {
-        const reviewsPromises = userServices.map(service => 
-          axios.get(`/reviews/${service.id}/`).catch(() => ({ data: [] }))
-        );
-        const reviewsResponses = await Promise.all(reviewsPromises);
-        
-        // Объединяем все отзывы в один массив
-        const allReviews = reviewsResponses.flatMap(response => response.data);
-        console.log('Loaded reviews for services:', allReviews);
-        setReviews(allReviews);
-      }
+      // Получаем отзывы о услугах пользователя
+      setReviews(reviewsData.data.results || reviewsData.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
@@ -143,27 +134,27 @@ export default function UserProfile() {
               <div className="grid grid-cols-3 gap-4 mt-6">
                 <div className="bg-[#E9EEF4] rounded-2xl p-4 text-center">
                   <p className="text-2xl font-bold text-[#1E2A3A]">{services.length}</p>
-                  <p className="text-sm text-gray-600">Услуг</p>
+                  <p className="text-sm text-gray-600">{t('profile.services', 'Услуг')}</p>
                 </div>
                 <div className="bg-[#E9EEF4] rounded-2xl p-4 text-center">
                   <div className="flex items-center justify-center space-x-2">
                     <span className="text-2xl font-bold text-[#1E2A3A]">
-                      {user.rating && typeof user.rating === 'number' ? user.rating.toFixed(1) : '—'}
+                      {typeof user.rating === 'number' ? user.rating.toFixed(1) : '—'}
                     </span>
                     <svg className="w-6 h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
-                  <p className="text-sm text-gray-600">Рейтинг</p>
+                  <p className="text-sm text-gray-600">{t('profile.rating', 'Рейтинг')}</p>
                 </div>
                 <div className="bg-[#E9EEF4] rounded-2xl p-4 text-center">
                   <p className="text-2xl font-bold text-[#1E2A3A]">{reviews.length}</p>
-                  <p className="text-sm text-gray-600">Отзывов</p>
+                  <p className="text-sm text-gray-600">{t('profile.reviews', 'Отзывов')}</p>
                 </div>
               </div>
 
               {/* Контакты */}
-              {(user.phone || user.email) && (
+              {(user.phone || user.email || user.whatsapp || user.telegram || user.instagram) && (
                 <div className="mt-6 space-y-2">
                   {user.phone && (
                     <div className="flex items-center space-x-2 text-gray-600">
@@ -179,6 +170,30 @@ export default function UserProfile() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                       <span>{user.email}</span>
+                    </div>
+                  )}
+                  {user.whatsapp && (
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                      </svg>
+                      <span>{user.whatsapp}</span>
+                    </div>
+                  )}
+                  {user.telegram && (
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                      </svg>
+                      <span>{user.telegram}</span>
+                    </div>
+                  )}
+                  {user.instagram && (
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                      </svg>
+                      <span>{user.instagram}</span>
                     </div>
                   )}
                 </div>
@@ -198,7 +213,7 @@ export default function UserProfile() {
                   : 'text-gray-600 hover:bg-[#E9EEF4]'
               }`}
             >
-              Услуги ({services.length})
+              {t('profile.servicesTab', 'Услуги')} ({services.length})
             </button>
             <button
               onClick={() => setActiveTab('reviews')}
@@ -208,7 +223,7 @@ export default function UserProfile() {
                   : 'text-gray-600 hover:bg-[#E9EEF4]'
               }`}
             >
-              Отзывы ({reviews.length})
+              {t('profile.reviewsTab', 'Отзывы')} ({reviews.length})
             </button>
           </div>
         </div>
@@ -274,7 +289,7 @@ export default function UserProfile() {
                           <svg className="w-5 h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                           </svg>
-                          Отзывы об услуге ({reviews.filter(review => review.service?.id === service.id).length})
+                          {t('profile.reviewsForService', 'Отзывы об услуге')} ({reviews.filter(review => review.service?.id === service.id).length})
                         </h4>
                       </div>
                       <div className="space-y-4">
@@ -308,6 +323,9 @@ export default function UserProfile() {
                                     </p>
                                     <div className="flex items-center space-x-2">
                                       {renderStars(review.rating)}
+                                      <span className="text-xs font-semibold text-[#1E2A3A]">
+                                        {review.rating}/5
+                                      </span>
                                       <span className="text-xs text-gray-500">
                                         {new Date(review.created_at).toLocaleDateString('ru-RU')}
                                       </span>
@@ -326,7 +344,7 @@ export default function UserProfile() {
                             to={`/services/${service.id}#reviews`}
                             className="inline-flex items-center space-x-2 text-[#F4B942] hover:text-[#e5a832] font-semibold transition-colors group"
                           >
-                            <span>Показать все отзывы ({reviews.filter(review => review.service?.id === service.id).length})</span>
+                            <span>{t('profile.showAllReviews', 'Показать все отзывы')} ({reviews.filter(review => review.service?.id === service.id).length})</span>
                             <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -344,8 +362,8 @@ export default function UserProfile() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">Услуг пока нет</h3>
-                <p className="text-gray-600">У этого пользователя еще нет добавленных услуг</p>
+                <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">{t('profile.noServices', 'Услуг пока нет')}</h3>
+                <p className="text-gray-600">{t('profile.noServicesDesc', 'У этого пользователя еще нет добавленных услуг')}</p>
               </div>
             )}
           </div>
@@ -365,11 +383,14 @@ export default function UserProfile() {
                         to={`/services/${review.service?.id}`}
                         className="font-semibold text-[#1E2A3A] hover:text-[#F4B942] transition-colors"
                       >
-                        {review.service?.title || 'Услуга'}
+                        {review.service?.title || t('profile.service', 'Услуга')}
                       </Link>
                     </div>
                     <div className="flex items-center space-x-2">
                       {renderStars(review.rating)}
+                      <span className="text-sm font-semibold text-[#1E2A3A]">
+                        {review.rating}/5
+                      </span>
                       <span className="text-sm text-gray-500">
                         {new Date(review.created_at).toLocaleDateString('ru-RU')}
                       </span>
@@ -385,8 +406,8 @@ export default function UserProfile() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">Отзывов пока нет</h3>
-                <p className="text-gray-600">Этот пользователь еще не оставлял отзывы</p>
+                <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">{t('profile.noReviews', 'Отзывов пока нет')}</h3>
+                <p className="text-gray-600">{t('profile.noReviewsDesc', 'Этот пользователь еще не оставлял отзывы')}</p>
               </div>
             )}
           </div>

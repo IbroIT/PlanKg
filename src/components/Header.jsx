@@ -23,7 +23,7 @@ import {
 } from 'react-icons/fi';
 
 export default function Header() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,78 +59,16 @@ export default function Header() {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [i18n.language]);
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('/categories/');
+      const response = await axios.get(`/categories/?lang=${i18n.language}`);
       const data = response.data.results || response.data;
       setCategories(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching categories:', error);
-      // Mock данные для демонстрации
-      setCategories([
-        {
-          id: 1,
-          name: 'Мероприятия и праздники',
-          subcategories: [
-            { id: 11, name: 'Свадьбы' },
-            { id: 12, name: 'Дни рождения' },
-            { id: 13, name: 'Корпоративы' },
-            { id: 14, name: 'Выпускные' }
-          ]
-        },
-        {
-          id: 2,
-          name: 'Фотография и видео',
-          subcategories: [
-            { id: 21, name: 'Портретная съемка' },
-            { id: 22, name: 'Свадебная фотография' },
-            { id: 23, name: 'Предметная съемка' },
-            { id: 24, name: 'Видеосъемка' }
-          ]
-        },
-        {
-          id: 3,
-          name: 'Музыка и развлечения',
-          subcategories: [
-            { id: 31, name: 'Ди-джеи' },
-            { id: 32, name: 'Живые группы' },
-            { id: 33, name: 'Сольные исполнители' },
-            { id: 34, name: 'Ведущие' }
-          ]
-        },
-        {
-          id: 4,
-          name: 'Кейтеринг и питание',
-          subcategories: [
-            { id: 41, name: 'Фуршеты' },
-            { id: 42, name: 'Банкеты' },
-            { id: 43, name: 'Кофе-брейки' },
-            { id: 44, name: 'Бармены' }
-          ]
-        },
-        {
-          id: 5,
-          name: 'Образование и мастер-классы',
-          subcategories: [
-            { id: 51, name: 'Мастер-классы' },
-            { id: 52, name: 'Тренинги' },
-            { id: 53, name: 'Курсы' },
-            { id: 54, name: 'Лекции' }
-          ]
-        },
-        {
-          id: 6,
-          name: 'Красота и здоровье',
-          subcategories: [
-            { id: 61, name: 'Визажисты' },
-            { id: 62, name: 'Парикмахеры' },
-            { id: 63, name: 'Стилисты' },
-            { id: 64, name: 'Массажисты' }
-          ]
-        }
-      ]);
+      setCategories([]);
     }
   };
 
@@ -168,13 +106,13 @@ export default function Header() {
             className="group flex items-center space-x-3 transition-all duration-300 hover:scale-105 shrink-0 mr-auto"
           >
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#F4B942] to-[#e5a832] rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-3xl transition-all duration-300">
+              <div className="w-12 h-12 bg-linear-to-br from-[#F4B942] to-[#e5a832] rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-3xl transition-all duration-300">
                 <FiMapPin className="w-6 h-6 text-[#1E2A3A] font-bold" />
               </div>
               <div className="absolute -inset-2 bg-[#F4B942]/30 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold bg-gradient-to-r from-white to-[#E9EEF4] bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-linear-to-r from-white to-[#E9EEF4] bg-clip-text text-transparent">
                 Plan.kg
               </span>
               <span className="text-xs text-[#E9EEF4]/60 font-medium">{t('header.tagline')}</span>
@@ -364,7 +302,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="xl:hidden relative w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-[#F4B942] hover:text-[#1E2A3A] transition-all duration-300 group backdrop-blur-sm"
+            className="xl:hidden relative w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-[#F4B942] text-white hover:text-[#1E2A3A] transition-all duration-300 group backdrop-blur-sm"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
@@ -388,22 +326,22 @@ export default function Header() {
                 className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all duration-300"
               >
                 <div className="flex items-center space-x-3">
-                  <FiGrid className="w-5 h-5" />
-                  <span className="font-semibold text-lg">{t('nav.categories')}</span>
+                  <FiGrid className="w-5 h-5 text-white" />
+                  <span className="font-semibold text-lg text-white">{t('nav.categories')}</span>
                 </div>
-                <FiChevronDown className={`w-4 h-4 transition-transform duration-300 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+                <FiChevronDown className={`w-4 h-4 text-white transition-transform duration-300 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isCategoriesOpen && (
                 <div className="space-y-3 bg-white/5 rounded-2xl p-4 border border-white/10">
                   <div className="relative mb-4">
-                    <FiSearch className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                    <FiSearch className="w-5 h-5 text-white/60 absolute left-3 top-1/2 transform -translate-y-1/2" />
                     <input 
                       type="text" 
                       placeholder={t('header.searchCategories')} 
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-white/20 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#F4B942]/50 focus:border-transparent text-white placeholder-gray-300"
+                      className="w-full pl-10 pr-4 py-3 bg-white/20 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#F4B942]/50 focus:border-transparent text-white placeholder-white/50"
                     />
                   </div>
                   
@@ -416,8 +354,8 @@ export default function Header() {
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold">{category.name}</span>
-                            <span className="text-sm bg-white/20 px-2 py-1 rounded-lg">
+                            <span className="font-semibold text-white">{category.name}</span>
+                            <span className="text-sm bg-white/20 px-2 py-1 rounded-lg text-white">
                               {category.subcategories?.length || 0}
                             </span>
                           </div>
@@ -429,7 +367,7 @@ export default function Header() {
                               <Link
                                 key={sub.id}
                                 to={`/services?category=${sub.id}`}
-                                className="block p-2 text-sm rounded-lg hover:bg-white/10 transition-all duration-200"
+                                className="block p-2 text-sm text-white rounded-lg hover:bg-white/10 transition-all duration-200"
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 {sub.name}
@@ -441,8 +379,8 @@ export default function Header() {
                     ))}
                     
                     {filteredCategories.length === 0 && (
-                      <div className="text-center py-4 text-gray-400">
-                        <FiSearch className="w-8 h-8 mx-auto mb-2" />
+                      <div className="text-center py-4 text-white/70">
+                        <FiSearch className="w-8 h-8 mx-auto mb-2 text-white/50" />
                         <p>{t('header.noCategories')}</p>
                       </div>
                     )}
@@ -456,8 +394,8 @@ export default function Header() {
               className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FiCalendar className="w-5 h-5 transition-transform group-hover:scale-110" />
-              <span className="font-semibold text-lg">{t('nav.services')}</span>
+              <FiCalendar className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
+              <span className="font-semibold text-lg text-white">{t('nav.services')}</span>
             </Link>
 
             {user && (
@@ -467,16 +405,16 @@ export default function Header() {
                   className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <FiHeart className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span className="font-semibold text-lg">{t('nav.favorites')}</span>
+                  <FiHeart className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
+                  <span className="font-semibold text-lg text-white">{t('nav.favorites')}</span>
                 </Link>
                 <Link
                   to="/add-service"
                   className="flex items-center space-x-3 bg-linear-to-r from-[#F4B942] to-[#e5a832] text-[#1E2A3A] p-4 rounded-2xl font-bold hover:shadow-lg transition-all duration-300 group"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <FiPlusCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span className="text-lg">{t('nav.addService')}</span>
+                  <FiPlusCircle className="w-5 h-5 text-[#1E2A3A] transition-transform group-hover:scale-110" />
+                  <span className="text-lg text-white">{t('nav.addService')}</span>
                 </Link>
               </>
             )}
@@ -488,8 +426,8 @@ export default function Header() {
                   className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <FiUser className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span className="font-semibold text-lg">{t('nav.profile')}</span>
+                  <FiUser className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
+                  <span className="font-semibold text-lg text-white">{t('nav.profile')}</span>
                 </Link>
                 <button
                   onClick={() => {
@@ -498,8 +436,8 @@ export default function Header() {
                   }}
                   className="w-full flex items-center space-x-3 p-4 rounded-2xl hover:bg-red-500/20 transition-all duration-300 group text-left"
                 >
-                  <FiLogOut className="w-5 h-5  transition-transform group-hover:scale-110" />
-                  <span className="font-semibold text-lg ">{t('nav.logout')}</span>
+                  <FiLogOut className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
+                  <span className="font-semibold text-lg text-white">{t('nav.logout')}</span>
                 </button>
               </>
             ) : (
@@ -509,16 +447,16 @@ export default function Header() {
                   className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <FiLogIn className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span className="font-semibold text-lg">{t('nav.login')}</span>
+                  <FiLogIn className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
+                  <span className="font-semibold text-lg text-white">{t('nav.login')}</span>
                 </Link>
                 <Link
                   to="/register"
                   className="flex items-center space-x-3 bg-linear-to-r from-[#F4B942] to-[#e5a832] text-[#1E2A3A] p-4 rounded-2xl font-bold hover:shadow-lg transition-all duration-300 group"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <FiUserPlus className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span className="text-lg">{t('nav.register')}</span>
+                  <FiUserPlus className="w-5 h-5 text-[#1E2A3A] transition-transform group-hover:scale-110" />
+                  <span className="text-lg text-white">{t('nav.register')}</span>
                 </Link>
               </>
             )}

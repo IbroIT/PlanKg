@@ -17,13 +17,22 @@ export const authAPI = {
   },
   
   updateProfile: async (data) => {
-    const formData = new FormData();
-    Object.keys(data).forEach(key => {
-      if (data[key] !== null && data[key] !== undefined) {
-        formData.append(key, data[key]);
-      }
-    });
-    const response = await api.patch('/users/me/', formData, {
+    let formDataToSend;
+    
+    // Если data уже является FormData, используем его напрямую
+    if (data instanceof FormData) {
+      formDataToSend = data;
+    } else {
+      // Иначе создаем новый FormData из объекта
+      formDataToSend = new FormData();
+      Object.keys(data).forEach(key => {
+        if (data[key] !== null && data[key] !== undefined) {
+          formDataToSend.append(key, data[key]);
+        }
+      });
+    }
+    
+    const response = await api.patch('/users/me/', formDataToSend, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;

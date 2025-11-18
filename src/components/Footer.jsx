@@ -4,7 +4,7 @@ export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-gradient-to-b from-[#1E2A3A] to-[#0f1724] text-white mt-auto">
+    <footer className="bg-gradient-to-b from-[#1E2A3A] to-[#0f1724] text-white mt-auto z-10 relative">
       <div className="container mx-auto px-4 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">

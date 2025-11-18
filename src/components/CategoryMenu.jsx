@@ -24,7 +24,7 @@ export default function CategoryMenu() {
     <nav className="bg-white border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-4">
         <ul className="flex overflow-x-auto space-x-4 py-3 scrollbar-hide">
-          {categories.map((category) => (
+          {categories.length > 0 ? categories.map((category) => (
             <li
               key={category.id}
               className="relative group shrink-0"
@@ -32,7 +32,18 @@ export default function CategoryMenu() {
               onMouseLeave={() => setActiveCategory(null)}
             >
               <div className="flex items-center space-x-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
-                <span className="text-xl">{category.icon}</span>
+                {category.icon ? (
+                  <img 
+                    src={category.icon} 
+                    alt={category.name} 
+                    className="w-5 h-5 object-cover rounded"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'inline';
+                    }}
+                  />
+                ) : null}
+                <span className={`text-xl ${category.icon ? 'hidden' : ''}`}>📁</span>
                 <span className="text-gray-700 font-medium text-sm">{category.name}</span>
               </div>
 
@@ -46,7 +57,18 @@ export default function CategoryMenu() {
                           to={`/services?category=${subcategory.id}`}
                           className="flex items-center space-x-3 px-4 py-2 hover:bg-[#F4B942] hover:text-white transition-colors text-sm"
                         >
-                          <span className="text-lg">{subcategory.icon}</span>
+                          {subcategory.icon ? (
+                            <img 
+                              src={subcategory.icon} 
+                              alt={subcategory.name} 
+                              className="w-4 h-4 object-cover rounded"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'inline';
+                              }}
+                            />
+                          ) : null}
+                          <span className={`text-lg ${subcategory.icon ? 'hidden' : ''}`}>📄</span>
                           <span>{subcategory.name}</span>
                         </Link>
                       </li>
@@ -55,7 +77,7 @@ export default function CategoryMenu() {
                 </div>
               )}
             </li>
-          ))}
+          )) : null}
         </ul>
       </div>
     </nav>

@@ -1,8 +1,8 @@
 import api from './axios';
 
 // Get all favorites
-export const getFavorites = async () => {
-  const response = await api.get('/favorites/');
+export const getFavorites = async (lang = 'ru') => {
+  const response = await api.get('/favorites/', { params: { lang } });
   return response.data;
 };
 

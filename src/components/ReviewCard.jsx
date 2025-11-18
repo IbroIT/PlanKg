@@ -59,8 +59,11 @@ export default function ReviewCard({ review }) {
           </div>
           
           {/* Rating Stars */}
-          <div className="flex mb-3">
+          <div className="flex items-center mb-3">
             {renderStars(review.rating)}
+            <span className="ml-2 text-sm font-semibold text-[#1E2A3A]">
+              {review.rating}/5
+            </span>
           </div>
           
           {/* Comment */}

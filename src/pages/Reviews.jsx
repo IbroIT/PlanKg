@@ -115,7 +115,7 @@ export default function Reviews() {
   };
 
   const filters = [
-    { id: 'all', label: 'Все', count: 2 },
+    { id: 'all', label: t('reviews.all'), count: 2 },
     { id: 'cleaning', label: 'Уборка, клининг, домработницы', count: 2 }
   ];
 
@@ -124,12 +124,12 @@ export default function Reviews() {
       <div className="container mx-auto px-4" style={{ maxWidth: '1200px' }}>
         {/* Заголовок */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-[#1E2A3A]">Отзывы</h1>
+          <h1 className="text-3xl font-bold text-[#1E2A3A]">{t('reviews.title')}</h1>
           <Link 
             to="/reviews/all" 
             className="text-sm text-[#1E2A3A] hover:text-[#2E3F54] hover:underline transition-colors"
           >
-            Смотреть все отзывы
+            {t('reviews.viewAll')}
           </Link>
         </div>
 
@@ -160,7 +160,7 @@ export default function Reviews() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
                 <p className="text-sm text-gray-500 mb-4">
-                  {statistics.totalReviews} {statistics.totalReviews === 1 ? 'оценка' : 'оценки'}
+                  {statistics.totalReviews} {statistics.totalReviews === 1 ? t('reviews.rating') : t('reviews.ratings')}
                 </p>
                 
                 <div className="flex items-center space-x-4 mb-6">
@@ -204,7 +204,7 @@ export default function Reviews() {
                         onClick={() => toggleReviewExpansion(review.id)}
                         className="flex items-center space-x-2 text-[#1E2A3A] hover:text-[#2E3F54] hover:underline text-sm font-medium transition-colors"
                       >
-                        <span>{expandedReviews.has(review.id) ? 'Скрыть' : 'Показать еще'}</span>
+                        <span>{expandedReviews.has(review.id) ? t('reviews.showLess') : t('reviews.showMore')}</span>
                         <svg
                           className={`w-4 h-4 transition-transform duration-300 ${
                             expandedReviews.has(review.id) ? 'rotate-180' : ''
@@ -232,8 +232,8 @@ export default function Reviews() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">Отзывов пока нет</h3>
-                  <p className="text-gray-600">Будьте первым, кто оставит отзыв!</p>
+                  <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">{t('reviews.noReviewsYet')}</h3>
+                  <p className="text-gray-600">{t('reviews.beFirstToReview')}</p>
                 </div>
               )}
 

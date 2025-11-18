@@ -4,12 +4,183 @@ import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../api/auth';
 import { servicesAPI } from '../api/services';
 
+// Category-specific fields mapping (using slugs as keys)
+const CATEGORY_FIELDS = {
+  'photographers': [
+    'shooting_hour_price', 'full_day_price', 'love_story_price', 'portfolio_photos_count',
+    'shooting_style', 'delivery_time_days', 'experience_years', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'videographers': [
+    'shooting_hour_price', 'full_day_price', 'love_story_price', 'portfolio_photos_count',
+    'shooting_style', 'delivery_time_days', 'experience_years', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram', 'video_format', 'second_operator',
+    'montage_included', 'sound_recording'
+  ],
+  'hosts-toastmasters': [
+    'price', 'price_type', 'video_presentation', 'languages', 'dress_code', 'experience_years',
+    'time_limit', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'venues-restaurants-halls': [
+    'capacity', 'price', 'price_type', 'stage_available', 'sound_available', 'parking_available',
+    'projector_available', 'decor_available', 'menu_available', 'working_hours', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'florists-decorators': [
+    'price', 'price_type', 'minimum_order', 'services_offered', 'wedding_decor_price',
+    'custom_calculation', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'catering': [
+    'price', 'price_type', 'cuisine_type', 'service_type', 'minimum_order', 'delivery_included',
+    'staff_included', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'musicians-djs-bands': [
+    'price', 'price_type', 'performance_video', 'equipment_provided', 'repertoire', 'performance_type',
+    'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'artists-show-programs': [
+    'price', 'price_type', 'show_type', 'performance_video', 'stage_requirements', 'character_type',
+    'show_duration', 'props_included', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'event-organizers-agencies': [
+    'price', 'price_type', 'experience_years', 'services_offered', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'transportation': [
+    'vehicle_type', 'price', 'price_type', 'vehicle_capacity', 'driver_included', 'decoration_available',
+    'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'stylists-makeup-hairdressers': [
+    'price', 'price_type', 'service_duration', 'home_visit', 'city', 'phone', 'email',
+    'instagram', 'whatsapp', 'telegram'
+  ],
+  'bakeries-cakes-desserts': [
+    'price', 'price_type', 'cake_weight_kg', 'flavors_available', 'advance_order_days',
+    'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'photo-zones-equipment-props': [
+    'price', 'price_type', 'equipment_type', 'rental_duration', 'rental_price', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'waiters-event-staff': [
+    'price', 'price_type', 'staff_count', 'uniform_provided', 'city', 'phone', 'email',
+    'instagram', 'whatsapp', 'telegram'
+  ],
+  'security': [
+    'price', 'price_type', 'license_number', 'guard_count', 'city', 'phone', 'email',
+    'instagram', 'whatsapp', 'telegram'
+  ],
+  'animators-children-events': [
+    'price', 'price_type', 'character_type', 'show_duration', 'props_included', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ],
+  'lighting-sound-stage': [
+    'price', 'price_type', 'lighting_type', 'sound_system', 'stage_setup', 'city',
+    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+  ]
+};
+
+// Field labels and types
+const FIELD_CONFIG = {
+  // Photo/Video fields
+  shooting_hour_price: { label: 'addService.fields.shooting_hour_price', type: 'number', suffix: 'currency' },
+  full_day_price: { label: 'addService.fields.full_day_price', type: 'number', suffix: 'currency' },
+  love_story_price: { label: 'addService.fields.love_story_price', type: 'number', suffix: 'currency' },
+  portfolio_photos_count: { label: 'addService.fields.portfolio_photos_count', type: 'number' },
+  delivery_time_days: { label: 'addService.fields.delivery_time_days', type: 'number' },
+  shooting_style: { label: 'addService.fields.shooting_style', type: 'text' },
+  second_operator: { label: 'addService.fields.second_operator', type: 'boolean' },
+  drone_available: { label: 'addService.fields.drone_available', type: 'boolean' },
+  video_format: { label: 'addService.fields.video_format', type: 'select', options: ['hd', '4k', 'full_hd'] },
+  sound_recording: { label: 'addService.fields.sound_recording', type: 'boolean' },
+  montage_included: { label: 'addService.fields.montage_included', type: 'boolean' },
+  video_presentation: { label: 'addService.fields.video_presentation', type: 'url' },
+
+  // Host/MC fields
+  languages: { label: 'addService.fields.languages', type: 'text' },
+  dress_code: { label: 'addService.fields.dress_code', type: 'text' },
+  time_limit: { label: 'addService.fields.time_limit', type: 'text' },
+
+  // Venue fields
+  capacity: { label: 'addService.fields.capacity', type: 'number' },
+  stage_available: { label: 'addService.fields.stage_available', type: 'boolean' },
+  sound_available: { label: 'addService.fields.sound_available', type: 'boolean' },
+  parking_available: { label: 'addService.fields.parking_available', type: 'boolean' },
+  projector_available: { label: 'addService.fields.projector_available', type: 'boolean' },
+  decor_available: { label: 'addService.fields.decor_available', type: 'boolean' },
+  menu_available: { label: 'addService.fields.menu_available', type: 'boolean' },
+  working_hours: { label: 'addService.fields.working_hours', type: 'text' },
+
+  // Florist/Decorator fields
+  services_offered: { label: 'addService.fields.services_offered', type: 'textarea' },
+  wedding_decor_price: { label: 'addService.fields.wedding_decor_price', type: 'number', suffix: 'currency' },
+  custom_calculation: { label: 'addService.fields.custom_calculation', type: 'boolean' },
+
+  // Catering fields
+  cuisine_type: { label: 'addService.fields.cuisine_type', type: 'text' },
+  service_type: { label: 'addService.fields.service_type', type: 'select', options: ['buffet', 'banquet', 'individual'] },
+  minimum_order: { label: 'addService.fields.minimum_order', type: 'number' },
+  delivery_included: { label: 'addService.fields.delivery_included', type: 'boolean' },
+  staff_included: { label: 'addService.fields.staff_included', type: 'boolean' },
+
+  // Music fields
+  music_genre: { label: 'addService.fields.music_genre', type: 'text' },
+  equipment_provided: { label: 'addService.fields.equipment_provided', type: 'boolean' },
+  repertoire: { label: 'addService.fields.repertoire', type: 'textarea' },
+  performance_type: { label: 'addService.fields.performance_type', type: 'select', options: ['live', 'dj', 'backing_track'] },
+
+  // Artist/Show fields
+  show_type: { label: 'addService.fields.show_type', type: 'text' },
+  performance_video: { label: 'addService.fields.performance_video', type: 'url' },
+  stage_requirements: { label: 'addService.fields.stage_requirements', type: 'textarea' },
+  character_type: { label: 'addService.fields.character_type', type: 'text' },
+  show_duration: { label: 'addService.fields.show_duration', type: 'number' },
+  props_included: { label: 'addService.fields.props_included', type: 'boolean' },
+
+  // Organizer fields
+  experience_years: { label: 'addService.fields.experience_years', type: 'number' },
+
+  // Transport fields
+  vehicle_type: { label: 'addService.fields.vehicle_type', type: 'text' },
+  vehicle_capacity: { label: 'addService.fields.vehicle_capacity', type: 'number' },
+  driver_included: { label: 'addService.fields.driver_included', type: 'boolean' },
+  decoration_available: { label: 'addService.fields.decoration_available', type: 'boolean' },
+
+  // Beauty fields
+  service_duration: { label: 'addService.fields.service_duration', type: 'number' },
+  home_visit: { label: 'addService.fields.home_visit', type: 'boolean' },
+
+  // Bakery fields
+  cake_weight_kg: { label: 'addService.fields.cake_weight_kg', type: 'number' },
+  flavors_available: { label: 'addService.fields.flavors_available', type: 'textarea' },
+  advance_order_days: { label: 'addService.fields.advance_order_days', type: 'number' },
+
+  // Equipment rental fields
+  equipment_type: { label: 'addService.fields.equipment_type', type: 'text' },
+  rental_duration: { label: 'addService.fields.rental_duration', type: 'text' },
+  rental_price: { label: 'addService.fields.rental_price', type: 'number', suffix: 'currency' },
+
+  // Staff fields
+  staff_count: { label: 'addService.fields.staff_count', type: 'number' },
+  uniform_provided: { label: 'addService.fields.uniform_provided', type: 'boolean' },
+
+  // Security fields
+  license_number: { label: 'addService.fields.license_number', type: 'text' },
+  guard_count: { label: 'addService.fields.guard_count', type: 'number' },
+
+  // Technical fields
+  lighting_type: { label: 'addService.fields.lighting_type', type: 'text' },
+  sound_system: { label: 'addService.fields.sound_system', type: 'text' },
+  stage_setup: { label: 'addService.fields.stage_setup', type: 'boolean' }
+};
+
 export default function AddService() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentLang, setCurrentLang] = useState('ru');
+  const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     translations: {
       ru: { title: '', description: '' },
@@ -20,9 +191,85 @@ export default function AddService() {
     price: '',
     price_type: 'fixed',
     city: '',
+    phone: '',
+    email: '',
+    instagram: '',
+    whatsapp: '',
+    telegram: '',
+    capacity: '',
+    average_check: '',
+    event_duration: '',
+    additional_services: '',
+    experience_years: '',
+    hourly_rate: '',
+    gender: 'any',
     image1: null,
     image2: null,
     image3: null,
+    image4: null,
+    image5: null,
+    video1: null,
+    video2: null,
+    // Category-specific fields
+    shooting_hour_price: '',
+    full_day_price: '',
+    love_story_price: '',
+    portfolio_photos_count: '',
+    delivery_time_days: '',
+    shooting_style: '',
+    second_operator: false,
+    drone_available: false,
+    video_format: 'hd',
+    sound_recording: false,
+    montage_included: false,
+    video_presentation: '',
+    languages: '',
+    dress_code: '',
+    time_limit: '',
+    stage_available: false,
+    sound_available: false,
+    parking_available: false,
+    projector_available: false,
+    decor_available: false,
+    menu_available: false,
+    working_hours: '',
+    services_offered: '',
+    wedding_decor_price: '',
+    custom_calculation: false,
+    cuisine_type: '',
+    service_type: 'buffet',
+    minimum_order: '',
+    delivery_included: false,
+    staff_included: false,
+    music_genre: '',
+    equipment_provided: false,
+    repertoire: '',
+    performance_type: 'live',
+    show_type: '',
+    performance_video: '',
+    stage_requirements: '',
+    character_type: '',
+    show_duration: '',
+    props_included: false,
+    vehicle_type: '',
+    vehicle_capacity: '',
+    driver_included: false,
+    decoration_available: false,
+    service_duration: '',
+    home_visit: false,
+    cake_weight_kg: '',
+    flavors_available: '',
+    advance_order_days: '',
+    equipment_type: '',
+    rental_duration: '',
+    rental_price: '',
+    staff_count: '',
+    uniform_provided: false,
+    license_number: '',
+    guard_count: '',
+    lighting_type: '',
+    sound_system: '',
+    stage_setup: false
   });
 
   useEffect(() => {
@@ -31,14 +278,35 @@ export default function AddService() {
       return;
     }
     fetchCategories();
+    fetchUserData();
   }, [i18n.language]);
+
+  const fetchUserData = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        setUser(userData);
+        setFormData(prev => ({
+          ...prev,
+          city: userData.city || '',
+          phone: userData.phone || '',
+          email: userData.email || '',
+          instagram: userData.instagram || '',
+          whatsapp: userData.whatsapp || '',
+          telegram: userData.telegram || ''
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
       const data = await servicesAPI.getCategories(i18n.language);
       const allData = Array.isArray(data) ? data : (data.results || []);
-      const subcategories = allData.flatMap(parent => parent.subcategories || []);
-      setCategories(subcategories);
+      // Show all categories, not just subcategories
+      setCategories(allData);
     } catch (error) {
       console.error('Error fetching categories:', error);
       setCategories([]);
@@ -58,24 +326,120 @@ export default function AddService() {
     });
   };
 
-  const handleFileChange = (e, field) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, [field]: file });
-      
-      // Preview image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        document.getElementById(`${field}-preview`).innerHTML = `
-          <img src="${e.target.result}" alt="Preview" class="w-full h-32 object-cover rounded-xl" />
-        `;
-      };
-      reader.readAsDataURL(file);
-    }
+  const getCategoryFields = () => {
+    if (!formData.category_id || !categories.length) return [];
+    
+    const selectedCategory = categories.find(cat => cat.id.toString() === formData.category_id.toString());
+    if (!selectedCategory) return [];
+    
+    return CATEGORY_FIELDS[selectedCategory.slug] || [];
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const renderField = (fieldName) => {
+    const config = FIELD_CONFIG[fieldName];
+    if (!config) return null;
+
+    const value = formData[fieldName];
+    const fieldId = `field-${fieldName}`;
+
+    return (
+      <div key={fieldName} className="mb-4">
+        <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
+          {t(config.label)}
+        </label>
+        
+        {config.type === 'boolean' ? (
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={value || false}
+              onChange={(e) => handleInputChange(fieldName, e.target.checked)}
+              className="w-5 h-5 text-[#F4B942] bg-[#E9EEF4] border-gray-300 rounded focus:ring-[#F4B942] focus:ring-2"
+            />
+            <span className="text-gray-600">{value ? t('common.yes') : t('common.no')}</span>
+          </label>
+        ) : config.type === 'select' ? (
+          <select
+            value={value || ''}
+            onChange={(e) => handleInputChange(fieldName, e.target.value)}
+            className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A]"
+          >
+            <option value="">{t('common.select')}</option>
+            {config.options.map(option => (
+              <option key={option} value={option}>
+                {option === 'hd' ? 'HD' : 
+                 option === '4k' ? '4K' : 
+                 option === 'full_hd' ? 'Full HD' :
+                 option === 'buffet' ? t('addService.fields.options.buffet') :
+                 option === 'banquet' ? t('addService.fields.options.banquet') :
+                 option === 'individual' ? t('addService.fields.options.individual') :
+                 option === 'live' ? t('addService.fields.options.live') :
+                 option === 'dj' ? t('addService.fields.options.dj') :
+                 option === 'backing_track' ? t('addService.fields.options.backing_track') :
+                 option}
+              </option>
+            ))}
+          </select>
+        ) : config.type === 'textarea' ? (
+          <textarea
+            value={value || ''}
+            onChange={(e) => handleInputChange(fieldName, e.target.value)}
+            rows="3"
+            className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 resize-none"
+            placeholder={`${t('common.enter')} ${t(config.label).toLowerCase()}`}
+          />
+        ) : config.type === 'url' ? (
+          <input
+            type="url"
+            value={value || ''}
+            onChange={(e) => handleInputChange(fieldName, e.target.value)}
+            className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+            placeholder="https://example.com"
+          />
+        ) : (
+          <div className="relative">
+            <input
+              type={config.type}
+              value={value || ''}
+              onChange={(e) => handleInputChange(fieldName, e.target.value)}
+              className={`w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 ${
+                config.suffix ? 'pr-16' : ''
+              }`}
+              placeholder={`${t('common.enter')} ${t(config.label).toLowerCase()}`}
+            />
+            {config.suffix && (
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+                <span className="font-semibold">
+                  {config.suffix === 'currency' ? t('service.currency') : config.suffix}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate multilingual input
+    const missingLanguages = [];
+    ['ru', 'en', 'kg'].forEach(lang => {
+      if (!formData.translations[lang].title.trim() || !formData.translations[lang].description.trim()) {
+        missingLanguages.push(languageNames[lang]);
+      }
+    });
+    
+    if (missingLanguages.length > 0) {
+      alert(`Пожалуйста, заполните название и описание услуги на следующих языках: ${missingLanguages.join(', ')}`);
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -93,6 +457,31 @@ export default function AddService() {
     ru: 'Русский',
     en: 'English',
     kg: 'Кыргызча'
+  };
+
+  const handleFileChange = (e, field) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, [field]: file });
+      
+      // Preview image/video
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const previewElement = document.getElementById(`${field}-preview`);
+        if (previewElement) {
+          if (field.startsWith('video')) {
+            previewElement.innerHTML = `
+              <video src="${e.target.result}" class="w-full h-32 object-cover rounded-xl" controls></video>
+            `;
+          } else {
+            previewElement.innerHTML = `
+              <img src="${e.target.result}" alt="Preview" class="w-full h-32 object-cover rounded-xl" />
+            `;
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -134,7 +523,7 @@ export default function AddService() {
                           : 'text-gray-600 hover:text-[#1E2A3A]'
                       }`}
                     >
-                      {languageNames[lang]}
+                      {languageNames[lang]} *
                     </button>
                   ))}
                 </div>
@@ -181,7 +570,7 @@ export default function AddService() {
                   <div className="relative">
                     <select
                       value={formData.category_id}
-                      onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                      onChange={(e) => handleInputChange('category_id', e.target.value)}
                       className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] appearance-none"
                       required
                     >
@@ -213,7 +602,7 @@ export default function AddService() {
                         type="radio"
                         value="fixed"
                         checked={formData.price_type === 'fixed'}
-                        onChange={(e) => setFormData({ ...formData, price_type: e.target.value })}
+                        onChange={(e) => handleInputChange('price_type', e.target.value)}
                         className="sr-only"
                       />
                       <span className={`font-semibold ${
@@ -231,7 +620,7 @@ export default function AddService() {
                         type="radio"
                         value="negotiable"
                         checked={formData.price_type === 'negotiable'}
-                        onChange={(e) => setFormData({ ...formData, price_type: e.target.value })}
+                        onChange={(e) => handleInputChange('price_type', e.target.value)}
                         className="sr-only"
                       />
                       <span className={`font-semibold ${
@@ -248,19 +637,19 @@ export default function AddService() {
               {formData.price_type === 'fixed' && (
                 <div>
                   <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
-                    {t('service.price')} (сом) *
+                    {t('service.price')} ({t('service.currency')}) *
                   </label>
                   <div className="relative max-w-xs">
                     <input
                       type="number"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      onChange={(e) => handleInputChange('price', e.target.value)}
                       className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] pl-12"
                       placeholder="0"
                       required
                     />
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
-                      <span className="font-semibold">сом</span>
+                      <span className="font-semibold">{t('service.currency')}</span>
                     </div>
                   </div>
                 </div>
@@ -271,20 +660,129 @@ export default function AddService() {
                 <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
                   {t('addService.location')}
                 </h3>
-                <div>
-                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
-                    {t('auth.city')} *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
-                    placeholder={t('auth.cityPlaceholder')}
-                    required
-                  />
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                      {t('auth.city')} *
+                    </label>
+                    <select
+                      value={formData.city}
+                      onChange={(e) => handleInputChange('city', e.target.value)}
+                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A]"
+                      required
+                    >
+                      <option value="">{t('addService.selectCity')}</option>
+                      <option value="Бишкек">{t('cities.bishkek')}</option>
+                      <option value="Ош">{t('cities.osh')}</option>
+                      <option value="Токмок">{t('cities.tokmok')}</option>
+                      <option value="Кант">{t('cities.kant')}</option>
+                      <option value="Кара-Балта">{t('cities.karaBalta')}</option>
+                      <option value="Шопоков">{t('cities.shopokov')}</option>
+                      <option value="Каинды">{t('cities.kaindy')}</option>
+                      <option value="Кара-Суу">{t('cities.karaSuu')}</option>
+                      <option value="Ноокат">{t('cities.nookat')}</option>
+                      <option value="Узген (Өзгөн)">{t('cities.uzgen')}</option>
+                      <option value="Манас">{t('cities.manas')}</option>
+                      <option value="Кара-Куль">{t('cities.karaKul')}</option>
+                      <option value="Майлуу-Суу">{t('cities.mailuuSuu')}</option>
+                      <option value="Таш-Кумыр">{t('cities.tashKumyr')}</option>
+                      <option value="Кербен (Ала-Бука)">{t('cities.kerben')}</option>
+                      <option value="Каракол">{t('cities.karakol')}</option>
+                      <option value="Балыкчы">{t('cities.balykchy')}</option>
+                      <option value="Чолпон-Ата">{t('cities.cholponAta')}</option>
+                      <option value="Нарын">{t('cities.naryn')}</option>
+                      <option value="Кочкор">{t('cities.kochkor')}</option>
+                      <option value="Ат-Башы">{t('cities.atBashi')}</option>
+                      <option value="Талас">{t('cities.talas')}</option>
+                      <option value="Кызыл-Адыр">{t('cities.kyzylAdyr')}</option>
+                      <option value="Баткен">{t('cities.batken')}</option>
+                      <option value="Кызыл-Кыя">{t('cities.kyzylKiya')}</option>
+                      <option value="Сулюкта">{t('cities.sulukta')}</option>
+                    </select>
+                  </div>
                 </div>
               </div>
+
+              {/* Contact Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                  {t('addService.contactInfo')}
+                </h3>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                      {t('addService.phone')}
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      placeholder="+996 XXX XXX XXX"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      placeholder="example@email.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                      Instagram
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.instagram}
+                      onChange={(e) => handleInputChange('instagram', e.target.value)}
+                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      placeholder="@username"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                      WhatsApp
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.whatsapp}
+                      onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      placeholder="+996 XXX XXX XXX или @username"
+                    />
+                  </div>
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                      Telegram
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.telegram}
+                      onChange={(e) => handleInputChange('telegram', e.target.value)}
+                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      placeholder="@username"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Category-specific fields */}
+              {getCategoryFields().length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                    {t('addService.additionalInfo')}
+                  </h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {getCategoryFields().map(fieldName => renderField(fieldName))}
+                  </div>
+                </div>
+              )}
 
               {/* Images */}
               <div>
@@ -292,11 +790,11 @@ export default function AddService() {
                   {t('addService.images')}
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  {t('addService.imagesHint', 'Добавьте до 3 фотографий вашей услуги')}
+                  {t('addService.imagesHint', 'Добавьте до 5 фотографий вашей услуги')}
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[1, 2, 3].map((num) => (
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {[1, 2, 3, 4, 5].map((num) => (
                     <div key={num} className="text-center">
                       <label className="cursor-pointer group">
                         <div 
@@ -312,6 +810,40 @@ export default function AddService() {
                           type="file"
                           accept="image/*"
                           onChange={(e) => handleFileChange(e, `image${num}`)}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Videos */}
+              <div>
+                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                  {t('addService.video')}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  {t('addService.videoHint')}
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[1, 2].map((num) => (
+                    <div key={num} className="text-center">
+                      <label className="cursor-pointer group">
+                        <div 
+                          id={`video${num}-preview`}
+                          className="w-full h-32 bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
+                        >
+                          <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-sm text-gray-500">{t('addService.uploadVideo')}</span>
+                        </div>
+                        <input
+                          type="file"
+                          accept="video/*"
+                          onChange={(e) => handleFileChange(e, `video${num}`)}
                           className="hidden"
                         />
                       </label>
