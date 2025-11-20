@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { servicesAPI } from '../api/services';
 import Logo from '/logo.png';
 // Deep Blue Particle Background
@@ -339,6 +339,7 @@ const LoadingSpinner = () => (
 
 export default function Home() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -410,7 +411,7 @@ export default function Home() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/services?search=${encodeURIComponent(searchQuery)}`;
+      navigate(`/services?search=${encodeURIComponent(searchQuery)}`);
     } else {
       searchInputRef.current?.focus();
     }
@@ -418,10 +419,10 @@ export default function Home() {
 
   const handleSuggestionClick = (suggestion) => {
     if (suggestion.type === 'category') {
-      window.location.href = `/services?category=${suggestion.id}`;
+      navigate(`/services?category=${suggestion.id}`);
     } else {
       setSearchQuery(suggestion.name);
-      window.location.href = `/services?search=${encodeURIComponent(suggestion.name)}`;
+      navigate(`/services?search=${encodeURIComponent(suggestion.name)}`);
     }
     setShowSuggestions(false);
   };
