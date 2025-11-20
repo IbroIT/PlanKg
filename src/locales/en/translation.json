@@ -503,6 +503,8 @@
     "beFirstToReview": "Be the first to leave a review!"
   },
   "services": {
-    "found": "services found"
+    "description": "Find the perfect service for your needs",
+    "found": "services found",
+    "tryChangingFilters": "Try changing the filters or search query"
   }
 }
