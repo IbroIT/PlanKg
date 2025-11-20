@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { servicesAPI } from '../api/services';
-
+import Logo from '/logo.png';
 // Deep Blue Particle Background
 const DeepBlueBackground = () => {
   const canvasRef = useRef(null);

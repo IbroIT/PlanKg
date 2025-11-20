@@ -105,9 +105,7 @@ export default function Header() {
             className="group flex items-center space-x-3 transition-all duration-300 hover:scale-105 shrink-0 mr-auto"
           >
             <div className="relative">
-              <div className="w-12 h-12 bg-linear-to-br from-[#F4B942] to-[#e5a832] rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-3xl transition-all duration-300">
-                <FiMapPin className="w-6 h-6 text-[#1E2A3A] font-bold" />
-              </div>
+              <img src="/logo.png" alt="Plan.kg Logo" className="w-10 h-10 rounded-xl z-10 relative" />
               <div className="absolute -inset-2 bg-[#F4B942]/30 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
             </div>
             <div className="flex flex-col">
