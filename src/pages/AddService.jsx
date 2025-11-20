@@ -174,6 +174,7 @@ export default function AddService() {
   const [loading, setLoading] = useState(false);
   const [currentLang, setCurrentLang] = useState('ru');
   const [user, setUser] = useState(null);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [formData, setFormData] = useState({
     translations: {
       ru: { 
@@ -463,28 +464,6 @@ export default function AddService() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    let shouldFillOthers = false;
-    
-    // Check if Russian is filled and current language is Russian
-    if (currentLang === 'ru' && formData.translations.ru.title.trim() && formData.translations.ru.description.trim()) {
-      shouldFillOthers = window.confirm('Хотите заполнить услугу на английском и кыргызском языках? Это поможет привлечь больше аудитории.');
-      
-      if (shouldFillOthers) {
-        // Switch to English tab
-        setCurrentLang('en');
-        alert('Пожалуйста, заполните информацию на английском языке.');
-        return;
-      } else {
-        // Copy Russian to other languages if not filled
-        if (!formData.translations.en.title.trim()) {
-          formData.translations.en = { ...formData.translations.ru };
-        }
-        if (!formData.translations.kg.title.trim()) {
-          formData.translations.kg = { ...formData.translations.ru };
-        }
-      }
-    }
-    
     // Validate that at least Russian is filled
     if (!formData.translations.ru.title.trim() || !formData.translations.ru.description.trim()) {
       alert('Пожалуйста, заполните название и описание услуги на русском языке.');
@@ -492,20 +471,34 @@ export default function AddService() {
       return;
     }
     
-    // If user chose to fill other languages, validate they are filled
-    if (shouldFillOthers) {
-      if (!formData.translations.en.title.trim() || !formData.translations.en.description.trim()) {
-        alert('Пожалуйста, заполните название и описание услуги на английском языке.');
-        setCurrentLang('en');
-        return;
-      }
-      if (!formData.translations.kg.title.trim() || !formData.translations.kg.description.trim()) {
-        alert('Пожалуйста, заполните название и описание услуги на кыргызском языке.');
-        setCurrentLang('kg');
-        return;
-      }
+    // Check if Russian is filled and current language is Russian - show modal
+    if (currentLang === 'ru' && formData.translations.ru.title.trim() && formData.translations.ru.description.trim()) {
+      setShowLanguageModal(true);
+      return;
     }
     
+    // If user chose to fill other languages, validate they are filled
+    if (currentLang === 'en' && (!formData.translations.en.title.trim() || !formData.translations.en.description.trim())) {
+      alert('Пожалуйста, заполните название и описание услуги на английском языке.');
+      return;
+    }
+    if (currentLang === 'kg' && (!formData.translations.kg.title.trim() || !formData.translations.kg.description.trim())) {
+      alert('Пожалуйста, заполните название и описание услуги на кыргызском языке.');
+      return;
+    }
+    
+    // If user didn't go through modal (direct submit), copy Russian to other languages
+    if (!formData.translations.en.title.trim()) {
+      formData.translations.en = { ...formData.translations.ru };
+    }
+    if (!formData.translations.kg.title.trim()) {
+      formData.translations.kg = { ...formData.translations.ru };
+    }
+    
+    await submitService();
+  };
+
+  const submitService = async () => {
     setLoading(true);
 
     const submitData = {
@@ -513,7 +506,25 @@ export default function AddService() {
       category_id: formData.category_id,
       price_type: formData.price_type,
       city: formData.city,
-      ...formData
+      price: formData.price,
+      phone: formData.phone,
+      email: formData.email,
+      instagram: formData.instagram,
+      whatsapp: formData.whatsapp,
+      telegram: formData.telegram,
+      avatar: formData.avatar,
+      image1: formData.image1,
+      image2: formData.image2,
+      image3: formData.image3,
+      image4: formData.image4,
+      image5: formData.image5,
+      video1: formData.video1,
+      video2: formData.video2,
+      // Add category-specific fields
+      ...getCategoryFields().reduce((acc, fieldName) => {
+        acc[fieldName] = formData[fieldName];
+        return acc;
+      }, {})
     };
 
     console.log('Submitting formData:', submitData);
@@ -528,6 +539,24 @@ export default function AddService() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePublishNow = () => {
+    // Copy Russian to other languages if not filled
+    if (!formData.translations.en.title.trim()) {
+      formData.translations.en = { ...formData.translations.ru };
+    }
+    if (!formData.translations.kg.title.trim()) {
+      formData.translations.kg = { ...formData.translations.ru };
+    }
+    setShowLanguageModal(false);
+    submitService();
+  };
+
+  const handleFillLanguages = () => {
+    setShowLanguageModal(false);
+    // Switch to English tab
+    setCurrentLang('en');
   };
 
   const languageNames = {
@@ -999,6 +1028,58 @@ export default function AddService() {
           </div>
         </div>
       </div>
+
+      {/* Language Modal */}
+      {showLanguageModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-[#F4B942] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-[#1E2A3A] mb-2">
+                Расширить аудиторию?
+              </h3>
+              <p className="text-gray-600">
+                Хотите заполнить услугу на английском и кыргызском языках? Это поможет привлечь больше клиентов из разных стран.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                onClick={handleFillLanguages}
+                className="w-full bg-[#F4B942] text-[#1E2A3A] py-4 px-6 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Заполнить на других языках
+              </button>
+
+              <button
+                onClick={handlePublishNow}
+                className="w-full bg-white border-2 border-[#1E2A3A] text-[#1E2A3A] py-4 px-6 rounded-xl font-bold hover:bg-[#1E2A3A] hover:text-white transition-all duration-300 flex items-center justify-center"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Опубликовать сейчас
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowLanguageModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
