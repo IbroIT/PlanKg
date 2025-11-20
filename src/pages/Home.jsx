@@ -129,7 +129,7 @@ const GeometricPattern = () => {
         {[...Array(12)].map((_, i) => (
           <div
             key={i}
-            className="absolute h-px bg-gradient-to-r from-transparent via-[#F4B942] to-transparent"
+            className="absolute h-px bg-linear-to-r from-transparent via-[#F4B942] to-transparent"
             style={{
               top: `${(i * 15) % 100}%`,
               left: '0',
@@ -283,7 +283,7 @@ const CategoryCard = ({ category, index }) => {
       >
         {/* Amber glow effect on hover */}
         {isHovered && (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#F4B942]/5 to-transparent rounded-2xl"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-[#F4B942]/5 to-transparent rounded-2xl"></div>
         )}
 
         <div className="relative p-8 text-center">
@@ -345,11 +345,51 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isClickingSuggestion, setIsClickingSuggestion] = useState(false);
   const searchInputRef = useRef(null);
+
+  // Popular search terms
+  const popularSearches = [
+    'фотограф',
+    'видеограф',
+    'ведущий',
+    'DJ',
+    'флорист',
+    'кейтеринг',
+    'пекарня',
+    'аниматор',
+    'транспорт',
+    'декоратор'
+  ];
 
   useEffect(() => {
     fetchData();
   }, [i18n.language]);
+
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const filteredCategories = categories.filter(category => 
+        category.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+      const filteredPopular = popularSearches.filter(search => 
+        search.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+      const allSuggestions = [
+        ...filteredCategories.map(cat => ({ type: 'category', ...cat })),
+        ...filteredPopular.map(search => ({ type: 'search', name: search, id: search }))
+      ].slice(0, 8);
+      
+      setSuggestions(allSuggestions);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [searchQuery, categories]);
 
   const fetchData = async () => {
     try {
@@ -376,6 +416,16 @@ export default function Home() {
     }
   };
 
+  const handleSuggestionClick = (suggestion) => {
+    if (suggestion.type === 'category') {
+      window.location.href = `/services?category=${suggestion.id}`;
+    } else {
+      setSearchQuery(suggestion.name);
+      window.location.href = `/services?search=${encodeURIComponent(suggestion.name)}`;
+    }
+    setShowSuggestions(false);
+  };
+
   return (
     <div className="bg-[#1E2A3A] relative min-h-screen">
       <DeepBlueBackground />
@@ -383,7 +433,7 @@ export default function Home() {
       <FloatingAmberElements />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#1E2A3A] via-[#1A2432] to-[#151E2B] text-white py-38 overflow-hidden">
+      <section className="relative bg-linear-to-br from-[#1E2A3A] via-[#1A2432] to-[#151E2B] text-white py-38">
         {/* Amber accent elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-32 h-32 bg-[#F4B942] rounded-full blur-3xl animate-pulse-slow"></div>
@@ -395,7 +445,7 @@ export default function Home() {
             <div className="mb-8">
               
               <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-white via-[#F4B942] to-gray-300 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-white via-[#F4B942] to-gray-300 bg-clip-text text-transparent">
                   {t('home.title')}
                 </span>
               </h1>
@@ -405,8 +455,7 @@ export default function Home() {
               </p>
             </div>
             
-            {/* Search Bar */}
-            <div className={`max-w-2xl mx-auto transition-all duration-300 ${
+            <div className={`max-w-2xl mx-auto transition-all duration-300 relative z-50 ${
               isSearchFocused ? 'scale-105' : 'scale-100'
             }`}>
               <form onSubmit={handleSearch} className="relative">
@@ -417,8 +466,12 @@ export default function Home() {
                     placeholder={t('home.searchPlaceholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => {
+                      if (!isClickingSuggestion) {
+                        setShowSuggestions(false);
+                      }
+                    }}
                     className="w-full pl-16 pr-8 py-5 rounded-2xl text-gray-800 placeholder-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-[#F4B942] shadow-2xl text-lg border-0"
                   />
                   <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500">
@@ -434,6 +487,55 @@ export default function Home() {
                   {t('filters.search')}
                 </button>
               </form>
+
+              {/* Search Suggestions */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div 
+                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 max-h-80 overflow-y-auto z-10000"
+                  onMouseDown={() => setIsClickingSuggestion(true)}
+                  onMouseUp={() => setIsClickingSuggestion(false)}
+                  onMouseLeave={() => setShowSuggestions(false)}
+                >
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={`${suggestion.type}-${suggestion.id || suggestion.name}`}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className="flex items-center px-6 py-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-150"
+                    >
+                      <div className="flex items-center flex-1">
+                        {suggestion.type === 'category' ? (
+                          <>
+                            <div className="w-10 h-10 bg-[#F4B942]/10 rounded-lg flex items-center justify-center mr-4">
+                              <svg className="w-5 h-5 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                              </svg>
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900">{suggestion.name}</div>
+                              <div className="text-sm text-gray-500">{t('home.category', 'Категория')}</div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-10 h-10 bg-[#1E2A3A]/10 rounded-lg flex items-center justify-center mr-4">
+                              <svg className="w-5 h-5 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900">{suggestion.name}</div>
+                              <div className="text-sm text-gray-500">{t('home.popularSearch', 'Популярный поиск')}</div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
