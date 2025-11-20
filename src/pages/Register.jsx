@@ -11,11 +11,10 @@ export default function Register() {
     username: '',
     email: '',
     password: '',
-    password2: '',
+    password_confirm: '',
     first_name: '',
     last_name: '',
     phone: '',
-    city: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +28,7 @@ export default function Register() {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.password2) {
+    if (formData.password !== formData.password_confirm) {
       setError(t('auth.passwordMismatch', { defaultValue: "Passwords don't match" }));
       return;
     }
@@ -214,8 +213,8 @@ export default function Register() {
                 <div className="relative">
                   <input
                     type="password"
-                    value={formData.password2}
-                    onChange={(e) => setFormData({ ...formData, password2: e.target.value })}
+                    value={formData.password_confirm}
+                    onChange={(e) => setFormData({ ...formData, password_confirm: e.target.value })}
                     className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
                     placeholder={t('auth.confirmPasswordPlaceholder')}
                     required
@@ -244,28 +243,6 @@ export default function Register() {
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* City */}
-              <div>
-                <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
-                  {t('auth.city')}
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
-                    placeholder={t('auth.cityPlaceholder')}
-                  />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
                 </div>

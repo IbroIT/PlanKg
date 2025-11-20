@@ -17,6 +17,8 @@ export const servicesAPI = {
   },
   
   createService: async (data) => {
+    console.log('createService called with data:', data);
+    console.log('Avatar in data:', data.avatar);
     const formData = new FormData();
     
     // Add translations as JSON string
@@ -45,11 +47,12 @@ export const servicesAPI = {
       'music_genre', 'equipment_provided', 'repertoire', 'performance_type',
       'show_type', 'performance_video', 'stage_requirements', 'cake_weight_kg',
       'flavors_available', 'advance_order_days', 'staff_count', 'uniform_provided',
-      'services_offered', 'wedding_decor_price', 'custom_calculation'
+      'services_offered', 'wedding_decor_price', 'custom_calculation', 'avatar'
     ];
     
     optionalFields.forEach(field => {
       if (data[field] !== null && data[field] !== undefined && data[field] !== '') {
+        console.log(`Appending ${field}:`, data[field]);
         formData.append(field, data[field]);
       }
     });

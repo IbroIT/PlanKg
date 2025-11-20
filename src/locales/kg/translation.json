@@ -39,6 +39,7 @@
     "latestServices": "Акыркы кызматтар",
     "viewAll": "Баарын көрүү",
     "allCategories": "Популярдуу категориялар",
+    "showAllCategories": "Бардык категорияларды көрсөтүү",
     "categoriesDescription": "Ар кандай категорияларды карап чыгып, иш-чараңыз үчүн идеалдуу кызматтарды табыңыз",
     "fastBooking": "Тез брондоо",
     "fastBookingDesc": "Дароо ырастоо жана ыңгайлуу график",
@@ -144,6 +145,31 @@
     "detailedInfo": "Деталдуу маалымат",
     "venueInfo": "Мекеме тууралуу маалымат",
     "specialistInfo": "Адис тууралуу маалымат",
+    "droneAvailable": "Дрон жеткиликтүү",
+    "included": "Киргизилген",
+    "separately": "Өзүнчө",
+    "available": "Жеткиликтүү",
+    "people": "адам",
+    "years": "жыл",
+    "days": "күн",
+    "hours": "саат",
+    "kg": "кг",
+    "photos": "сүрөт",
+    "videoFormatOptions": {
+      "hd": "HD",
+      "4k": "4K",
+      "full_hd": "Full HD"
+    },
+    "serviceTypeOptions": {
+      "buffet": "Буфет",
+      "banquet": "Банкет",
+      "individual": "Жеке"
+    },
+    "performanceTypeOptions": {
+      "live": "Жандуу аткаруу",
+      "dj": "DJ",
+      "backing_track": "Фондук музыка"
+    },
     "website": "Вебсайт",
     "reviewsCount": "{{count}} пикир",
     "reviewsCount_2": "{{count}} пикир",
@@ -154,7 +180,13 @@
     "hour": "саат",
     "instagram": "Instagram",
     "cancel": "Жокко чыгаруу",
-    "videoNotSupported": "Сиздин браузериңиз видео тегин колдобойт."
+    "videoNotSupported": "Сиздин браузериңиз видео тегин колдобойт.",
+    "videos": "Видеолор",
+    "gallery": "Галерея",
+    "contactSuccess": "Келишимге жете алдыңызбы?",
+    "contactFeedback": "Пикириңиз үчүн рахмат!",
+    "yes": "Ооба",
+    "no": "Жок"
   },
   "serviceSubmitted": {
     "title": "Сиздин каттоо кабыл алынды!",
@@ -237,6 +269,8 @@
     "pendingStatus": "⏳ Модерацияда",
     "rejectedStatus": "❌ Четке кагылды",
     "addFirstService": "Биринчи кызматыңызды кошуңуз",
+    "fillProfile": "Профильди толтуруңуз",
+    "fillProfileDesc": "Кардарлар сиз менен оңой байланышуу үчүн шаар жана байланыш маалыматтарын кошуңуз",
     "cities": [
       "Бишкек",
       "Ош",
@@ -286,6 +320,9 @@
     "district": "Району",
     "districtPlaceholder": "Мисалы: Ленинский",
     "images": "Сүрөттөр",
+    "avatar": "Кызматтын аватаркасы",
+    "avatarHint": "Кызматыңыз үчүн негизги сүрөттү жүктөңүз",
+    "uploadAvatar": "Аватарка жүктөө",
     "imagesHint": "Кызматыңыздын 3ке чейин сүрөтүн кошуңуз",
     "uploadImage": "Сүрөт жүктөө",
     "addImages": "Сүрөт кошуу (5ке чейин)",

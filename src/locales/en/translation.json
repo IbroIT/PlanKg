@@ -33,6 +33,7 @@
   },
   "home": {
     "allCategories": "Popular Categories",
+    "showAllCategories": "Show all categories",
     "categoriesDescription": "Explore various categories to find the perfect services for your event",
     "title": "Organize an unforgettable event",
     "subtitle": "Everything for your celebration in one place",
@@ -144,6 +145,31 @@
     "detailedInfo": "Detailed Information",
     "venueInfo": "Venue Information",
     "specialistInfo": "Specialist Information",
+    "droneAvailable": "Drone Available",
+    "included": "Included",
+    "separately": "Separately",
+    "available": "Available",
+    "people": "people",
+    "years": "years",
+    "days": "days",
+    "hours": "hours",
+    "kg": "kg",
+    "photos": "photos",
+    "videoFormatOptions": {
+      "hd": "HD",
+      "4k": "4K",
+      "full_hd": "Full HD"
+    },
+    "serviceTypeOptions": {
+      "buffet": "Buffet",
+      "banquet": "Banquet",
+      "individual": "Individual"
+    },
+    "performanceTypeOptions": {
+      "live": "Live performance",
+      "dj": "DJ",
+      "backing_track": "Backing track"
+    },
     "website": "Website",
     "reviewsCount": "{{count}} review",
     "reviewsCount_plural": "{{count}} reviews",
@@ -153,7 +179,13 @@
     "hour": "hour",
     "instagram": "Instagram",
     "cancel": "Cancel",
-    "videoNotSupported": "Your browser does not support the video tag."
+    "videoNotSupported": "Your browser does not support the video tag.",
+    "videos": "Videos",
+    "gallery": "Gallery",
+    "contactSuccess": "Were you able to reach an agreement?",
+    "contactFeedback": "Thank you for your feedback!",
+    "yes": "Yes",
+    "no": "No"
   },
   "serviceSubmitted": {
     "title": "Your application has been accepted!",
@@ -236,6 +268,8 @@
     "pendingStatus": "⏳ Under moderation",
     "rejectedStatus": "❌ Rejected",
     "addFirstService": "Add your first service",
+    "fillProfile": "Fill your profile",
+    "fillProfileDesc": "Add your city and contact information so clients can easily reach you",
     "cities": [
       "Bishkek",
       "Osh",
@@ -285,6 +319,9 @@
     "district": "District",
     "districtPlaceholder": "For example: Leninsky",
     "images": "Images",
+    "avatar": "Service Avatar",
+    "avatarHint": "Upload the main image for your service",
+    "uploadAvatar": "Upload avatar",
     "imagesHint": "Add up to 3 photos of your service",
     "uploadImage": "Upload photo",
     "addImages": "Add images (up to 5)",

@@ -8,80 +8,73 @@ import { servicesAPI } from '../api/services';
 const CATEGORY_FIELDS = {
   'photographers': [
     'shooting_hour_price', 'full_day_price', 'love_story_price', 'portfolio_photos_count',
-    'shooting_style', 'delivery_time_days', 'experience_years', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'shooting_style', 'delivery_time_days', 'experience_years', 'second_operator',
+    'drone_available', 'video_format', 'sound_recording', 'montage_included'
   ],
   'videographers': [
     'shooting_hour_price', 'full_day_price', 'love_story_price', 'portfolio_photos_count',
-    'shooting_style', 'delivery_time_days', 'experience_years', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram', 'video_format', 'second_operator',
-    'montage_included', 'sound_recording'
+    'shooting_style', 'delivery_time_days', 'experience_years', 'second_operator',
+    'drone_available', 'video_format', 'sound_recording', 'montage_included'
   ],
   'hosts-toastmasters': [
-    'price', 'price_type', 'video_presentation', 'languages', 'dress_code', 'experience_years',
-    'time_limit', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'video_presentation', 'languages', 'dress_code', 'experience_years',
+    'time_limit'
   ],
   'venues-restaurants-halls': [
-    'capacity', 'price', 'price_type', 'stage_available', 'sound_available', 'parking_available',
-    'projector_available', 'decor_available', 'menu_available', 'working_hours', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'capacity', 'stage_available', 'sound_available', 'parking_available',
+    'projector_available', 'decor_available', 'menu_available', 'working_hours'
   ],
   'florists-decorators': [
-    'price', 'price_type', 'minimum_order', 'services_offered', 'wedding_decor_price',
-    'custom_calculation', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'minimum_order', 'services_offered', 'wedding_decor_price',
+    'custom_calculation'
   ],
   'catering': [
-    'price', 'price_type', 'cuisine_type', 'service_type', 'minimum_order', 'delivery_included',
-    'staff_included', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'cuisine_type', 'service_type', 'minimum_order', 'delivery_included',
+    'staff_included'
   ],
   'musicians-djs-bands': [
-    'price', 'price_type', 'performance_video', 'equipment_provided', 'repertoire', 'performance_type',
-    'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'performance_video', 'equipment_provided', 'repertoire', 'performance_type',
+    'music_genre'
   ],
   'artists-show-programs': [
-    'price', 'price_type', 'show_type', 'performance_video', 'stage_requirements', 'character_type',
-    'show_duration', 'props_included', 'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'show_type', 'performance_video', 'stage_requirements', 'character_type',
+    'show_duration', 'props_included', 'experience_years'
   ],
   'event-organizers-agencies': [
-    'price', 'price_type', 'experience_years', 'services_offered', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'experience_years', 'services_offered'
   ],
   'transportation': [
-    'vehicle_type', 'price', 'price_type', 'vehicle_capacity', 'driver_included', 'decoration_available',
-    'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'vehicle_type', 'vehicle_capacity', 'driver_included', 'decoration_available'
   ],
   'stylists-makeup-hairdressers': [
-    'price', 'price_type', 'service_duration', 'home_visit', 'city', 'phone', 'email',
-    'instagram', 'whatsapp', 'telegram'
+    'service_duration', 'home_visit'
   ],
   'bakeries-cakes-desserts': [
-    'price', 'price_type', 'cake_weight_kg', 'flavors_available', 'advance_order_days',
-    'city', 'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'cake_weight_kg', 'flavors_available', 'advance_order_days'
   ],
   'photo-zones-equipment-props': [
-    'price', 'price_type', 'equipment_type', 'rental_duration', 'rental_price', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'equipment_type', 'rental_duration', 'rental_price'
   ],
   'waiters-event-staff': [
-    'price', 'price_type', 'staff_count', 'uniform_provided', 'city', 'phone', 'email',
-    'instagram', 'whatsapp', 'telegram'
+    'staff_count', 'uniform_provided'
   ],
   'security': [
-    'price', 'price_type', 'license_number', 'guard_count', 'city', 'phone', 'email',
-    'instagram', 'whatsapp', 'telegram'
+    'license_number', 'guard_count'
   ],
   'animators-children-events': [
-    'price', 'price_type', 'character_type', 'show_duration', 'props_included', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'character_type', 'show_duration', 'props_included'
   ],
   'lighting-sound-stage': [
-    'price', 'price_type', 'lighting_type', 'sound_system', 'stage_setup', 'city',
-    'phone', 'email', 'instagram', 'whatsapp', 'telegram'
+    'lighting_type', 'sound_system', 'stage_setup'
   ]
 };
 
 // Field labels and types
 const FIELD_CONFIG = {
+  // Common fields
+  price: { label: 'service.price', type: 'number', suffix: 'currency' },
+  price_type: { label: 'addService.priceType', type: 'select', options: ['fixed', 'negotiable'] },
+
   // Photo/Video fields
   shooting_hour_price: { label: 'addService.fields.shooting_hour_price', type: 'number', suffix: 'currency' },
   full_day_price: { label: 'addService.fields.full_day_price', type: 'number', suffix: 'currency' },
@@ -183,11 +176,21 @@ export default function AddService() {
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     translations: {
-      ru: { title: '', description: '' },
-      en: { title: '', description: '' },
-      kg: { title: '', description: '' },
+      ru: { 
+        title: '', 
+        description: '',
+      },
+      en: { 
+        title: '', 
+        description: '',
+      },
+      kg: { 
+        title: '', 
+        description: '',
+      },
     },
     category_id: '',
+    avatar: null,
     price: '',
     price_type: 'fixed',
     city: '',
@@ -332,18 +335,51 @@ export default function AddService() {
     const selectedCategory = categories.find(cat => cat.id.toString() === formData.category_id.toString());
     if (!selectedCategory) return [];
     
-    return CATEGORY_FIELDS[selectedCategory.slug] || [];
+    let fields = CATEGORY_FIELDS[selectedCategory.slug] || [];
+    
+    // If price type is negotiable, filter out price-related fields
+    if (formData.price_type === 'negotiable') {
+      fields = fields.filter(field => {
+        // Filter out fields that contain 'price' in their name (but not 'price_type')
+        return !field.includes('price') || field === 'price_type';
+      });
+    }
+    
+    return fields;
   };
 
   const handleInputChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
+    // Check if this is a translatable text field
+    const isTranslatableText = [].includes(field);
+    
+    if (isTranslatableText) {
+      setFormData({
+        ...formData,
+        translations: {
+          ...formData.translations,
+          [currentLang]: {
+            ...formData.translations[currentLang],
+            [field]: value,
+          },
+        },
+      });
+    } else {
+      setFormData({ ...formData, [field]: value });
+    }
   };
 
   const renderField = (fieldName) => {
     const config = FIELD_CONFIG[fieldName];
     if (!config) return null;
 
-    const value = formData[fieldName];
+    // For translatable text fields, use translations
+    const isTranslatableText = (config.type === 'text' || config.type === 'textarea') && 
+      [].includes(fieldName);
+    
+    const value = isTranslatableText ? 
+      (formData.translations[currentLang]?.[fieldName] || '') : 
+      formData[fieldName];
+    
     const fieldId = `field-${fieldName}`;
 
     return (
@@ -427,23 +463,64 @@ export default function AddService() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate multilingual input
-    const missingLanguages = [];
-    ['ru', 'en', 'kg'].forEach(lang => {
-      if (!formData.translations[lang].title.trim() || !formData.translations[lang].description.trim()) {
-        missingLanguages.push(languageNames[lang]);
-      }
-    });
+    let shouldFillOthers = false;
     
-    if (missingLanguages.length > 0) {
-      alert(`Пожалуйста, заполните название и описание услуги на следующих языках: ${missingLanguages.join(', ')}`);
+    // Check if Russian is filled and current language is Russian
+    if (currentLang === 'ru' && formData.translations.ru.title.trim() && formData.translations.ru.description.trim()) {
+      shouldFillOthers = window.confirm('Хотите заполнить услугу на английском и кыргызском языках? Это поможет привлечь больше аудитории.');
+      
+      if (shouldFillOthers) {
+        // Switch to English tab
+        setCurrentLang('en');
+        alert('Пожалуйста, заполните информацию на английском языке.');
+        return;
+      } else {
+        // Copy Russian to other languages if not filled
+        if (!formData.translations.en.title.trim()) {
+          formData.translations.en = { ...formData.translations.ru };
+        }
+        if (!formData.translations.kg.title.trim()) {
+          formData.translations.kg = { ...formData.translations.ru };
+        }
+      }
+    }
+    
+    // Validate that at least Russian is filled
+    if (!formData.translations.ru.title.trim() || !formData.translations.ru.description.trim()) {
+      alert('Пожалуйста, заполните название и описание услуги на русском языке.');
+      setCurrentLang('ru');
       return;
+    }
+    
+    // If user chose to fill other languages, validate they are filled
+    if (shouldFillOthers) {
+      if (!formData.translations.en.title.trim() || !formData.translations.en.description.trim()) {
+        alert('Пожалуйста, заполните название и описание услуги на английском языке.');
+        setCurrentLang('en');
+        return;
+      }
+      if (!formData.translations.kg.title.trim() || !formData.translations.kg.description.trim()) {
+        alert('Пожалуйста, заполните название и описание услуги на кыргызском языке.');
+        setCurrentLang('kg');
+        return;
+      }
     }
     
     setLoading(true);
 
+    const submitData = {
+      translations: formData.translations,
+      category_id: formData.category_id,
+      price_type: formData.price_type,
+      city: formData.city,
+      ...formData
+    };
+
+    console.log('Submitting formData:', submitData);
+    console.log('Avatar in formData:', formData.avatar);
+
     try {
-      await servicesAPI.createService(formData);
+      await servicesAPI.createService(submitData);
       navigate('/service-submitted');
     } catch (error) {
       console.error('Error creating service:', error);
@@ -505,6 +582,31 @@ export default function AddService() {
 
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                  {t('addService.category')} *
+                </label>
+                <div className="relative">
+                  <select
+                    value={formData.category_id}
+                    onChange={(e) => handleInputChange('category_id', e.target.value)}
+                    className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] appearance-none"
+                    required
+                  >
+                    <option value="">{t('addService.selectCategory')}</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
               {/* Language Tabs */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
@@ -523,7 +625,7 @@ export default function AddService() {
                           : 'text-gray-600 hover:text-[#1E2A3A]'
                       }`}
                     >
-                      {languageNames[lang]} *
+                      {languageNames[lang]} {lang === 'ru' ? '*' : ''}
                     </button>
                   ))}
                 </div>
@@ -560,76 +662,48 @@ export default function AddService() {
                 </div>
               </div>
 
-              {/* Category & Price */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Category */}
-                <div>
-                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
-                    {t('addService.category')} *
-                  </label>
-                  <div className="relative">
-                    <select
-                      value={formData.category_id}
-                      onChange={(e) => handleInputChange('category_id', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] appearance-none"
-                      required
-                    >
-                      <option value="">{t('addService.selectCategory')}</option>
-                      {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                      ))}
-                    </select>
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Price Type */}
-                <div>
-                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
-                    {t('addService.priceType')} *
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                      formData.price_type === 'fixed' 
-                        ? 'border-[#F4B942] bg-[#F4B942]' 
-                        : 'border-gray-200 hover:border-gray-300'
+              {/* Price Type */}
+              <div>
+                <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                  {t('addService.priceType')} *
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                    formData.price_type === 'fixed' 
+                      ? 'border-[#F4B942] bg-[#F4B942]' 
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}>
+                    <input
+                      type="radio"
+                      value="fixed"
+                      checked={formData.price_type === 'fixed'}
+                      onChange={(e) => handleInputChange('price_type', e.target.value)}
+                      className="sr-only"
+                    />
+                    <span className={`font-semibold ${
+                      formData.price_type === 'fixed' ? 'text-white' : 'text-gray-600'
                     }`}>
-                      <input
-                        type="radio"
-                        value="fixed"
-                        checked={formData.price_type === 'fixed'}
-                        onChange={(e) => handleInputChange('price_type', e.target.value)}
-                        className="sr-only"
-                      />
-                      <span className={`font-semibold ${
-                        formData.price_type === 'fixed' ? 'text-white' : 'text-gray-600'
-                      }`}>
-                        {t('addService.fixed')}
-                      </span>
-                    </label>
-                    <label className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                      formData.price_type === 'negotiable' 
-                        ? 'border-[#F4B942] bg-[#F4B942]' 
-                        : 'border-gray-200 hover:border-gray-300'
+                      {t('addService.fixed')}
+                    </span>
+                  </label>
+                  <label className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                    formData.price_type === 'negotiable' 
+                      ? 'border-[#F4B942] bg-[#F4B942]' 
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}>
+                    <input
+                      type="radio"
+                      value="negotiable"
+                      checked={formData.price_type === 'negotiable'}
+                      onChange={(e) => handleInputChange('price_type', e.target.value)}
+                      className="sr-only"
+                    />
+                    <span className={`font-semibold ${
+                      formData.price_type === 'negotiable' ? 'text-white' : 'text-gray-600'
                     }`}>
-                      <input
-                        type="radio"
-                        value="negotiable"
-                        checked={formData.price_type === 'negotiable'}
-                        onChange={(e) => handleInputChange('price_type', e.target.value)}
-                        className="sr-only"
-                      />
-                      <span className={`font-semibold ${
-                        formData.price_type === 'negotiable' ? 'text-white' : 'text-gray-600'
-                      }`}>
-                        {t('addService.negotiable')}
-                      </span>
-                    </label>
-                  </div>
+                      {t('addService.negotiable')}
+                    </span>
+                  </label>
                 </div>
               </div>
 
@@ -651,6 +725,18 @@ export default function AddService() {
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
                       <span className="font-semibold">{t('service.currency')}</span>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Category-specific fields */}
+              {getCategoryFields().length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                    {t('addService.additionalInfo')}
+                  </h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {getCategoryFields().map(fieldName => renderField(fieldName))}
                   </div>
                 </div>
               )}
@@ -772,23 +858,41 @@ export default function AddService() {
                 </div>
               </div>
 
-              {/* Category-specific fields */}
-              {getCategoryFields().length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
-                    {t('addService.additionalInfo')}
-                  </h3>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {getCategoryFields().map(fieldName => renderField(fieldName))}
-                  </div>
-                </div>
-              )}
-
               {/* Images */}
               <div>
                 <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
                   {t('addService.images')}
                 </h3>
+                
+                {/* Avatar */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    {t('addService.avatar', 'Аватарка сервиса')}
+                  </label>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {t('addService.avatarHint', 'Загрузите основное изображение для вашего сервиса')}
+                  </p>
+                  <div className="text-center">
+                    <label className="cursor-pointer group">
+                      <div 
+                        id="avatar-preview"
+                        className="w-32 h-32 mx-auto bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
+                      >
+                        <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span className="text-sm text-gray-500">{t('addService.uploadAvatar', 'Загрузить аватарку')}</span>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleFileChange(e, 'avatar')}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+                
                 <p className="text-gray-600 text-sm mb-4">
                   {t('addService.imagesHint', 'Добавьте до 5 фотографий вашей услуги')}
                 </p>

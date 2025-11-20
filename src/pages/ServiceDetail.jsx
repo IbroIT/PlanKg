@@ -1,15 +1,43 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { servicesAPI } from '../api/services';
 import { reviewsAPI } from '../api/reviews';
 import { isAuthenticated } from '../api/auth';
 import ReviewCard from '../components/ReviewCard';
-import { FaMoneyBillWave, FaCalendarAlt, FaHeart, FaCamera, FaClock, FaMicrophone, FaUser, FaMapMarkerAlt, FaUtensils, FaMusic, FaCar, FaHome, FaBirthdayCake, FaTools, FaUsers, FaShieldAlt, FaMagic, FaVideo, FaStar } from 'react-icons/fa';
+import { FaMoneyBillWave, FaCalendarAlt, FaHeart, FaCamera, FaClock, FaMicrophone, FaUser, FaMapMarkerAlt, FaUtensils, FaMusic, FaCar, FaHome, FaBirthdayCake, FaTools, FaUsers, FaShieldAlt, FaMagic, FaVideo, FaStar, FaPhone, FaInstagram, FaFacebook } from 'react-icons/fa';
+
+const translateVideoFormat = (format, t) => {
+  const translations = {
+    'hd': t('service.videoFormatOptions.hd'),
+    '4k': t('service.videoFormatOptions.4k'),
+    'full_hd': t('service.videoFormatOptions.full_hd')
+  };
+  return translations[format] || format;
+};
+
+const translateServiceType = (type, t) => {
+  const translations = {
+    'buffet': t('service.serviceTypeOptions.buffet'),
+    'banquet': t('service.serviceTypeOptions.banquet'),
+    'individual': t('service.serviceTypeOptions.individual')
+  };
+  return translations[type] || type;
+};
+
+const translatePerformanceType = (type, t) => {
+  const translations = {
+    'live': t('service.performanceTypeOptions.live'),
+    'dj': t('service.performanceTypeOptions.dj'),
+    'backing_track': t('service.performanceTypeOptions.backing_track')
+  };
+  return translations[type] || type;
+};
 
 export default function ServiceDetail() {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
+  const navigate = useNavigate();
   const [service, setService] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +45,9 @@ export default function ServiceDetail() {
   const [reviewData, setReviewData] = useState({ rating: 5, comment: '' });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('photos');
+  const [contactInitiated, setContactInitiated] = useState(false);
+  const [showContactFeedback, setShowContactFeedback] = useState(false);
 
   // City translation mapping
   const cityKeys = {
@@ -84,6 +115,8 @@ export default function ServiceDetail() {
         servicesAPI.getServiceDetail(id, i18n.language),
         reviewsAPI.getServiceReviews(id),
       ]);
+      console.log('Service data:', serviceData);
+      console.log('Service avatar:', serviceData.avatar);
       setService(serviceData);
       setReviews(reviewsData);
     } catch (error) {
@@ -98,6 +131,29 @@ export default function ServiceDetail() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     fetchData();
   }, [id, i18n.language, fetchData]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && contactInitiated) {
+        setShowContactFeedback(true);
+        setContactInitiated(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [contactInitiated]);
+
+  useEffect(() => {
+    if (contactInitiated) {
+      const timer = setTimeout(() => {
+        setShowContactFeedback(true);
+        setContactInitiated(false);
+      }, 15000); // 15 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [contactInitiated]);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -193,127 +249,63 @@ export default function ServiceDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            {/* Images */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
-              {service.images && service.images.length > 0 ? (
-                service.images.length > 1 ? (
-                  // Slider for more than 1 image
-                  <div className="relative">
-                    <div className="relative h-96 overflow-hidden cursor-pointer" onClick={() => openImageModal(currentImageIndex)}>
-                      <img
-                        src={service.images[currentImageIndex]}
-                        alt={`${service.title} ${currentImageIndex + 1}`}
-                        className="w-full h-full object-cover transition-all duration-300 hover:scale-105"
-                      />
-                      
-                      {/* Navigation arrows */}
-                      <button
-                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200"
-                      >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </button>
-                      
-                      <button
-                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200"
-                      >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                      
-                      {/* Image counter */}
-                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
-                        {currentImageIndex + 1} / {service.images.length}
-                      </div>
-                      
-                      {/* Zoom icon */}
-                      <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                        </svg>
-                      </div>
-                    </div>
-                    
-                    {/* Thumbnail indicators */}
-                    <div className="flex justify-center space-x-2 p-4 bg-gray-50">
-                      {service.images.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => goToImage(index)}
-                          className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                            index === currentImageIndex ? 'bg-[#F4B942]' : 'bg-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  // Single image
-                  <img
-                    src={service.images[0]}
-                    alt={`${service.title} 1`}
-                    className="w-full h-96 object-cover cursor-pointer"
-                    onClick={() => openImageModal(0)}
-                  />
-                )
-              ) : (
-                <div className="h-64 bg-gray-200 flex items-center justify-center">
-                  <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              )}
-            </div>
-
             {/* Service Info */}
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-              <h1 className="text-3xl font-bold text-[#1E2A3A] mb-4">
-                {service.title}
-              </h1>
+              <div className="flex items-start gap-6">
+                <div className="flex-1">
+                  <h1 className="text-3xl font-bold text-[#1E2A3A] mb-4">
+                    {service.title}
+                  </h1>
 
-              {service.category && (
-                <div className="inline-block bg-[#E9EEF4] px-4 py-2 rounded-lg mb-4">
-                  <span className="text-[#1E2A3A] font-medium">{service.category.name}</span>
+                  {service.category && (
+                    <div className="inline-block bg-[#E9EEF4] px-4 py-2 rounded-lg mb-4">
+                      <span className="text-[#1E2A3A] font-medium">{service.category.name}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center mb-6">
+                    {service.rating > 0 && (
+                      <div className="flex items-center mr-6">
+                        <svg className="w-6 h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
+                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                        </svg>
+                        <span className="ml-2 text-lg font-semibold text-[#1E2A3A]">
+                          {service.rating ? Number(service.rating).toFixed(1) : '0.0'}
+                        </span>
+                        <span className="ml-1 text-gray-500">
+                          ({service.reviews_count || 0} {t('service.reviews')})
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-center text-gray-500">
+                      <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      {service.views_count} {t('service.views', { defaultValue: 'views' })}
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-6">
+                    <h2 className="text-xl font-semibold text-[#1E2A3A] mb-3">
+                      {t('service.description')}
+                    </h2>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {service.description}
+                    </p>
+                  </div>
                 </div>
-              )}
 
-              <div className="flex items-center mb-6">
-                {service.rating > 0 && (
-                  <div className="flex items-center mr-6">
-                    <svg className="w-6 h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                    <span className="ml-2 text-lg font-semibold text-[#1E2A3A]">
-                      {service.rating ? Number(service.rating).toFixed(1) : '0.0'}
-                    </span>
-                    <span className="ml-1 text-gray-500">
-                      ({service.reviews_count || 0} {t('service.reviews')})
-                    </span>
+                {service.avatar && (
+                  <div className="w-64 h-64 rounded-lg overflow-hidden shadow-lg flex-shrink-0">
+                    <img
+                      src={service.avatar}
+                      alt={service.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 )}
-                <div className="flex items-center text-gray-500">
-                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  {service.views_count} {t('service.views', { defaultValue: 'views' })}
-                </div>
               </div>
-
-              <div className="border-t border-gray-200 pt-6">
-                <h2 className="text-xl font-semibold text-[#1E2A3A] mb-3">
-                  {t('service.description')}
-                </h2>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {service.description}
-                </p>
-              </div>
-
-              {/* Category-specific Information */}
               {service.category && (
                 <div className="border-t border-gray-200 mt-6 pt-6">
                   <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
@@ -357,7 +349,7 @@ export default function ServiceDetail() {
                               <FaCamera className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.portfolio')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.portfolio_photos_count} фото</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.portfolio_photos_count} {t('service.photos')}</p>
                           </div>
                         )}
                         {service.shooting_style && (
@@ -375,7 +367,70 @@ export default function ServiceDetail() {
                               <FaClock className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.deliveryTime')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.delivery_time_days} дней</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.delivery_time_days} {t('service.days')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
+                          </div>
+                        )}
+                        {service.second_operator !== undefined && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.secondOperator')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.second_operator ? t('common.yes') : t('common.no')}</p>
+                          </div>
+                        )}
+                        {service.drone_available !== undefined && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMagic className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.droneAvailable')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.drone_available ? t('common.yes') : t('common.no')}</p>
+                          </div>
+                        )}
+                        {service.video_format && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaVideo className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.videoFormat')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{translateVideoFormat(service.video_format, t)}</p>
+                          </div>
+                        )}
+                        {service.sound_recording !== undefined && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMicrophone className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.soundRecording')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.sound_recording ? t('common.yes') : t('common.no')}</p>
+                          </div>
+                        )}
+                        {service.montage_included !== undefined && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaTools className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.montage')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.montage_included ? t('service.included') : t('service.separately')}</p>
+                          </div>
+                        )}
+                        {service.video_presentation && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaVideo className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.videoPresentation')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('service.available')}</p>
                           </div>
                         )}
                       </div>
@@ -403,40 +458,49 @@ export default function ServiceDetail() {
                             <p className="text-xl font-bold text-[#1E2A3A]">{service.full_day_price} {t('service.currency')}</p>
                           </div>
                         )}
+                        {service.love_story_price && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaHeart className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.loveStoryPrice')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.love_story_price} {t('service.currency')}</p>
+                          </div>
+                        )}
                         {service.video_format && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaVideo className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.videoFormat')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.video_format}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{translateVideoFormat(service.video_format, t)}</p>
                           </div>
                         )}
-                        {service.second_operator && (
+                        {service.second_operator !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaUser className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.secondOperator')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.second_operator ? 'Да' : 'Нет'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.second_operator ? t('common.yes') : t('common.no')}</p>
                           </div>
                         )}
-                        {service.montage_included && (
+                        {service.montage_included !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaTools className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.montage')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.montage_included ? 'Включён' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.montage_included ? t('service.included') : t('service.separately')}</p>
                           </div>
                         )}
-                        {service.sound_recording && (
+                        {service.sound_recording !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaMicrophone className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.soundRecording')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.sound_recording ? 'Да' : 'Нет'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.sound_recording ? t('common.yes') : t('common.no')}</p>
                           </div>
                         )}
                         {service.portfolio_photos_count && (
@@ -445,7 +509,52 @@ export default function ServiceDetail() {
                               <FaCamera className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.portfolio')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.portfolio_photos_count} фото</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.portfolio_photos_count} {t('service.photos')}</p>
+                          </div>
+                        )}
+                        {service.shooting_style && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMagic className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.shootingStyle')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.shooting_style}</p>
+                          </div>
+                        )}
+                        {service.delivery_time_days && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaClock className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.deliveryTime')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.delivery_time_days} {t('service.days')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
+                          </div>
+                        )}
+                        {service.drone_available !== undefined && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMagic className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.droneAvailable')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.drone_available ? t('common.yes') : t('common.no')}</p>
+                          </div>
+                        )}
+                        {service.video_presentation && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaVideo className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.videoPresentation')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('service.available')}</p>
                           </div>
                         )}
                       </div>
@@ -500,13 +609,22 @@ export default function ServiceDetail() {
                             <p className="text-lg font-semibold text-[#1E2A3A]">{typeof service.additional_services === 'string' ? service.additional_services : JSON.stringify(service.additional_services)}</p>
                           </div>
                         )}
-                        {service.performance_video && (
+                        {service.video_presentation && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaVideo className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.videoPresentation')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">Доступно</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('service.available')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
@@ -526,7 +644,7 @@ export default function ServiceDetail() {
                               <FaUsers className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.capacity')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.capacity} чел.</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.capacity} {t('service.people')}</p>
                           </div>
                         )}
                         {service.rental_price && (
@@ -576,6 +694,24 @@ export default function ServiceDetail() {
                             {service.menu_available && <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">{t('service.menu')}</span>}
                           </div>
                         </div>
+                        {service.working_hours && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaClock className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.workingHours')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.working_hours}</p>
+                          </div>
+                        )}
+                        {service.cuisine_type && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUtensils className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.cuisine')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.cuisine_type}</p>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -607,7 +743,16 @@ export default function ServiceDetail() {
                               <FaTools className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.individualCalculation')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">Да</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('common.yes')}</p>
+                          </div>
+                        )}
+                        {service.services_offered && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMagic className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.whatTheyDo')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.services_offered}</p>
                           </div>
                         )}
                         {service.additional_services && (
@@ -653,31 +798,40 @@ export default function ServiceDetail() {
                             <p className="text-lg font-semibold text-[#1E2A3A]">{service.service_type}</p>
                           </div>
                         )}
-                        {service.delivery_included && (
+                        {service.cuisine_type && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUtensils className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.cuisine')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.cuisine_type}</p>
+                          </div>
+                        )}
+                        {service.delivery_included !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaMagic className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.delivery')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.delivery_included ? 'Включена' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.delivery_included ? t('service.included') : t('service.separately')}</p>
                           </div>
                         )}
-                        {service.staff_included && (
+                        {service.staff_included !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaUser className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.waiters')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.staff_included ? 'Включены' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.staff_included ? t('service.included') : t('service.separately')}</p>
                           </div>
                         )}
-                        {service.menu_available && (
+                        {service.menu_available !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaUtensils className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.menuAvailable')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">Доступно</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('service.available')}</p>
                           </div>
                         )}
                         {service.additional_services && (
@@ -712,7 +866,7 @@ export default function ServiceDetail() {
                               <FaMusic className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.equipment')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.equipment_provided ? 'Предоставляется' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.equipment_provided ? t('service.provided') : t('service.separately')}</p>
                           </div>
                         )}
                         {service.repertoire && (
@@ -757,15 +911,23 @@ export default function ServiceDetail() {
                               <FaVideo className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.performanceVideo')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">Доступно</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('service.available')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
                     )}
 
                     {/* Artist */}
-                    {(service.category.name.toLowerCase().includes('artist') || 
-                      service.category.name.toLowerCase().includes('артист')) && (
+                    {(service.category.slug === 'artists-show-programs') && (
                       <div className="space-y-4">
                         {service.hourly_rate && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
@@ -783,6 +945,15 @@ export default function ServiceDetail() {
                               <span className="text-sm">{t('service.showType')}</span>
                             </div>
                             <p className="text-lg font-semibold text-[#1E2A3A]">{service.show_type}</p>
+                          </div>
+                        )}
+                        {service.character_type && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMagic className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.characters')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.character_type}</p>
                           </div>
                         )}
                         {service.show_duration && (
@@ -803,13 +974,22 @@ export default function ServiceDetail() {
                             <p className="text-lg font-semibold text-[#1E2A3A]">{service.stage_requirements}</p>
                           </div>
                         )}
+                        {service.props_included !== undefined && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaMagic className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.props')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.props_included ? t('service.included') : t('service.separately')}</p>
+                          </div>
+                        )}
                         {service.performance_video && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaVideo className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.performanceVideo')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">Доступно</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{t('service.available')}</p>
                           </div>
                         )}
                       </div>
@@ -834,7 +1014,7 @@ export default function ServiceDetail() {
                               <FaUsers className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.vehicleCapacity')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.vehicle_capacity} чел.</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.vehicle_capacity} {t('service.people')}</p>
                           </div>
                         )}
                         {service.hourly_rate && (
@@ -852,7 +1032,7 @@ export default function ServiceDetail() {
                               <FaClock className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.minOrder')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.minimum_order} ч</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.minimum_order} {t('service.hours')}</p>
                           </div>
                         )}
                         {service.driver_included && (
@@ -861,16 +1041,25 @@ export default function ServiceDetail() {
                               <FaUser className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.driver')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.driver_included ? 'Включён' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.driver_included ? t('service.included') : t('service.separately')}</p>
                           </div>
                         )}
-                        {service.decoration_available && (
+                        {service.decoration_available !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaMagic className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.decoration')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.decoration_available ? 'Доступно' : 'Нет'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.decoration_available ? t('service.available') : t('common.no')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
@@ -889,13 +1078,22 @@ export default function ServiceDetail() {
                             <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
                           </div>
                         )}
-                        {service.home_visit && (
+                        {service.service_duration && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaClock className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.serviceDuration')}</span>
+                            </div>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.service_duration} {t('service.hours')}</p>
+                          </div>
+                        )}
+                        {service.home_visit !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaHome className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.homeVisit')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.home_visit ? 'Да' : 'Нет'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.home_visit ? t('common.yes') : t('common.no')}</p>
                           </div>
                         )}
                         {service.additional_services && (
@@ -940,7 +1138,7 @@ export default function ServiceDetail() {
                               <FaCalendarAlt className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.orderAdvance')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.advance_order_days} дней</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.advance_order_days} {t('service.days')}</p>
                           </div>
                         )}
                         {service.minimum_order && (
@@ -949,7 +1147,16 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.minOrderKg')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.minimum_order} кг</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.minimum_order} {t('service.kg')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
@@ -995,6 +1202,15 @@ export default function ServiceDetail() {
                             <p className="text-lg font-semibold text-[#1E2A3A]">{typeof service.additional_services === 'string' ? service.additional_services : JSON.stringify(service.additional_services)}</p>
                           </div>
                         )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1017,16 +1233,16 @@ export default function ServiceDetail() {
                               <FaUsers className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.staffCount')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.staff_count} чел.</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.staff_count} {t('service.people')}</p>
                           </div>
                         )}
-                        {service.uniform_provided && (
+                        {service.uniform_provided !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaMagic className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.uniform')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.uniform_provided ? 'Предоставляется' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.uniform_provided ? t('service.provided') : t('service.separately')}</p>
                           </div>
                         )}
                         {service.service_type && (
@@ -1036,6 +1252,15 @@ export default function ServiceDetail() {
                               <span className="text-sm">{t('service.specialization')}</span>
                             </div>
                             <p className="text-lg font-semibold text-[#1E2A3A]">{service.service_type}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
@@ -1069,7 +1294,16 @@ export default function ServiceDetail() {
                               <FaShieldAlt className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.guardsCount')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.guard_count} чел.</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.guard_count} {t('service.people')}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
@@ -1106,13 +1340,13 @@ export default function ServiceDetail() {
                             <p className="text-lg font-semibold text-[#1E2A3A]">{service.show_duration}</p>
                           </div>
                         )}
-                        {service.props_included && (
+                        {service.props_included !== undefined && (
                           <div className="bg-[#E9EEF4] p-4 rounded-lg">
                             <div className="flex items-center text-gray-600 mb-1">
                               <FaMagic className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.props')}</span>
                             </div>
-                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.props_included ? 'Включён' : 'Отдельно'}</p>
+                            <p className="text-lg font-semibold text-[#1E2A3A]">{service.props_included ? t('service.included') : t('service.separately')}</p>
                           </div>
                         )}
                         {service.additional_services && (
@@ -1122,6 +1356,15 @@ export default function ServiceDetail() {
                               <span className="text-sm">{t('service.scenario')}</span>
                             </div>
                             <p className="text-lg font-semibold text-[#1E2A3A]">{typeof service.additional_services === 'string' ? service.additional_services : JSON.stringify(service.additional_services)}</p>
+                          </div>
+                        )}
+                        {service.experience_years && (
+                          <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <FaUser className="w-4 h-4 mr-2" />
+                              <span className="text-sm">{t('service.experienceYears')}</span>
+                            </div>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                           </div>
                         )}
                       </div>
@@ -1146,7 +1389,7 @@ export default function ServiceDetail() {
                           </svg>
                           <span className="text-sm">{t('service.capacity')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.capacity} чел.</p>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.capacity} {t('service.people')}</p>
                       </div>
                     )}
                     {service.average_check && (
@@ -1157,7 +1400,7 @@ export default function ServiceDetail() {
                           </svg>
                           <span className="text-sm">{t('service.averageCheck')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} ${t('service.currency')}</p>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} {t('service.currency')}</p>
                       </div>
                     )}
                     {service.event_duration && (
@@ -1188,7 +1431,7 @@ export default function ServiceDetail() {
               )}
 
               {/* Individual Provider Specific Info */}
-              {(service.experience_years || service.hourly_rate || service.gender) && (
+              {(service.experience_years || service.hourly_rate) && (
                 <div className="border-t border-gray-200 mt-6 pt-6">
                   <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
                     {t('service.specialistInfo')}
@@ -1202,7 +1445,7 @@ export default function ServiceDetail() {
                           </svg>
                           <span className="text-sm">{t('service.experienceYears')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} лет</p>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                       </div>
                     )}
                     {service.hourly_rate && (
@@ -1213,7 +1456,51 @@ export default function ServiceDetail() {
                           </svg>
                           <span className="text-sm">{t('service.hourlyRate')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} ${t('service.currency')}/час</p>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}/{t('service.hour')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Lighting/Sound/Stage Equipment Specific Info */}
+              {(service.lighting_type || service.sound_system || service.stage_setup) && (
+                <div className="border-t border-gray-200 mt-6 pt-6">
+                  <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
+                    {t('service.equipmentInfo')}
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {service.lighting_type && (
+                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                        <div className="flex items-center text-gray-600 mb-1">
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                          </svg>
+                          <span className="text-sm">{t('service.lightingType')}</span>
+                        </div>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.lighting_type}</p>
+                      </div>
+                    )}
+                    {service.sound_system && (
+                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                        <div className="flex items-center text-gray-600 mb-1">
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                          </svg>
+                          <span className="text-sm">{t('service.soundSystem')}</span>
+                        </div>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.sound_system}</p>
+                      </div>
+                    )}
+                    {service.stage_setup && (
+                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                        <div className="flex items-center text-gray-600 mb-1">
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          <span className="text-sm">{t('service.stageSetup')}</span>
+                        </div>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.stage_setup ? t('common.yes') : t('common.no')}</p>
                       </div>
                     )}
                   </div>
@@ -1253,7 +1540,7 @@ export default function ServiceDetail() {
                     )}
                     {service.instagram && (
                       <a href={`https://instagram.com/${service.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <span className="mr-3">📷</span>
+                        <FaInstagram className="w-5 h-5 mr-3" />
                         @{service.instagram}
                       </a>
                     )}
@@ -1277,24 +1564,9 @@ export default function ServiceDetail() {
                   {translateCity(service.city)}
                 </div>
               </div>
-
-              {/* Videos */}
-              {service.videos && service.videos.length > 0 && (
-                <div className="border-t border-gray-200 mt-6 pt-6">
-                  <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
-                    {t('service.videos')}
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {service.videos.map((video, index) => (
-                      <video key={index} controls className="w-full rounded-lg">
-                        <source src={video} type="video/mp4" />
-                        {t('service.videoNotSupported')}
-                      </video>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
+
+
 
             {/* Reviews */}
             <div id="reviews" className="bg-white rounded-xl shadow-md p-6 mt-6">
@@ -1449,21 +1721,8 @@ export default function ServiceDetail() {
                   </h3>
                   <Link
                     to={`/users/${service.user.id}`}
-                    className="flex items-center mb-4 hover:bg-[#E9EEF4] p-3 rounded-lg transition"
+                    className="flex items-center justify-between mb-4 hover:bg-[#E9EEF4] p-3 rounded-lg transition"
                   >
-                    <div className="w-16 h-16 rounded-full bg-[#E9EEF4] flex items-center justify-center mr-4">
-                      {service.user.avatar ? (
-                        <img
-                          src={service.user.avatar}
-                          alt={service.user.username}
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-[#1E2A3A] font-semibold text-2xl">
-                          {service.user.username.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
                     <div>
                       <p className="font-semibold text-[#1E2A3A]">
                         {service.user.first_name || service.user.username}
@@ -1534,24 +1793,102 @@ export default function ServiceDetail() {
                   {(service.phone || service.user.phone) && (
                     <a
                       href={`tel:${service.phone || service.user.phone}`}
+                      onClick={() => setContactInitiated(true)}
                       className="block w-full bg-[#F4B942] text-[#1E2A3A] text-center py-3 rounded-lg font-semibold hover:bg-[#e5a832] transition mb-3"
                     >
-                      📞 {t('service.contactProvider')}
-                    </a>
-                  )}
-
-                  {service.instagram && (
-                    <a
-                      href={`https://instagram.com/${service.instagram}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full bg-linear-to-r from-purple-500 to-pink-500 text-white text-center py-3 rounded-lg font-semibold hover:opacity-90 transition"
-                    >
-                      📷 {t('service.instagram')}
+                      <FaPhone className="w-5 h-5 inline mr-2" /> {t('service.contactProvider')}
                     </a>
                   )}
                 </div>
               )}
+
+              {/* Gallery in sidebar */}
+              {(service.images && service.images.length > 0) || (service.videos && service.videos.length > 0) ? (
+                <div className="border-t border-gray-200 pt-6">
+                  <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4 flex items-center">
+                    <svg className="w-5 h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {t('service.gallery', 'Галерея')}
+                  </h3>
+                  
+                  {/* Tabs */}
+                  <div className="flex mb-4 bg-[#E9EEF4] rounded-lg p-1">
+                    <button
+                      onClick={() => setActiveTab('photos')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                        activeTab === 'photos'
+                          ? 'bg-white text-[#1E2A3A] shadow-sm'
+                          : 'text-gray-600 hover:text-[#1E2A3A]'
+                      }`}
+                    >
+                      {t('service.photos', 'Фото')} ({service.images ? service.images.length : 0})
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('videos')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                        activeTab === 'videos'
+                          ? 'bg-white text-[#1E2A3A] shadow-sm'
+                          : 'text-gray-600 hover:text-[#1E2A3A]'
+                      }`}
+                    >
+                      {t('service.videos', 'Видео')} ({service.videos ? service.videos.length : 0})
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-3">
+                    {/* Images */}
+                    {activeTab === 'photos' && service.images && service.images.map((image, index) => (
+                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square">
+                        <img
+                          src={image}
+                          alt={`${service.title} ${index + 1}`}
+                          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                          <div className="backdrop-blur-sm bg-white/20 rounded-full p-3">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
+                          {index + 1}
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {/* Videos */}
+                    {activeTab === 'videos' && service.videos && service.videos.map((video, index) => (
+                      <div key={`video-${index}`} className="relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square">
+                        <video
+                          controls
+                          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                          poster={service.images && service.images[0] ? service.images[0] : undefined}
+                          preload="metadata"
+                        >
+                          <source src={video} type="video/mp4" />
+                          {t('service.videoNotSupported')}
+                        </video>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                          <div className="backdrop-blur-sm bg-white/20 rounded-full p-4">
+                            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="absolute top-2 right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                          <FaVideo className="w-3 h-3 inline mr-1" />
+                          {t('service.video')}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+
             </div>
           </div>
         </div>
@@ -1624,6 +1961,37 @@ export default function ServiceDetail() {
                 );
               })}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contact Feedback Modal */}
+      {showContactFeedback && (
+        <div className="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center">
+          <div className="bg-white bg-opacity-50 backdrop-blur-sm rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <h3 className="text-xl font-bold text-[#1E2A3A] mb-4 text-center">
+              {t('service.contactSuccess')}
+            </h3>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setShowContactFeedback(false)}
+                className="flex-1 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition"
+              >
+                {t('service.yes')}
+              </button>
+              <button
+                onClick={() => {
+                  setShowContactFeedback(false);
+                  navigate('/services');
+                }}
+                className="flex-1 bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+              >
+                {t('service.no')}
+              </button>
+            </div>
+            <p className="text-center text-gray-600 mt-4 text-sm">
+              {t('service.contactFeedback')}
+            </p>
           </div>
         </div>
       )}

@@ -18,8 +18,7 @@ import {
   FiX,
   FiChevronDown,
   FiMapPin,
-  FiSearch,
-  FiCalendar
+  FiSearch
 } from 'react-icons/fi';
 
 export default function Header() {
@@ -113,7 +112,7 @@ export default function Header() {
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-bold bg-linear-to-r from-white to-[#E9EEF4] bg-clip-text text-transparent">
-                Plan.kg
+                Plan
               </span>
               <span className="text-xs text-[#E9EEF4]/60 font-medium">{t('header.tagline')}</span>
             </div>
@@ -228,14 +227,6 @@ export default function Header() {
                 </div>
               )}
             </div>
-
-            <Link 
-              to="/services" 
-              className={`group flex items-center space-x-3 px-5 py-3 rounded-2xl transition-all duration-300 hover:bg-white/10 hover:text-[#F4B942] ${isActiveLink('/services')}`}
-            >
-              <FiCalendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-              <span className="font-semibold text-lg">{t('nav.services')}</span>
-            </Link>
 
             {user && (
               <>
@@ -388,15 +379,6 @@ export default function Header() {
                 </div>
               )}
             </div>
-
-            <Link
-              to="/services"
-              className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <FiCalendar className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
-              <span className="font-semibold text-lg text-white">{t('nav.services')}</span>
-            </Link>
 
             {user && (
               <>

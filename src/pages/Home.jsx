@@ -344,6 +344,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(false);
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -392,12 +393,6 @@ export default function Home() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
-              {/* Amber accent badge */}
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-[#F4B942]/10 rounded-2xl backdrop-blur-sm border border-[#F4B942]/20 mb-8 animate-float">
-                <svg className="w-10 h-10 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
               
               <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-white via-[#F4B942] to-gray-300 bg-clip-text text-transparent">
@@ -466,15 +461,28 @@ export default function Home() {
           {loading ? (
             <LoadingSpinner />
           ) : categories.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {categories.slice(0, 8).map((category, index) => (
-                <CategoryCard 
-                  key={category.id} 
-                  category={category} 
-                  index={index}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {categories.slice(0, showAllCategories ? categories.length : 8).map((category, index) => (
+                  <CategoryCard 
+                    key={category.id} 
+                    category={category} 
+                    index={index}
+                  />
+                ))}
+              </div>
+              
+              {categories.length > 8 && !showAllCategories && (
+                <div className="text-center mt-18">
+                  <button
+                    onClick={() => setShowAllCategories(true)}
+                    className="bg-[#F4B942] text-[#1E2A3A] px-8 py-4 rounded-2xl font-semibold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transform"
+                  >
+                    {t('home.showAllCategories', 'Показать все категории')}
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
               <div className="w-20 h-20 mx-auto mb-6 bg-[#E9EEF4] rounded-full flex items-center justify-center">
@@ -498,49 +506,6 @@ export default function Home() {
           )}
         </div>
       </section>
-
-      {/* Features Section with Gray-Blue Background */}
-      <section className="py-20 bg-[#E9EEF4] relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: 'M13 10V3L4 14h7v7l9-11h-7z',
-                title: t('home.fastBooking', 'Быстрое бронирование'),
-                desc: t('home.fastBookingDesc', 'Мгновенное подтверждение и удобное расписание')
-              },
-              {
-                icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z',
-                title: t('home.qualityServices', 'Качественные услуги'),
-                desc: t('home.qualityServicesDesc', 'Проверенные специалисты и отличные отзывы')
-              },
-              {
-                icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
-                title: t('home.securePayments', 'Безопасные платежи'),
-                desc: t('home.securePaymentsDesc', 'Защищенные транзакции и гарантии')
-              }
-            ].map((feature, index) => (
-              <div 
-                key={index}
-                className="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#F4B942] transform hover:-translate-y-1"
-              >
-                <div className="w-16 h-16 bg-[#E9EEF4] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-[#F4B942] transition-all duration-500">
-                  <svg className="w-8 h-8 text-[#1E2A3A] group-hover:text-white transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={feature.icon} />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <style jsx>{`
         @keyframes fadeInUp {
           from {

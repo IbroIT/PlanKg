@@ -139,11 +139,35 @@
     "videoFormat": "Формат видео",
     "secondOperator": "Второй оператор",
     "montage": "Монтаж",
-    "soundRecording": "Запись звука",
     "conveniences": "Удобства",
     "detailedInfo": "Подробная информация",
-    "venueInfo": "Информация о заведении",
+    "venueInfo": "Информация о площадке",
     "specialistInfo": "Информация о специалисте",
+    "droneAvailable": "Дрон доступен",
+    "included": "Включён",
+    "separately": "Отдельно",
+    "available": "Доступно",
+    "people": "чел.",
+    "years": "лет",
+    "days": "дней",
+    "hours": "ч",
+    "kg": "кг",
+    "photos": "фото",
+    "videoFormatOptions": {
+      "hd": "HD",
+      "4k": "4K",
+      "full_hd": "Full HD"
+    },
+    "serviceTypeOptions": {
+      "buffet": "Буфет",
+      "banquet": "Банкет",
+      "individual": "Индивидуально"
+    },
+    "performanceTypeOptions": {
+      "live": "Живое исполнение",
+      "dj": "DJ",
+      "backing_track": "Фоновая музыка"
+    },
     "website": "Вебсайт",
     "reviewsCount": "{{count}} отзыв",
     "reviewsCount_2": "{{count}} отзыва",
@@ -154,7 +178,13 @@
     "hour": "час",
     "instagram": "Instagram",
     "cancel": "Отменить",
-    "videoNotSupported": "Ваш браузер не поддерживает видео."
+    "videoNotSupported": "Ваш браузер не поддерживает видео.",
+    "videos": "Видео",
+    "gallery": "Галерея",
+    "contactSuccess": "Удалось ли договориться?",
+    "contactFeedback": "Спасибо за обратную связь!",
+    "yes": "Да",
+    "no": "Нет"
   },
   "serviceSubmitted": {
     "title": "Ваша заявка принята!",
@@ -225,6 +255,8 @@
     "pendingStatus": "⏳ На модерации",
     "rejectedStatus": "❌ Отклонено",
     "addFirstService": "Добавьте свою первую услугу",
+    "fillProfile": "Заполните профиль",
+    "fillProfileDesc": "Добавьте город и контактные данные, чтобы клиенты могли легко связаться с вами",
     "cities": [
       "Бишкек",
       "Ош",
@@ -274,6 +306,9 @@
     "district": "Район",
     "districtPlaceholder": "Например: Ленинский",
     "images": "Изображения",
+    "avatar": "Аватарка сервиса",
+    "avatarHint": "Загрузите основное изображение для вашего сервиса",
+    "uploadAvatar": "Загрузить аватарку",
     "imagesHint": "Добавьте до 3 фотографий вашей услуги",
     "uploadImage": "Загрузить фото",
     "addImages": "Добавить изображения (до 5)",
@@ -359,7 +394,10 @@
     "additionalInfo": "Дополнительная информация",
     "video": "Видео",
     "contactInfo": "Контактная информация",
-    "uploadVideo": "Загрузить видео"
+    "uploadVideo": "Загрузить видео",
+    "selectCity": "Выберите город",
+    "phone": "Телефон",
+    "videoHint": "Добавьте до 2 видео вашей услуги"
   },
   "filters": {
     "activeFilters": "Активные фильтры",
