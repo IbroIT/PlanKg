@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    outDir: '../back/media', // куда собирать файлы для Django
+    outDir: 'dist', // куда собирать файлы для Vercel
     emptyOutDir: true,           // очищает папку перед билдом
     rollupOptions: {
       output: {
