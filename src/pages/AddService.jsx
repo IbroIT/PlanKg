@@ -351,7 +351,11 @@ export default function AddService() {
 
   const handleInputChange = (field, value) => {
     // Check if this is a translatable text field
-    const isTranslatableText = [].includes(field);
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
+                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
+                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
+                               'equipment_type', 'rental_duration', 'license_number'];
+    const isTranslatableText = translatableFields.includes(field);
     
     if (isTranslatableText) {
       setFormData({
@@ -374,8 +378,12 @@ export default function AddService() {
     if (!config) return null;
 
     // For translatable text fields, use translations
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
+                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
+                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
+                               'equipment_type', 'rental_duration', 'license_number'];
     const isTranslatableText = (config.type === 'text' || config.type === 'textarea') && 
-      [].includes(fieldName);
+      translatableFields.includes(fieldName);
     
     const value = isTranslatableText ? 
       (formData.translations[currentLang]?.[fieldName] || '') : 
@@ -489,10 +497,22 @@ export default function AddService() {
     
     // If user didn't go through modal (direct submit), copy Russian to other languages
     if (!formData.translations.en.title.trim()) {
-      formData.translations.en = { ...formData.translations.ru };
+      setFormData(prev => ({
+        ...prev,
+        translations: {
+          ...prev.translations,
+          en: { ...prev.translations.ru }
+        }
+      }));
     }
     if (!formData.translations.kg.title.trim()) {
-      formData.translations.kg = { ...formData.translations.ru };
+      setFormData(prev => ({
+        ...prev,
+        translations: {
+          ...prev.translations,
+          kg: { ...prev.translations.ru }
+        }
+      }));
     }
     
     await submitService();
@@ -520,12 +540,14 @@ export default function AddService() {
       image5: formData.image5,
       video1: formData.video1,
       video2: formData.video2,
-      // Add category-specific fields
-      ...getCategoryFields().reduce((acc, fieldName) => {
-        acc[fieldName] = formData[fieldName];
-        return acc;
-      }, {})
     };
+
+    // Add category-specific fields only if they have values
+    getCategoryFields().forEach(fieldName => {
+      if (formData[fieldName] !== null && formData[fieldName] !== undefined && formData[fieldName] !== '') {
+        submitData[fieldName] = formData[fieldName];
+      }
+    });
 
     console.log('Submitting formData:', submitData);
     console.log('Avatar in formData:', formData.avatar);
@@ -543,14 +565,22 @@ export default function AddService() {
 
   const handlePublishNow = () => {
     // Copy Russian to other languages if not filled
-    if (!formData.translations.en.title.trim()) {
-      formData.translations.en = { ...formData.translations.ru };
-    }
-    if (!formData.translations.kg.title.trim()) {
-      formData.translations.kg = { ...formData.translations.ru };
-    }
+    setFormData(prev => {
+      const updatedTranslations = { ...prev.translations };
+      if (!updatedTranslations.en.title.trim()) {
+        updatedTranslations.en = { ...updatedTranslations.ru };
+      }
+      if (!updatedTranslations.kg.title.trim()) {
+        updatedTranslations.kg = { ...updatedTranslations.ru };
+      }
+      return {
+        ...prev,
+        translations: updatedTranslations
+      };
+    });
     setShowLanguageModal(false);
-    submitService();
+    // Need to wait for state update, so use setTimeout
+    setTimeout(() => submitService(), 0);
   };
 
   const handleFillLanguages = () => {
