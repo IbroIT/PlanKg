@@ -1721,22 +1721,31 @@ export default function ServiceDetail() {
                   </h3>
                   <Link
                     to={`/users/${service.user.id}`}
-                    className="flex items-center justify-between mb-4 hover:bg-[#E9EEF4] p-3 rounded-lg transition"
+                    className="flex items-center mb-4 hover:bg-[#E9EEF4] p-3 rounded-lg transition"
                   >
-                    <div>
-                      <p className="font-semibold text-[#1E2A3A]">
-                        {service.user.first_name || service.user.username}
-                      </p>
-                      {service.user.rating > 0 && (
-                        <div className="flex items-center mt-1">
-                          <svg className="w-4 h-4 text-[#F4B942] fill-current" viewBox="0 0 20 20">
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
-                          <span className="ml-1 text-sm">
-                            {service.user.rating ? Number(service.user.rating).toFixed(1) : '0.0'} ({service.user.reviews_count || 0})
-                          </span>
-                        </div>
+                    <div className="flex items-center flex-1">
+                      {service.user.avatar && (
+                        <img
+                          src={service.user.avatar}
+                          alt={service.user.first_name || service.user.username}
+                          className="w-12 h-12 rounded-full mr-3 object-cover border-2 border-[#F4B942]"
+                        />
                       )}
+                      <div className="flex-1">
+                        <p className="font-semibold text-[#1E2A3A]">
+                          {service.user.first_name || service.user.username}
+                        </p>
+                        {service.user.rating > 0 && (
+                          <div className="flex items-center mt-1">
+                            <svg className="w-4 h-4 text-[#F4B942] fill-current" viewBox="0 0 20 20">
+                              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                            <span className="ml-1 text-sm">
+                              {service.user.rating ? Number(service.user.rating).toFixed(1) : '0.0'} ({service.user.reviews_count || 0})
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </Link>
 

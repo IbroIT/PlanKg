@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getFavorites } from '../api/favorites';
 import ServiceCard from '../components/ServiceCard';
+import { Link } from 'react-router-dom';
 
 export default function Favorites() {
   const { t, i18n } = useTranslation();
@@ -76,15 +77,15 @@ export default function Favorites() {
             <p className="text-gray-600 text-base md:text-lg mb-8 max-w-md mx-auto">
               {t('favorites.emptyDescription')}
             </p>
-            <a
-              href="/services"
+            <Link
+              to="/services"
               className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-6 py-3 md:px-8 md:py-4 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
             >
               <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               {t('favorites.browseServices')}
-            </a>
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
