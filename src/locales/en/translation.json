@@ -508,5 +508,190 @@
     "description": "Find the perfect service for your needs",
     "found": "services found",
     "tryChangingFilters": "Try changing the filters or search query"
+  },
+  "privacy": {
+    "title": "Privacy Policy and Terms of Use",
+    "intro": "These Privacy Policy and Terms of Use regulate the procedure for collecting, storing, processing and using users' personal data, as well as the rules for using the online platform plan.kg (hereinafter referred to as the \"Platform\").",
+    "consent": "By using the site and services of plan.kg, you confirm your consent to these terms. If you do not agree - please stop using the Platform.",
+    "sections": {
+      "general": {
+        "title": "1. General provisions",
+        "1": "1.1. The plan.kg platform is an online service for posting and searching for services for organizing events of any format.",
+        "2": "1.2. The Platform Administration acts in accordance with the legislation of the Kyrgyz Republic.",
+        "3": "1.3. Service providers and clients are independently responsible for the accuracy of the information provided."
+      },
+      "personalData": {
+        "title": "2. Personal data",
+        "1": "2.1. When registering and using the Platform, the user may provide the following data:",
+        "dataList": [
+          "Full name",
+          "Phone number",
+          "Email address",
+          "Company name / brand",
+          "Photos and portfolio",
+          "Service address",
+          "Social networks"
+        ],
+        "2": "2.2. This data is used for:",
+        "usageList": [
+          "service functioning",
+          "communication between customer and provider",
+          "improving service quality",
+          "notifications and technical support"
+        ],
+        "3": "2.3. The Administration does not transfer personal data to third parties without the user's consent, except in cases provided by law.",
+        "4": "2.4. The user has the right to request deletion or modification of their data by sending a request to the administration's email address."
+      },
+      "informationUsage": {
+        "title": "3. Information usage",
+        "1": "3.1. Information posted by service providers may be displayed publicly in the Platform's catalog.",
+        "2": "3.2. The Platform has the right to use uploaded materials (photos, descriptions) for service promotion purposes without changing authorship.",
+        "3": "3.3. It is prohibited to post:",
+        "prohibitedList": [
+          "false information",
+          "content violating KR laws",
+          "offensive materials",
+          "spam and fraudulent offers"
+        ]
+      },
+      "registration": {
+        "title": "4. Registration and account",
+        "1": "4.1. The user undertakes to provide accurate data during registration.",
+        "2": "4.2. It is prohibited to transfer access to the account to third parties.",
+        "3": "4.3. The Administration has the right to block the account upon detection of violations without prior notice."
+      },
+      "responsibility": {
+        "title": "5. Parties' responsibility",
+        "1": "5.1. The plan.kg platform is not a party to the transaction between the customer and the service provider.",
+        "2": "5.2. All agreements, payments and service quality are regulated directly between the parties.",
+        "3": "5.3. The Administration is not responsible for losses incurred as a result of service provision."
+      },
+      "paidServices": {
+        "title": "6. Paid services",
+        "1": "6.1. The Platform has the right to provide paid features: promotion, priority placement, additional profile capabilities.",
+        "2": "6.2. Cost and payment terms are published separately.",
+        "3": "6.3. Payment is not refundable after service activation."
+      },
+      "cookies": {
+        "title": "7. Cookies and analytics",
+        "1": "7.1. The Platform uses cookies to improve user experience.",
+        "2": "7.2. Collection of anonymized data is carried out for statistics and service optimization."
+      },
+      "changes": {
+        "title": "8. Terms change",
+        "1": "8.1. The Administration has the right to make changes to these Terms without prior notice.",
+        "2": "8.2. The current version is always posted on the plan.kg website."
+      },
+      "contact": {
+        "title": "9. Contact information",
+        "text": "For questions about data processing and Platform usage, you can contact the administration:",
+        "email": "service2aces@gmail.com",
+        "phone": "+996 500 691 995"
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of Use (extended legal edition)",
+    "sections": {
+      "legalStatus": {
+        "title": "1. Legal status of the Platform",
+        "1": "1.1. The plan.kg platform is exclusively an information and intermediary service providing the technical ability to post profiles and search for service providers.",
+        "2": "1.2. plan.kg is not an agent, contractor, employer, representative or guarantor of the quality of services provided by third parties.",
+        "3": "1.3. All obligations for service provision arise exclusively between the client and the provider."
+      },
+      "liabilityLimitation": {
+        "title": "2. Liability limitation",
+        "1": "2.1. The Platform Administration is not responsible for:",
+        "notResponsibleList": [
+          "quality, timing, result and safety of services provided",
+          "financial losses, lost profits, moral damage",
+          "dishonest actions of providers",
+          "cases of fraud, misleading or deception",
+          "violation of agreements between parties"
+        ],
+        "2": "2.2. The user understands and accepts that any transactions are made at their own risk.",
+        "3": "2.3. plan.kg does not participate in the process of negotiations, settlements and fulfillment of obligations between parties."
+      },
+      "userResponsibility": {
+        "title": "3. User responsibility",
+        "1": "3.1. The service provider bears full legal responsibility for the accuracy of information in their profile.",
+        "2": "3.2. The client is obliged to independently check the reputation and reliability of the selected contractor."
+      },
+      "security": {
+        "title": "4. Security and fraud",
+        "1": "4.1. The Administration has the right to delete profiles upon suspicion of fraudulent actions.",
+        "2": "4.2. However, deletion or moderation does not guarantee interaction safety.",
+        "3": "4.3. The user agrees that using the Platform does not exclude risks."
+      },
+      "jurisdiction": {
+        "title": "5. Jurisdiction",
+        "1": "5.1. All disputes are regulated by the legislation of the Kyrgyz Republic.",
+        "2": "5.2. Dispute resolution is carried out at the place of registration of the Platform owner."
+      }
+    },
+    "lastUpdate": "Last update date: __________"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions and Provider Guide",
+    "questions": [
+      {
+        "question": "Who are the providers on the plan.kg platform?",
+        "answer": "Providers are specialists and companies providing services for events: artists, hosts, decorators, catering, photographers, chefs and others."
+      },
+      {
+        "question": "How to register on the platform?",
+        "answer": "You need to go through registration, fill out the provider profile, provide accurate information about services and confirm contact details."
+      },
+      {
+        "question": "What data needs to be filled in?",
+        "answer": "Name or company name, phone number, service description, city, category, portfolio examples, prices and work schedule."
+      },
+      {
+        "question": "Is registration paid?",
+        "answer": "Registration can be free or paid depending on the selected tariff and cooperation terms."
+      },
+      {
+        "question": "How to increase the number of orders?",
+        "answer": "It is recommended to fill out the profile in detail, upload high-quality photos, respond quickly to inquiries and keep information up to date."
+      },
+      {
+        "question": "Can I edit the profile?",
+        "answer": "Yes, the provider can change data in their profile at any time through the personal account."
+      },
+      {
+        "question": "Does plan.kg bear responsibility for orders?",
+        "answer": "The platform is not a party to the transaction and does not bear responsibility for the quality, timing and result of services provided by the provider."
+      },
+      {
+        "question": "What is prohibited on the platform?",
+        "answer": "Posting false information, fraud, misleading clients and using other people's materials without permission."
+      },
+      {
+        "question": "How does interaction with the client happen?",
+        "answer": "The client contacts the provider directly through the specified contact details."
+      },
+      {
+        "question": "What to do in case of disputes?",
+        "answer": "All disputes are resolved directly between the client and the provider without platform participation."
+      }
+    ],
+    "responsibilities": {
+      "title": "Provider Responsibilities",
+      "list": [
+        "Provide accurate information",
+        "Provide services according to agreements",
+        "Maintain business ethics",
+        "Do not mislead clients"
+      ]
+    },
+    "advantages": {
+      "title": "Advantages of placing on plan.kg",
+      "list": [
+        "Additional client flow",
+        "Online presence",
+        "Simplified search for customers",
+        "Service promotion in one place"
+      ]
+    }
   }
 }

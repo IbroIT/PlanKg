@@ -15,6 +15,9 @@ import ServiceSubmitted from './pages/ServiceSubmitted';
 import Favorites from './pages/Favorites';
 import Reviews from './pages/Reviews';
 import UserProfile from './pages/UserProfile';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
+import FAQ from './pages/FAQ';
 import './App.css';
 
 function App() {
@@ -38,6 +41,9 @@ function App() {
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/reviews/all" element={<Reviews />} />
             <Route path="/users/:id" element={<UserProfile />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfUse />} />
+            <Route path="/faq" element={<FAQ />} />
           </Routes>
         </main>
         <Footer />
