@@ -6,65 +6,65 @@ import { servicesAPI } from '../api/services';
 
 // Category-specific fields mapping (using slugs as keys)
 const CATEGORY_FIELDS = {
-  'photographers': [
+  'category-1': [
     'shooting_hour_price', 'full_day_price', 'love_story_price', 'portfolio_photos_count',
     'shooting_style', 'delivery_time_days', 'experience_years', 'second_operator',
     'drone_available', 'video_format', 'sound_recording', 'montage_included'
   ],
-  'videographers': [
+  'category-2': [
     'shooting_hour_price', 'full_day_price', 'love_story_price', 'portfolio_photos_count',
     'shooting_style', 'delivery_time_days', 'experience_years', 'second_operator',
     'drone_available', 'video_format', 'sound_recording', 'montage_included'
   ],
-  'hosts-toastmasters': [
+  'category-3': [
     'video_presentation', 'languages', 'dress_code', 'experience_years',
     'time_limit'
   ],
-  'venues-restaurants-halls': [
+  'category-4': [
     'capacity', 'stage_available', 'sound_available', 'parking_available',
     'projector_available', 'decor_available', 'menu_available', 'working_hours'
   ],
-  'florists-decorators': [
+  'category-5': [
     'minimum_order', 'services_offered', 'wedding_decor_price',
     'custom_calculation'
   ],
-  'catering': [
+  'category-6': [
     'cuisine_type', 'service_type', 'minimum_order', 'delivery_included',
     'staff_included'
   ],
-  'musicians-djs-bands': [
+  'category-7': [
     'performance_video', 'equipment_provided', 'repertoire', 'performance_type',
     'music_genre'
   ],
-  'artists-show-programs': [
+  'category-8': [
     'show_type', 'performance_video', 'stage_requirements', 'character_type',
     'show_duration', 'props_included', 'experience_years'
   ],
-  'event-organizers-agencies': [
+  'category-9': [
     'experience_years', 'services_offered'
   ],
-  'transportation': [
+  'category-10': [
     'vehicle_type', 'vehicle_capacity', 'driver_included', 'decoration_available'
   ],
-  'stylists-makeup-hairdressers': [
+  'category-11': [
     'service_duration', 'home_visit'
   ],
-  'bakeries-cakes-desserts': [
+  'category-12': [
     'cake_weight_kg', 'flavors_available', 'advance_order_days'
   ],
-  'photo-zones-equipment-props': [
+  'category-13': [
     'equipment_type', 'rental_duration', 'rental_price'
   ],
-  'waiters-event-staff': [
+  'category-14': [
     'staff_count', 'uniform_provided'
   ],
-  'security': [
+  'category-15': [
     'license_number', 'guard_count'
   ],
-  'animators-children-events': [
+  'category-16': [
     'character_type', 'show_duration', 'props_included'
   ],
-  'lighting-sound-stage': [
+  'category-17': [
     'lighting_type', 'sound_system', 'stage_setup'
   ]
 };

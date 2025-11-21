@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import '../ServiceDetail.adaptive.css';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { servicesAPI } from '../api/services';
@@ -297,7 +298,7 @@ export default function ServiceDetail() {
                 </div>
 
                 {service.avatar && (
-                  <div className="w-64 h-64 rounded-lg overflow-hidden shadow-lg flex-shrink-0">
+                  <div className="w-64 h-64 rounded-lg overflow-hidden shadow-lg shrink-0">
                     <img
                       src={service.avatar}
                       alt={service.title}
@@ -1855,7 +1856,7 @@ export default function ServiceDetail() {
                           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                           loading="lazy"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
                           <div className="backdrop-blur-sm bg-white/20 rounded-full p-3">
                             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
@@ -1880,14 +1881,14 @@ export default function ServiceDetail() {
                           <source src={video} type="video/mp4" />
                           {t('service.videoNotSupported')}
                         </video>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center pointer-events-none">
+                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center pointer-events-none">
                           <div className="backdrop-blur-sm bg-white/20 rounded-full p-4">
                             <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z"/>
                             </svg>
                           </div>
                         </div>
-                        <div className="absolute top-2 right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                        <div className="absolute top-2 right-2 bg-linear-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                           <FaVideo className="w-3 h-3 inline mr-1" />
                           {t('service.video')}
                         </div>

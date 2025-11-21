@@ -109,6 +109,7 @@ export default function Services() {
       console.log('Fetching services with params:', params);
       const data = await servicesAPI.getServices(params);
       console.log('Services data received:', data);
+      console.log('Services results:', data.results || data);
       setServices(data.results || data || []);
     } catch (error) {
       console.error('Error fetching services:', error);
