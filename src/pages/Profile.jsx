@@ -19,41 +19,35 @@ export default function Profile() {
 
 
 
-  // City translation keys
-  const cityKeys = {
-    'Бишкек': 'bishkek',
-    'Ош': 'osh',
-    'Токмок': 'tokmok',
-    'Кант': 'kant',
-    'Кара-Балта': 'karaBalta',
-    'Шопоков': 'shopokov',
-    'Каинды': 'kaindy',
-    'Кара-Суу': 'karaSuu',
-    'Ноокат': 'nookat',
-    'Узген (Өзгөн)': 'uzgen',
-    'Манас': 'manas',
-    'Кара-Куль': 'karaKul',
-    'Майлуу-Суу': 'mailuuSuu',
-    'Таш-Кумыр': 'tashKumyr',
-    'Кербен (Ала-Бука)': 'kerben',
-    'Каракол': 'karakol',
-    'Балыкчы': 'balykchy',
-    'Чолпон-Ата': 'cholponAta',
-    'Нарын': 'naryn',
-    'Кочкор': 'kochkor',
-    'Ат-Башы': 'atBashi',
-    'Талас': 'talas',
-    'Кызыл-Адыр': 'kyzylAdyr',
-    'Баткен': 'batken',
-    'Кызыл-Кыя': 'kyzylKiya',
-    'Сулюкта': 'sulukta'
-  };
-
   // City options for select
-  const cityOptions = Object.keys(cityKeys).map(city => ({
-    value: city,
-    label: t(`cities.${cityKeys[city]}`)
-  }));
+  const cityOptions = [
+    { value: 'bishkek', label: t('cities.bishkek') },
+    { value: 'osh', label: t('cities.osh') },
+    { value: 'tokmok', label: t('cities.tokmok') },
+    { value: 'kant', label: t('cities.kant') },
+    { value: 'karaBalta', label: t('cities.karaBalta') },
+    { value: 'shopokov', label: t('cities.shopokov') },
+    { value: 'kaindy', label: t('cities.kaindy') },
+    { value: 'karaSuu', label: t('cities.karaSuu') },
+    { value: 'nookat', label: t('cities.nookat') },
+    { value: 'uzgen', label: t('cities.uzgen') },
+    { value: 'manas', label: t('cities.manas') },
+    { value: 'karaKul', label: t('cities.karaKul') },
+    { value: 'mailuuSuu', label: t('cities.mailuuSuu') },
+    { value: 'tashKumyr', label: t('cities.tashKumyr') },
+    { value: 'kerben', label: t('cities.kerben') },
+    { value: 'karakol', label: t('cities.karakol') },
+    { value: 'balykchy', label: t('cities.balykchy') },
+    { value: 'cholponAta', label: t('cities.cholponAta') },
+    { value: 'naryn', label: t('cities.naryn') },
+    { value: 'kochkor', label: t('cities.kochkor') },
+    { value: 'atBashi', label: t('cities.atBashi') },
+    { value: 'talas', label: t('cities.talas') },
+    { value: 'kyzylAdyr', label: t('cities.kyzylAdyr') },
+    { value: 'batken', label: t('cities.batken') },
+    { value: 'kyzylKiya', label: t('cities.kyzylKiya') },
+    { value: 'sulukta', label: t('cities.sulukta') }
+  ];
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -365,7 +359,7 @@ export default function Profile() {
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-gray-200">
                       <span className="text-gray-600">{t('auth.city')}</span>
-                      <span className="font-semibold text-[#1E2A3A]">{user?.city ? t(`cities.${cityKeys[user?.city]}`) : '—'}</span>
+                      <span className="font-semibold text-[#1E2A3A]">{user?.city ? t(`cities.${user?.city}`) : '—'}</span>
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-gray-200">
                       <span className="text-gray-600">{t('service.rating')}</span>

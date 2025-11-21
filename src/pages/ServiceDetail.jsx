@@ -51,37 +51,8 @@ export default function ServiceDetail() {
   const [showContactFeedback, setShowContactFeedback] = useState(false);
 
   // City translation mapping
-  const cityKeys = {
-    'Бишкек': 'bishkek',
-    'Ош': 'osh',
-    'Токмок': 'tokmok',
-    'Кант': 'kant',
-    'Кара-Балта': 'karaBalta',
-    'Шопоков': 'shopokov',
-    'Каинды': 'kaindy',
-    'Кара-Суу': 'karaSuu',
-    'Ноокат': 'nookat',
-    'Узген (Өзгөн)': 'uzgen',
-    'Манас': 'manas',
-    'Кара-Куль': 'karaKul',
-    'Майлуу-Суу': 'mailuuSuu',
-    'Таш-Кумыр': 'tashKumyr',
-    'Кербен (Ала-Бука)': 'kerben',
-    'Каракол': 'karakol',
-    'Балыкчы': 'balykchy',
-    'Чолпон-Ата': 'cholponAta',
-    'Нарын': 'naryn',
-    'Кочкор': 'kochkor',
-    'Ат-Башы': 'atBashi',
-    'Талас': 'talas',
-    'Кызыл-Адыр': 'kyzylAdyr',
-    'Баткен': 'batken',
-    'Кызыл-Кыя': 'kyzylKiya',
-    'Сулюкта': 'sulukta'
-  };
-
   const translateCity = (city) => {
-    return t(`cities.${cityKeys[city] || 'bishkek'}`);
+    return t(`cities.${city || 'bishkek'}`);
   };
 
   const nextImage = useCallback(() => {
@@ -279,11 +250,6 @@ export default function ServiceDetail() {
                       </div>
                     )}
                     <div className="flex items-center text-gray-500">
-                      <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      {service.reviews_count || 0} {t('service.reviews')}
                     </div>
                   </div>
 
@@ -586,6 +552,30 @@ export default function ServiceDetail() {
                 </div>
               )}
 
+              {/* Edit Button for Owner */}
+              {(() => {
+                const currentUser = JSON.parse(localStorage.getItem('user'));
+                const isOwner = currentUser && service.user && currentUser.id === service.user.id;
+                const canEdit = service.status === 'pending' || service.status === 'approved';
+
+                if (isOwner && canEdit) {
+                  return (
+                    <div className="mb-4">
+                      <Link
+                        to={`/edit-service/${service.id}`}
+                        className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl"
+                      >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        {t('service.edit', 'Редактировать')}
+                      </Link>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
               {/* Provider Info */}
               {service.user && (
                 <div className="border-t border-gray-200 pt-6">
@@ -721,7 +711,7 @@ export default function ServiceDetail() {
                   <div className="grid grid-cols-1 gap-3">
                     {/* Images */}
                     {activeTab === 'photos' && service.images && service.images.map((image, index) => (
-                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square">
+                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square" onClick={() => openImageModal(index)}>
                         <img
                           src={image}
                           alt={`${service.title} ${index + 1}`}

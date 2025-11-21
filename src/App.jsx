@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import AddService from './pages/AddService';
+import EditService from './pages/EditService';
 import ServiceSubmitted from './pages/ServiceSubmitted';
 import Favorites from './pages/Favorites';
 import Reviews from './pages/Reviews';
@@ -36,6 +37,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/add-service" element={<AddService />} />
+            <Route path="/edit-service/:id" element={<EditService />} />
             <Route path="/service-submitted" element={<ServiceSubmitted />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/reviews" element={<Reviews />} />

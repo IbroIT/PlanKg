@@ -306,6 +306,7 @@
     "subtitle": "Add a new service and start receiving orders",
     "step": "Step",
     "serviceInfo": "Service Information",
+    "media": "Media",
     "editTitle": "Edit Service",
     "serviceName": "Service Name",
     "serviceNamePlaceholder": "For example: Wedding photography",
@@ -407,6 +408,7 @@
       }
     },
     "additionalInfo": "Additional information",
+    "image": "Image",
     "video": "Video",
     "contactInfo": "Contact information",
     "uploadVideo": "Upload video",

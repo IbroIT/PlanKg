@@ -12,35 +12,6 @@ export default function ServiceCard({ service, onFavoriteChange }) {
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
   // Маппинг городов на translation keys
-  const cityKeys = {
-    'Бишкек': 'bishkek',
-    'Ош': 'osh',
-    'Токмок': 'tokmok',
-    'Кант': 'kant',
-    'Кара-Балта': 'karaBalta',
-    'Шопоков': 'shopokov',
-    'Каинды': 'kaindy',
-    'Кара-Суу': 'karaSuu',
-    'Ноокат': 'nookat',
-    'Узген (Өзгөн)': 'uzgen',
-    'Манас': 'manas',
-    'Кара-Куль': 'karaKul',
-    'Майлуу-Суу': 'mailuuSuu',
-    'Таш-Кумыр': 'tashKumyr',
-    'Кербен (Ала-Бука)': 'kerben',
-    'Каракол': 'karakol',
-    'Балыкчы': 'balykchy',
-    'Чолпон-Ата': 'cholponAta',
-    'Нарын': 'naryn',
-    'Кочкор': 'kochkor',
-    'Ат-Башы': 'atBashi',
-    'Талас': 'talas',
-    'Кызыл-Адыр': 'kyzylAdyr',
-    'Баткен': 'batken',
-    'Кызыл-Кыя': 'kyzylKiya',
-    'Сулюкта': 'sulukta'
-  };
-
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -159,7 +130,7 @@ export default function ServiceCard({ service, onFavoriteChange }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          {t(`cities.${cityKeys[service.city] || 'bishkek'}`)}
+          {t(`cities.${service.city || 'bishkek'}`)}
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-200 gap-3">

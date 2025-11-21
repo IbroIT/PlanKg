@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isAuthenticated } from '../api/auth';
 import { servicesAPI } from '../api/services';
 
@@ -167,11 +167,13 @@ const FIELD_CONFIG = {
   stage_setup: { label: 'addService.fields.stage_setup', type: 'boolean' }
 };
 
-export default function AddService() {
+export default function EditService() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { id } = useParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
   const [currentLang, setCurrentLang] = useState('ru');
   const [user, setUser] = useState(null);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
@@ -180,18 +182,64 @@ export default function AddService() {
       ru: { 
         title: '', 
         description: '',
+        additional_services: '',
+        languages: '',
+        dress_code: '',
+        working_hours: '',
+        services_offered: '',
+        cuisine_type: '',
+        music_genre: '',
+        repertoire: '',
+        show_type: '',
+        stage_requirements: '',
+        character_type: '',
+        vehicle_type: '',
+        equipment_type: '',
+        rental_duration: '',
+        license_number: '',
       },
       en: { 
         title: '', 
         description: '',
+        additional_services: '',
+        languages: '',
+        dress_code: '',
+        working_hours: '',
+        services_offered: '',
+        cuisine_type: '',
+        music_genre: '',
+        repertoire: '',
+        show_type: '',
+        stage_requirements: '',
+        character_type: '',
+        vehicle_type: '',
+        equipment_type: '',
+        rental_duration: '',
+        license_number: '',
       },
       kg: { 
         title: '', 
         description: '',
+        additional_services: '',
+        languages: '',
+        dress_code: '',
+        working_hours: '',
+        services_offered: '',
+        cuisine_type: '',
+        music_genre: '',
+        repertoire: '',
+        show_type: '',
+        stage_requirements: '',
+        character_type: '',
+        vehicle_type: '',
+        equipment_type: '',
+        rental_duration: '',
+        license_number: '',
       },
     },
     category_id: '',
     avatar: null,
+    avatar_url: null,
     price: '',
     price_type: 'fixed',
     city: '',
@@ -212,8 +260,15 @@ export default function AddService() {
     image3: null,
     image4: null,
     image5: null,
+    image1_url: null,
+    image2_url: null,
+    image3_url: null,
+    image4_url: null,
+    image5_url: null,
     video1: null,
     video2: null,
+    video1_url: null,
+    video2_url: null,
     // Category-specific fields
     shooting_hour_price: '',
     full_day_price: '',
@@ -274,15 +329,14 @@ export default function AddService() {
     lighting_type: '',
     sound_system: '',
     stage_setup: false
-  });
-
-  useEffect(() => {
+  });  useEffect(() => {
     if (!isAuthenticated()) {
       navigate('/login');
       return;
     }
     fetchCategories();
     fetchUserData();
+    fetchServiceData();
   }, [i18n.language]);
 
   const fetchUserData = async () => {
@@ -290,15 +344,6 @@ export default function AddService() {
       const userData = JSON.parse(localStorage.getItem('user'));
       if (userData) {
         setUser(userData);
-        setFormData(prev => ({
-          ...prev,
-          city: userData.city || '',
-          phone: userData.phone || '',
-          email: userData.email || '',
-          instagram: userData.instagram || '',
-          whatsapp: userData.whatsapp || '',
-          telegram: userData.telegram || ''
-        }));
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -309,11 +354,172 @@ export default function AddService() {
     try {
       const data = await servicesAPI.getCategories(i18n.language);
       const allData = Array.isArray(data) ? data : (data.results || []);
-      // Show all categories, not just subcategories
       setCategories(allData);
     } catch (error) {
       console.error('Error fetching categories:', error);
       setCategories([]);
+    }
+  };
+
+  const fetchServiceData = async () => {
+    try {
+      setFetchLoading(true);
+      const serviceData = await servicesAPI.getServiceDetail(id, i18n.language);
+      console.log('Fetched service data:', serviceData);
+
+      // Check if user owns this service
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      if (!currentUser || serviceData.user.id !== currentUser.id) {
+        alert('У вас нет прав на редактирование этой услуги');
+        navigate('/profile');
+        return;
+      }
+
+      // Translatable fields that should be in translations
+      const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
+                                 'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
+                                 'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
+                                 'equipment_type', 'rental_duration', 'license_number'];
+
+      // Initialize translations with existing data or defaults
+      const translations = serviceData.translations || {
+        ru: { title: '', description: '' },
+        en: { title: '', description: '' },
+        kg: { title: '', description: '' },
+      };
+
+      console.log('Original translations from API:', serviceData.translations);
+      console.log('Processed translations:', translations);
+
+      // Ensure all languages have basic structure and translatable fields
+      ['ru', 'en', 'kg'].forEach(lang => {
+        if (!translations[lang]) {
+          translations[lang] = { title: '', description: '' };
+        }
+        // Copy title and description if they exist
+        if (serviceData.title && lang === 'ru') translations[lang].title = serviceData.title;
+        if (serviceData.description && lang === 'ru') translations[lang].description = serviceData.description;
+        
+        // For translatable fields, put the direct field value into the current language
+        // Since API returns them directly, we'll assume they're in the default language (ru)
+        if (lang === 'ru') {
+          translatableFields.forEach(field => {
+            if (serviceData[field] !== null && serviceData[field] !== undefined) {
+              translations[lang][field] = serviceData[field];
+            }
+          });
+        } else {
+          // For other languages, copy from ru if not set
+          translatableFields.forEach(field => {
+            if (!translations[lang][field] && translations.ru[field]) {
+              translations[lang][field] = translations.ru[field];
+            }
+          });
+        }
+      });
+
+      // Populate form data
+      setFormData({
+        translations: translations,
+        category_id: serviceData.category?.id || '',
+        avatar: null, // Files can't be pre-populated, but we'll show existing avatar
+        avatar_url: serviceData.avatar, // Store existing avatar URL for preview
+        price: serviceData.price || '',
+        price_type: serviceData.price_type || 'fixed',
+        city: serviceData.city || '',
+        phone: serviceData.phone || '',
+        email: serviceData.email || '',
+        instagram: serviceData.instagram || '',
+        whatsapp: serviceData.whatsapp || '',
+        telegram: serviceData.telegram || '',
+        capacity: serviceData.capacity || '',
+        average_check: serviceData.average_check || '',
+        event_duration: serviceData.event_duration || '',
+        additional_services: serviceData.additional_services || '', // Keep for backward compatibility
+        experience_years: serviceData.experience_years || '',
+        hourly_rate: serviceData.hourly_rate || '',
+        gender: serviceData.gender || 'any',
+        image1: null,
+        image2: null,
+        image3: null,
+        image4: null,
+        image5: null,
+        image1_url: serviceData.images?.[0] || null, // Store existing image URLs for preview
+        image2_url: serviceData.images?.[1] || null,
+        image3_url: serviceData.images?.[2] || null,
+        image4_url: serviceData.images?.[3] || null,
+        image5_url: serviceData.images?.[4] || null,
+        video1: null,
+        video2: null,
+        video1_url: serviceData.videos?.[0] || null, // Store existing video URLs for preview
+        video2_url: serviceData.videos?.[1] || null,
+        // Category-specific fields
+        shooting_hour_price: serviceData.shooting_hour_price || '',
+        full_day_price: serviceData.full_day_price || '',
+        love_story_price: serviceData.love_story_price || '',
+        portfolio_photos_count: serviceData.portfolio_photos_count || '',
+        delivery_time_days: serviceData.delivery_time_days || '',
+        shooting_style: serviceData.shooting_style || '',
+        second_operator: serviceData.second_operator || false,
+        drone_available: serviceData.drone_available || false,
+        video_format: serviceData.video_format || 'hd',
+        sound_recording: serviceData.sound_recording || false,
+        montage_included: serviceData.montage_included || false,
+        video_presentation: serviceData.video_presentation || '',
+        languages: serviceData.languages || '', // Keep for backward compatibility
+        dress_code: serviceData.dress_code || '',
+        time_limit: serviceData.time_limit || '',
+        stage_available: serviceData.stage_available || false,
+        sound_available: serviceData.sound_available || false,
+        parking_available: serviceData.parking_available || false,
+        projector_available: serviceData.projector_available || false,
+        decor_available: serviceData.decor_available || false,
+        menu_available: serviceData.menu_available || false,
+        working_hours: serviceData.working_hours || '',
+        services_offered: serviceData.services_offered || '',
+        wedding_decor_price: serviceData.wedding_decor_price || '',
+        custom_calculation: serviceData.custom_calculation || false,
+        cuisine_type: serviceData.cuisine_type || '',
+        service_type: serviceData.service_type || 'buffet',
+        minimum_order: serviceData.minimum_order || '',
+        delivery_included: serviceData.delivery_included || false,
+        staff_included: serviceData.staff_included || false,
+        music_genre: serviceData.music_genre || '',
+        equipment_provided: serviceData.equipment_provided || false,
+        repertoire: serviceData.repertoire || '',
+        performance_type: serviceData.performance_type || 'live',
+        show_type: serviceData.show_type || '',
+        performance_video: serviceData.performance_video || '',
+        stage_requirements: serviceData.stage_requirements || '',
+        character_type: serviceData.character_type || '',
+        show_duration: serviceData.show_duration || '',
+        props_included: serviceData.props_included || false,
+        vehicle_type: serviceData.vehicle_type || '',
+        vehicle_capacity: serviceData.vehicle_capacity || '',
+        driver_included: serviceData.driver_included || false,
+        decoration_available: serviceData.decoration_available || false,
+        service_duration: serviceData.service_duration || '',
+        home_visit: serviceData.home_visit || false,
+        cake_weight_kg: serviceData.cake_weight_kg || '',
+        flavors_available: serviceData.flavors_available || '',
+        advance_order_days: serviceData.advance_order_days || '',
+        equipment_type: serviceData.equipment_type || '',
+        rental_duration: serviceData.rental_duration || '',
+        rental_price: serviceData.rental_price || '',
+        staff_count: serviceData.staff_count || '',
+        uniform_provided: serviceData.uniform_provided || false,
+        license_number: serviceData.license_number || '',
+        guard_count: serviceData.guard_count || '',
+        lighting_type: serviceData.lighting_type || '',
+        sound_system: serviceData.sound_system || '',
+        stage_setup: serviceData.stage_setup || false
+      });
+    } catch (error) {
+      console.error('Error fetching service data:', error);
+      alert('Ошибка при загрузке данных услуги');
+      navigate('/profile');
+    } finally {
+      setFetchLoading(false);
     }
   };
 
@@ -332,12 +538,12 @@ export default function AddService() {
 
   const getCategoryFields = () => {
     if (!formData.category_id || !categories.length) return [];
-    
+
     const selectedCategory = categories.find(cat => cat.id.toString() === formData.category_id.toString());
     if (!selectedCategory) return [];
-    
+
     let fields = CATEGORY_FIELDS[selectedCategory.slug] || [];
-    
+
     // If price type is negotiable, filter out price-related fields
     if (formData.price_type === 'negotiable') {
       fields = fields.filter(field => {
@@ -345,29 +551,30 @@ export default function AddService() {
         return !field.includes('price') || field === 'price_type';
       });
     }
-    
+
     return fields;
   };
 
   const handleInputChange = (field, value) => {
     // Check if this is a translatable text field
-    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
-                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
-                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours',
+                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire',
+                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type',
                                'equipment_type', 'rental_duration', 'license_number'];
     const isTranslatableText = translatableFields.includes(field);
-    
+
     if (isTranslatableText) {
-      setFormData({
-        ...formData,
+      setFormData(prev => ({
+        ...prev,
         translations: {
-          ...formData.translations,
+          ...prev.translations,
           [currentLang]: {
-            ...formData.translations[currentLang],
+            ...prev.translations[currentLang],
             [field]: value,
           },
         },
-      });
+        [field]: value, // Keep for backward compatibility
+      }));
     } else {
       setFormData({ ...formData, [field]: value });
     }
@@ -378,25 +585,23 @@ export default function AddService() {
     if (!config) return null;
 
     // For translatable text fields, use translations
-    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
-                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
-                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours',
+                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire',
+                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type',
                                'equipment_type', 'rental_duration', 'license_number'];
-    const isTranslatableText = (config.type === 'text' || config.type === 'textarea') && 
+    const isTranslatableText = (config.type === 'text' || config.type === 'textarea') &&
       translatableFields.includes(fieldName);
-    
+
     const value = isTranslatableText ? 
-      (formData.translations[currentLang]?.[fieldName] || '') : 
-      formData[fieldName];
-    
-    const fieldId = `field-${fieldName}`;
+      (formData.translations?.[currentLang]?.[fieldName] || formData[fieldName] || '') : 
+      formData[fieldName];    const fieldId = `field-${fieldName}`;
 
     return (
       <div key={fieldName} className="mb-4">
         <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
           {t(config.label)}
         </label>
-        
+
         {config.type === 'boolean' ? (
           <label className="flex items-center space-x-3 cursor-pointer">
             <input
@@ -416,8 +621,8 @@ export default function AddService() {
             <option value="">{t('common.select')}</option>
             {config.options.map(option => (
               <option key={option} value={option}>
-                {option === 'hd' ? 'HD' : 
-                 option === '4k' ? '4K' : 
+                {option === 'hd' ? 'HD' :
+                 option === '4k' ? '4K' :
                  option === 'full_hd' ? 'Full HD' :
                  option === 'buffet' ? t('addService.fields.options.buffet') :
                  option === 'banquet' ? t('addService.fields.options.banquet') :
@@ -471,20 +676,14 @@ export default function AddService() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate that at least Russian is filled
     if (!formData.translations.ru.title.trim() || !formData.translations.ru.description.trim()) {
       alert('Пожалуйста, заполните название и описание услуги на русском языке.');
       setCurrentLang('ru');
       return;
     }
-    
-    // Check if Russian is filled and current language is Russian - show modal
-    if (currentLang === 'ru' && formData.translations.ru.title.trim() && formData.translations.ru.description.trim()) {
-      setShowLanguageModal(true);
-      return;
-    }
-    
+
     // If user chose to fill other languages, validate they are filled
     if (currentLang === 'en' && (!formData.translations.en.title.trim() || !formData.translations.en.description.trim())) {
       alert('Пожалуйста, заполните название и описание услуги на английском языке.');
@@ -494,42 +693,14 @@ export default function AddService() {
       alert('Пожалуйста, заполните название и описание услуги на кыргызском языке.');
       return;
     }
-    
-    // If user didn't go through modal (direct submit), copy Russian to other languages
-    setFormData(prev => {
-      const updatedTranslations = { ...prev.translations };
-      
-      // Ensure all languages have translations object
-      if (!updatedTranslations.en) updatedTranslations.en = {};
-      if (!updatedTranslations.kg) updatedTranslations.kg = {};
-      
-      // Copy missing title and description from Russian
-      if (!updatedTranslations.en.title?.trim()) {
-        updatedTranslations.en.title = updatedTranslations.ru.title || '';
-      }
-      if (!updatedTranslations.en.description?.trim()) {
-        updatedTranslations.en.description = updatedTranslations.ru.description || '';
-      }
-      if (!updatedTranslations.kg.title?.trim()) {
-        updatedTranslations.kg.title = updatedTranslations.ru.title || '';
-      }
-      if (!updatedTranslations.kg.description?.trim()) {
-        updatedTranslations.kg.description = updatedTranslations.ru.description || '';
-      }
-      
-      return {
-        ...prev,
-        translations: updatedTranslations
-      };
-    });
-    
-    await submitService();
+
+    await updateService();
   };
 
-  const submitService = async () => {
+  const updateService = async () => {
     setLoading(true);
 
-    const submitData = {
+    const updateData = {
       translations: formData.translations,
       category_id: formData.category_id,
       price_type: formData.price_type,
@@ -550,57 +721,49 @@ export default function AddService() {
       video2: formData.video2,
     };
 
-    console.log('Submitting formData:', submitData);
-    console.log('Avatar in formData:', formData.avatar);
+    // Add category-specific fields
+    const categoryFields = getCategoryFields();
+    categoryFields.forEach(field => {
+      if (formData[field] !== null && formData[field] !== undefined && formData[field] !== '') {
+        updateData[field] = formData[field];
+      }
+    });
+
+    // Add common additional fields
+    const additionalFields = [
+      'capacity', 'average_check', 'event_duration', 'additional_services',
+      'experience_years', 'hourly_rate', 'gender'
+    ];
+    additionalFields.forEach(field => {
+      if (formData[field] !== null && formData[field] !== undefined && formData[field] !== '') {
+        updateData[field] = formData[field];
+      }
+    });
+
+    // Add translatable fields from translations (take from current language)
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
+                               'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
+                               'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
+                               'equipment_type', 'rental_duration', 'license_number'];
+    translatableFields.forEach(field => {
+      const value = formData.translations[currentLang]?.[field];
+      if (value !== null && value !== undefined && value !== '') {
+        updateData[field] = value;
+      }
+    });
+
+    console.log('Updating service with data:', updateData);
 
     try {
-      await servicesAPI.createService(submitData);
-      navigate('/service-submitted');
+      await servicesAPI.updateService(id, updateData);
+      alert('Услуга успешно обновлена и отправлена на модерацию!');
+      navigate('/profile');
     } catch (error) {
-      console.error('Error creating service:', error);
+      console.error('Error updating service:', error);
       alert(t('common.error'));
     } finally {
       setLoading(false);
     }
-  };
-
-  const handlePublishNow = () => {
-    // Copy Russian to other languages if not filled
-    setFormData(prev => {
-      const updatedTranslations = { ...prev.translations };
-      
-      // Ensure all languages have translations object
-      if (!updatedTranslations.en) updatedTranslations.en = {};
-      if (!updatedTranslations.kg) updatedTranslations.kg = {};
-      
-      // Copy missing title and description from Russian
-      if (!updatedTranslations.en.title?.trim()) {
-        updatedTranslations.en.title = updatedTranslations.ru.title || '';
-      }
-      if (!updatedTranslations.en.description?.trim()) {
-        updatedTranslations.en.description = updatedTranslations.ru.description || '';
-      }
-      if (!updatedTranslations.kg.title?.trim()) {
-        updatedTranslations.kg.title = updatedTranslations.ru.title || '';
-      }
-      if (!updatedTranslations.kg.description?.trim()) {
-        updatedTranslations.kg.description = updatedTranslations.ru.description || '';
-      }
-      
-      return {
-        ...prev,
-        translations: updatedTranslations
-      };
-    });
-    setShowLanguageModal(false);
-    // Need to wait for state update, so use setTimeout
-    setTimeout(() => submitService(), 0);
-  };
-
-  const handleFillLanguages = () => {
-    setShowLanguageModal(false);
-    // Switch to English tab
-    setCurrentLang('en');
   };
 
   const languageNames = {
@@ -613,7 +776,7 @@ export default function AddService() {
     const file = e.target.files[0];
     if (file) {
       setFormData({ ...formData, [field]: file });
-      
+
       // Preview image/video
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -634,6 +797,17 @@ export default function AddService() {
     }
   };
 
+  if (fetchLoading) {
+    return (
+      <div className="min-h-screen bg-[#E9EEF4] flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#F4B942]"></div>
+          <p className="mt-4 text-gray-600">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#E9EEF4] py-3 md:py-8">
       <div className="container mx-auto px-2 md:px-4">
@@ -642,9 +816,9 @@ export default function AddService() {
           <div className="bg-linear-to-r from-[#1E2A3A] to-[#2a3f54] rounded-2xl shadow-2xl p-3 md:p-8 mb-6 md:mb-8 text-white">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4">
               <div className="flex-1">
-                <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-2">{t('addService.title')}</h1>
+                <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-2">{t('editService.title', 'Редактировать услугу')}</h1>
                 <p className="text-gray-300 text-xs md:text-lg">
-                  {t('addService.subtitle', 'Добавьте новую услугу и начните получать заказы')}
+                  {t('editService.subtitle', 'Внесите изменения в вашу услугу')}
                 </p>
               </div>
             </div>
@@ -734,7 +908,7 @@ export default function AddService() {
                 <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                   {t('addService.serviceInfo')}
                 </h3>
-                
+
                 <div className="flex flex-wrap gap-1 md:gap-2 bg-[#E9EEF4] p-1 rounded-xl mb-4 md:mb-6">
                   {['ru', 'en', 'kg'].map((lang) => (
                     <button
@@ -742,8 +916,8 @@ export default function AddService() {
                       type="button"
                       onClick={() => setCurrentLang(lang)}
                       className={`flex-1 min-w-0 px-2 md:px-4 py-2 md:py-3 rounded-lg font-semibold transition-all text-xs md:text-sm ${
-                        currentLang === lang 
-                          ? 'bg-[#F4B942] text-[#1E2A3A] shadow-md' 
+                        currentLang === lang
+                          ? 'bg-[#F4B942] text-[#1E2A3A] shadow-md'
                           : 'text-gray-600 hover:text-[#1E2A3A]'
                       }`}
                     >
@@ -767,7 +941,7 @@ export default function AddService() {
                       required
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       {t('addService.serviceDescription')} *
@@ -791,8 +965,8 @@ export default function AddService() {
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label className={`relative flex items-center justify-center p-3 md:p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    formData.price_type === 'fixed' 
-                      ? 'border-[#F4B942] bg-[#F4B942]' 
+                    formData.price_type === 'fixed'
+                      ? 'border-[#F4B942] bg-[#F4B942]'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}>
                     <input
@@ -809,8 +983,8 @@ export default function AddService() {
                     </span>
                   </label>
                   <label className={`relative flex items-center justify-center p-3 md:p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    formData.price_type === 'negotiable' 
-                      ? 'border-[#F4B942] bg-[#F4B942]' 
+                    formData.price_type === 'negotiable'
+                      ? 'border-[#F4B942] bg-[#F4B942]'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}>
                     <input
@@ -925,7 +1099,7 @@ export default function AddService() {
                 <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-4 md:mb-6">
                   {t('addService.media')}
                 </h3>
-                
+
                 {/* Avatar */}
                 <div className="mb-4">
                   <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
@@ -937,7 +1111,16 @@ export default function AddService() {
                     onChange={(e) => handleFileChange(e, 'avatar')}
                     className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                   />
-                  <div id="avatar-preview" className="mt-2"></div>
+                  <div id="avatar-preview" className="mt-2">
+                    {formData.avatar_url && (
+                      <div className="relative inline-block">
+                        <img src={formData.avatar_url} alt="Current avatar" className="w-full h-32 object-cover rounded-xl" />
+                        <span className="absolute top-2 right-2 bg-[#F4B942] text-[#1E2A3A] text-xs px-2 py-1 rounded">
+                          {t('editService.currentImage', 'Текущее изображение')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Images */}
@@ -953,7 +1136,16 @@ export default function AddService() {
                         onChange={(e) => handleFileChange(e, `image${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
-                      <div id={`image${num}-preview`} className="mt-2"></div>
+                      <div id={`image${num}-preview`} className="mt-2">
+                        {formData[`image${num}_url`] && (
+                          <div className="relative inline-block">
+                            <img src={formData[`image${num}_url`]} alt={`Current image ${num}`} className="w-full h-32 object-cover rounded-xl" />
+                            <span className="absolute top-2 right-2 bg-[#F4B942] text-[#1E2A3A] text-xs px-2 py-1 rounded">
+                              {t('editService.currentImage', 'Текущее изображение')}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -971,7 +1163,16 @@ export default function AddService() {
                         onChange={(e) => handleFileChange(e, `video${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
-                      <div id={`video${num}-preview`} className="mt-2"></div>
+                      <div id={`video${num}-preview`} className="mt-2">
+                        {formData[`video${num}_url`] && (
+                          <div className="relative inline-block">
+                            <video src={formData[`video${num}_url`]} className="w-full h-32 object-cover rounded-xl" controls></video>
+                            <span className="absolute top-2 right-2 bg-[#F4B942] text-[#1E2A3A] text-xs px-2 py-1 rounded">
+                              {t('editService.currentVideo', 'Текущее видео')}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -992,9 +1193,9 @@ export default function AddService() {
                   ) : (
                     <>
                       <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
-                      {t('addService.submit')}
+                      {t('editService.update', 'Обновить услугу')}
                     </>
                   )}
                 </button>
@@ -1020,58 +1221,6 @@ export default function AddService() {
           </div>
         </div>
       </div>
-
-      {/* Language Modal */}
-      {showLanguageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-xl z-50 flex items-center justify-center p-3 md:p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8">
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-[#F4B942] rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                </svg>
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-[#1E2A3A] mb-2">
-                Расширить аудиторию?
-              </h3>
-              <p className="text-gray-600 text-sm md:text-base">
-                Хотите заполнить услугу на английском и кыргызском языках? Это поможет привлечь больше клиентов из разных стран.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <button
-                onClick={handleFillLanguages}
-                className="w-full bg-[#F4B942] text-[#1E2A3A] py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center text-sm md:text-base"
-              >
-                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Заполнить на других языках
-              </button>
-
-              <button
-                onClick={handlePublishNow}
-                className="w-full bg-white border-2 border-[#1E2A3A] text-[#1E2A3A] py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold hover:bg-[#1E2A3A] hover:text-white transition-all duration-300 flex items-center justify-center text-sm md:text-base"
-              >
-                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Опубликовать сейчас
-              </button>
-            </div>
-
-            <button
-              onClick={() => setShowLanguageModal(false)}
-              className="absolute top-3 md:top-4 right-3 md:right-4 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
