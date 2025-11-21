@@ -277,7 +277,7 @@ const CategoryCard = ({ category, index }) => {
     >
       <Link
         to={`/services?category=${category.id}`}
-        className="group relative block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-[#F4B942] transform hover:-translate-y-2 h-64"
+        className="group relative block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-[#F4B942] transform hover:-translate-y-2 h-56 md:h-64"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -286,12 +286,12 @@ const CategoryCard = ({ category, index }) => {
           <div className="absolute inset-0 bg-linear-to-br from-[#F4B942]/5 to-transparent rounded-2xl"></div>
         )}
 
-        <div className="relative p-8 text-center">
+        <div className="relative p-6 md:p-8 text-center">
           {/* Icon container */}
-          <div className="relative inline-block mb-6">
+          <div className="relative inline-block mb-4 md:mb-6">
             <div className="absolute inset-0 bg-[#F4B942] rounded-2xl opacity-0 group-hover:opacity-20 blur-md transition-all duration-500 group-hover:scale-110"></div>
             
-            <div className="relative bg-white rounded-2xl p-5 group-hover:bg-[#F4B942] transition-all duration-500 shadow-sm border border-gray-100 group-hover:border-transparent group-hover:shadow-md">
+            <div className="relative bg-white rounded-2xl p-4 md:p-5 group-hover:bg-[#F4B942] transition-all duration-500 shadow-sm border border-gray-100 group-hover:border-transparent group-hover:shadow-md">
               <div className="text-[#1E2A3A] group-hover:text-white transition-colors duration-500">
                 <AnimatedCategoryIcon category={category} />
               </div>
@@ -299,20 +299,20 @@ const CategoryCard = ({ category, index }) => {
           </div>
 
           <div className="relative">
-            <h3 className="text-xl font-semibold text-[#1E2A3A] group-hover:text-[#1E2A3A] transition-all duration-500 mb-3">
+            <h3 className="text-lg md:text-xl font-semibold text-[#1E2A3A] group-hover:text-[#1E2A3A] transition-all duration-500 mb-2 md:mb-3">
               {category.name}
             </h3>
 
             {category.description && (
-              <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-2 group-hover:text-gray-700 transition-all duration-500">
+              <p className="text-gray-600 text-xs md:text-sm leading-relaxed mb-4 md:mb-6 line-clamp-2 group-hover:text-gray-700 transition-all duration-500">
                 {category.description}
               </p>
             )}
 
             <div className="flex items-center justify-center space-x-2 text-gray-500 group-hover:text-[#F4B942] transition-colors duration-300">
-              <span className="text-sm font-medium">Explore services</span>
+              <span className="text-xs md:text-sm font-medium">Explore services</span>
               <svg 
-                className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" 
+                className="w-3 h-3 md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform duration-300" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -329,10 +329,10 @@ const CategoryCard = ({ category, index }) => {
 
 // Animated Loading Component
 const LoadingSpinner = () => (
-  <div className="flex justify-center items-center py-20">
+  <div className="flex justify-center items-center py-12 md:py-20">
     <div className="relative">
-      <div className="w-16 h-16 border-4 border-[#E9EEF4] border-t-[#1E2A3A] rounded-full animate-spin"></div>
-      <div className="absolute inset-2 border-4 border-transparent border-r-[#F4B942] rounded-full animate-ping"></div>
+      <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-[#E9EEF4] border-t-[#1E2A3A] rounded-full animate-spin"></div>
+      <div className="absolute inset-1 md:inset-2 border-4 border-transparent border-r-[#F4B942] rounded-full animate-ping"></div>
     </div>
   </div>
 );
@@ -434,24 +434,24 @@ export default function Home() {
       <FloatingAmberElements />
       
       {/* Hero Section */}
-      <section className="relative bg-linear-to-br from-[#1E2A3A] via-[#1A2432] to-[#151E2B] text-white py-38">
+      <section className="relative bg-linear-to-br from-[#1E2A3A] via-[#1A2432] to-[#151E2B] text-white py-16 md:py-24 lg:py-32">
         {/* Amber accent elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-[#F4B942] rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-20 right-20 w-48 h-48 bg-[#F4B942] rounded-full blur-3xl animate-pulse-medium"></div>
+          <div className="absolute top-10 left-10 md:top-20 md:left-20 w-20 h-20 md:w-32 md:h-32 bg-[#F4B942] rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute bottom-10 right-10 md:bottom-20 md:right-20 w-24 h-24 md:w-48 md:h-48 bg-[#F4B942] rounded-full blur-3xl animate-pulse-medium"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-8">
+            <div className="mb-6 md:mb-8">
               
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
                 <span className="bg-linear-to-r from-white via-[#F4B942] to-gray-300 bg-clip-text text-transparent">
                   {t('home.title')}
                 </span>
               </h1>
               
-              <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto mb-10">
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto mb-8 md:mb-10">
                 {t('home.subtitle')}
               </p>
             </div>
@@ -473,17 +473,17 @@ export default function Home() {
                         setShowSuggestions(false);
                       }
                     }}
-                    className="w-full pl-16 pr-8 py-5 rounded-2xl text-gray-800 placeholder-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-[#F4B942] shadow-2xl text-lg border-0"
+                    className="w-full pl-12 md:pl-16 pr-6 md:pr-8 py-4 md:py-5 rounded-2xl text-gray-800 placeholder-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-[#F4B942] shadow-2xl text-base md:text-lg border-0"
                   />
-                  <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute left-4 md:left-5 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#F4B942] text-[#1E2A3A] px-8 py-3.5 rounded-xl font-semibold hover:bg-[#e5a832] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#F4B942] text-[#1E2A3A] px-4 md:px-8 py-2.5 md:py-3.5 rounded-xl font-semibold hover:bg-[#e5a832] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm md:text-base"
                 >
                   {t('filters.search')}
                 </button>
@@ -542,21 +542,21 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center backdrop-blur-sm">
-            <div className="w-1 h-3 bg-[#F4B942] rounded-full mt-2 animate-pulse"></div>
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-5 h-8 md:w-6 md:h-10 border-2 border-white/30 rounded-full flex justify-center backdrop-blur-sm">
+            <div className="w-1 h-2 md:h-3 bg-[#F4B942] rounded-full mt-1.5 md:mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="py-20 relative z-10">
+      <section className="py-12 md:py-16 lg:py-20 relative z-10">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">
               {t('home.allCategories', 'Популярные категории')}
             </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
               {t('home.categoriesDescription', 'Откройте для себя широкий спектр услуг в различных категориях')}
             </p>
           </div>
@@ -565,7 +565,7 @@ export default function Home() {
             <LoadingSpinner />
           ) : categories.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {categories.slice(0, showAllCategories ? categories.length : 8).map((category, index) => (
                   <CategoryCard 
                     key={category.id} 
@@ -576,10 +576,10 @@ export default function Home() {
               </div>
               
               {categories.length > 8 && !showAllCategories && (
-                <div className="text-center mt-18">
+                <div className="text-center mt-12 md:mt-18">
                   <button
                     onClick={() => setShowAllCategories(true)}
-                    className="bg-[#F4B942] text-[#1E2A3A] px-8 py-4 rounded-2xl font-semibold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transform"
+                    className="bg-[#F4B942] text-[#1E2A3A] px-6 md:px-8 py-3 md:py-4 rounded-2xl font-semibold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transform text-sm md:text-base"
                   >
                     {t('home.showAllCategories', 'Показать все категории')}
                   </button>
@@ -587,21 +587,21 @@ export default function Home() {
               )}
             </>
           ) : (
-            <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
-              <div className="w-20 h-20 mx-auto mb-6 bg-[#E9EEF4] rounded-full flex items-center justify-center">
-                <svg className="w-10 h-10 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center py-12 md:py-16 bg-white rounded-2xl shadow-lg mx-4 md:mx-0">
+              <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 bg-[#E9EEF4] rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 md:w-10 md:h-10 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-[#1E2A3A] mb-2">
+              <h3 className="text-lg md:text-xl font-semibold text-[#1E2A3A] mb-2">
                 {t('common.noCategories', 'Категории не найдены')}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
                 {t('common.tryAgainLater', 'Попробуйте обновить страницу позже')}
               </p>
               <button
                 onClick={fetchData}
-                className="bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-semibold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:scale-105 transform"
+                className="bg-[#F4B942] text-[#1E2A3A] px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:scale-105 transform text-sm md:text-base"
               >
                 {t('common.retry', 'Попробовать снова')}
               </button>
