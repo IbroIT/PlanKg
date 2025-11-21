@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
 import { isAuthenticated, clearAuthTokens } from '../api/auth';
@@ -24,12 +24,14 @@ import {
 export default function Header() {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
   const categoriesRef = useRef(null);
 
   useEffect(() => {
@@ -40,9 +42,14 @@ export default function Header() {
       }
     }
     fetchCategories();
+    checkMobile();
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
+    };
+
+    const handleResize = () => {
+      checkMobile();
     };
 
     const handleClickOutside = (event) => {
@@ -52,13 +59,19 @@ export default function Header() {
     };
 
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [i18n.language]);
+
+  const checkMobile = () => {
+    setIsMobile(window.innerWidth < 1280);
+  };
 
   const fetchCategories = async () => {
     try {
@@ -291,7 +304,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="xl:hidden relative w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-[#F4B942] text-white hover:text-[#1E2A3A] transition-all duration-300 group backdrop-blur-sm"
+            className="xl:hidden relative w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 hover:bg-[#F4B942] text-white hover:text-[#1E2A3A] transition-all duration-300 group backdrop-blur-sm mobile-menu-button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
@@ -312,7 +325,7 @@ export default function Header() {
             <div className="space-y-3">
               <button 
                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all duration-300"
+                className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all duration-300 mobile-category-button"
               >
                 <div className="flex items-center space-x-3">
                   <FiGrid className="w-5 h-5 text-white" />
@@ -339,8 +352,19 @@ export default function Header() {
                       <div key={category.id} className="space-y-2">
                         <Link
                           to={`/services?category=${category.id}`}
-                          className="block p-3 rounded-xl hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/20"
-                          onClick={() => setIsMenuOpen(false)}
+                          className="block p-3 rounded-xl hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/20 mobile-menu-link"
+                          onTouchEnd={(e) => {
+                            e.preventDefault();
+                            setIsMenuOpen(false);
+                            setIsCategoriesOpen(false);
+                            window.location.href = `/services?category=${category.id}`;
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsMenuOpen(false);
+                            setIsCategoriesOpen(false);
+                            window.location.href = `/services?category=${category.id}`;
+                          }}
                         >
                           <div className="flex items-center justify-between">
                             <span className="font-semibold text-white">{category.name}</span>
@@ -356,8 +380,19 @@ export default function Header() {
                               <Link
                                 key={sub.id}
                                 to={`/services?category=${sub.id}`}
-                                className="block p-2 text-sm text-white rounded-lg hover:bg-white/10 transition-all duration-200"
-                                onClick={() => setIsMenuOpen(false)}
+                                className="block p-2 text-sm text-white rounded-lg hover:bg-white/10 transition-all duration-200 mobile-menu-link"
+                                onTouchEnd={(e) => {
+                                  e.preventDefault();
+                                  setIsMenuOpen(false);
+                                  setIsCategoriesOpen(false);
+                                  window.location.href = `/services?category=${sub.id}`;
+                                }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setIsMenuOpen(false);
+                                  setIsCategoriesOpen(false);
+                                  window.location.href = `/services?category=${sub.id}`;
+                                }}
                               >
                                 {sub.name}
                               </Link>
@@ -382,7 +417,7 @@ export default function Header() {
               <>
                 <Link
                   to="/favorites"
-                  className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
+                  className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group mobile-menu-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <FiHeart className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
@@ -390,7 +425,7 @@ export default function Header() {
                 </Link>
                 <Link
                   to="/add-service"
-                  className="flex items-center space-x-3 bg-linear-to-r from-[#F4B942] to-[#e5a832] text-[#1E2A3A] p-4 rounded-2xl font-bold hover:shadow-lg transition-all duration-300 group"
+                  className="flex items-center space-x-3 bg-linear-to-r from-[#F4B942] to-[#e5a832] text-[#1E2A3A] p-4 rounded-2xl font-bold hover:shadow-lg transition-all duration-300 group mobile-menu-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <FiPlusCircle className="w-5 h-5 text-[#1E2A3A] transition-transform group-hover:scale-110" />
@@ -403,7 +438,7 @@ export default function Header() {
               <>
                 <Link
                   to="/profile"
-                  className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
+                  className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group mobile-menu-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <FiUser className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
@@ -424,7 +459,7 @@ export default function Header() {
               <>
                 <Link
                   to="/login"
-                  className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
+                  className="flex items-center space-x-3 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group mobile-menu-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <FiLogIn className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
@@ -432,7 +467,7 @@ export default function Header() {
                 </Link>
                 <Link
                   to="/register"
-                  className="flex items-center space-x-3 bg-linear-to-r from-[#F4B942] to-[#e5a832] text-[#1E2A3A] p-4 rounded-2xl font-bold hover:shadow-lg transition-all duration-300 group"
+                  className="flex items-center space-x-3 bg-linear-to-r from-[#F4B942] to-[#e5a832] text-[#1E2A3A] p-4 rounded-2xl font-bold hover:shadow-lg transition-all duration-300 group mobile-menu-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <FiUserPlus className="w-5 h-5 text-[#1E2A3A] transition-transform group-hover:scale-110" />
@@ -461,6 +496,24 @@ export default function Header() {
         }
         .animate-fade-in {
           animation: fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Mobile touch improvements */
+        @media (max-width: 1279px) {
+          .mobile-menu-button {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+          }
+          
+          .mobile-menu-link {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+          }
+          
+          .mobile-category-button {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+          }
         }
       `}</style>
     </header>
