@@ -323,7 +323,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.shootingHourPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.shooting_hour_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.shooting_hour_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.full_day_price && (
@@ -332,7 +332,7 @@ export default function ServiceDetail() {
                               <FaCalendarAlt className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.fullDayPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.full_day_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.full_day_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.love_story_price && (
@@ -341,7 +341,7 @@ export default function ServiceDetail() {
                               <FaHeart className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.loveStoryPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.love_story_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.love_story_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.portfolio_photos_count && (
@@ -447,7 +447,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.shootingHourPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.shooting_hour_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.shooting_hour_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.full_day_price && (
@@ -456,7 +456,7 @@ export default function ServiceDetail() {
                               <FaCalendarAlt className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.fullDayPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.full_day_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.full_day_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.love_story_price && (
@@ -465,7 +465,7 @@ export default function ServiceDetail() {
                               <FaHeart className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.loveStoryPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.love_story_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.love_story_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.video_format && (
@@ -571,7 +571,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.hourlyPayment')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.languages && (
@@ -654,7 +654,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.rentalPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.rental_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.rental_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.average_check && (
@@ -663,7 +663,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.averageCheck')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.working_hours && (
@@ -726,7 +726,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.minimumOrder')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.minimum_order} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.minimum_order} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.wedding_decor_price && (
@@ -735,7 +735,7 @@ export default function ServiceDetail() {
                               <FaMagic className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.weddingDecor')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.wedding_decor_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.wedding_decor_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.custom_calculation && (
@@ -778,7 +778,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.minimumOrder')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.minimum_order} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.minimum_order} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.average_check && (
@@ -787,7 +787,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.pricePerPerson')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} ${t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} ${t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.service_type && (
@@ -858,7 +858,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.hourlyPayment')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.equipment_provided && (
@@ -936,7 +936,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.costServices')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.show_type && (
@@ -1024,7 +1024,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.hourPrice')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.minimum_order && (
@@ -1076,7 +1076,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.costServices')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.service_duration && (
@@ -1121,7 +1121,7 @@ export default function ServiceDetail() {
                               <FaBirthdayCake className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.cakePriceKg')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.cake_weight_kg} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.cake_weight_kg} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.flavors_available && (
@@ -1173,7 +1173,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.rentalCost')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.rental_price} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.rental_price} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.rental_duration && (
@@ -1225,7 +1225,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.hourlyPayment')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.staff_count && (
@@ -1277,7 +1277,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.hourPriceSecurity')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.license_number && (
@@ -1320,7 +1320,7 @@ export default function ServiceDetail() {
                               <FaMoneyBillWave className="w-4 h-4 mr-2" />
                               <span className="text-sm">{t('service.hourPriceAnimation')}</span>
                             </div>
-                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}</p>
+                            <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}</p>
                           </div>
                         )}
                         {service.character_type && (
@@ -1401,7 +1401,7 @@ export default function ServiceDetail() {
                           </svg>
                           <span className="text-sm">{t('service.averageCheck')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} {t('service.currency')}</p>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.average_check} {t('service.currency', 'сом')}</p>
                       </div>
                     )}
                     {service.event_duration && (
@@ -1457,7 +1457,7 @@ export default function ServiceDetail() {
                           </svg>
                           <span className="text-sm">{t('service.hourlyRate')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency')}/{t('service.hour')}</p>
+                        <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}/{t('service.hour')}</p>
                       </div>
                     )}
                   </div>
@@ -1696,9 +1696,9 @@ export default function ServiceDetail() {
 
               <div className="text-3xl font-bold text-[#F4B942] mb-6">
                 {service.price_type === 'hourly' && service.hourly_rate
-                  ? `${service.hourly_rate} ${t('service.currency')}/${t('service.hour')}`
+                  ? `${service.hourly_rate} ${t('service.currency', 'сом')}/${t('service.hour')}`
                   : service.price_type === 'fixed' && service.price
-                  ? `${service.price} ${t('service.currency')}`
+                  ? `${service.price} ${t('service.currency', 'сом')}`
                   : t('service.negotiable')}
               </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from '../api/axios';
+import ServiceCard from '../components/ServiceCard';
 
 export default function UserProfile() {
   const { t } = useTranslation();
@@ -31,6 +32,9 @@ export default function UserProfile() {
       
       // Получаем отзывы о услугах пользователя
       setReviews(reviewsData.data.results || reviewsData.data);
+
+      console.log('User services:', userServices);
+      console.log('User reviews:', reviewsData.data.results || reviewsData.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
@@ -88,14 +92,14 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#E9EEF4] py-8">
+    <div className="min-h-screen bg-[#E9EEF4] py-4 md:py-8">
       <div className="container mx-auto px-4" style={{ maxWidth: '1200px' }}>
         {/* Профиль пользователя */}
-        <div className="bg-white rounded-3xl shadow-lg p-8 mb-8">
-          <div className="flex items-start space-x-6">
+        <div className="bg-white rounded-3xl shadow-lg p-4 md:p-8 mb-4 md:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-6 sm:space-y-0 space-y-4">
             {/* Аватар */}
             <div className="relative shrink-0">
-              <div className="w-32 h-32 bg-linear-to-br from-[#F4B942] to-[#e5a832] rounded-full flex items-center justify-center shadow-xl">
+              <div className="w-16 h-16 md:w-24 md:h-24 bg-linear-to-br from-[#F4B942] to-[#e5a832] rounded-full flex items-center justify-center shadow-xl">
                 {user.avatar ? (
                   <img
                     src={user.avatar}
@@ -121,35 +125,35 @@ export default function UserProfile() {
             <div className="flex-1">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold text-[#1E2A3A] mb-2">
+                  <h1 className="text-xl md:text-3xl font-bold text-[#1E2A3A] mb-2">
                     {user.username || user.email}
                   </h1>
                   {user.bio && (
-                    <p className="text-gray-600 leading-relaxed">{user.bio}</p>
+                    <p className="text-sm md:text-base text-gray-600 leading-relaxed">{user.bio}</p>
                   )}
                 </div>
               </div>
 
               {/* Статистика */}
-              <div className="grid grid-cols-3 gap-4 mt-6">
-                <div className="bg-[#E9EEF4] rounded-2xl p-4 text-center">
-                  <p className="text-2xl font-bold text-[#1E2A3A]">{services.length}</p>
-                  <p className="text-sm text-gray-600">{t('profile.services', 'Услуг')}</p>
+              <div className="grid grid-cols-3 gap-2 md:gap-4 mt-4 md:mt-6">
+                <div className="bg-[#E9EEF4] rounded-2xl p-3 md:p-4 text-center">
+                  <p className="text-lg md:text-2xl font-bold text-[#1E2A3A]">{services.length}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('profile.services', 'Услуг')}</p>
                 </div>
-                <div className="bg-[#E9EEF4] rounded-2xl p-4 text-center">
+                <div className="bg-[#E9EEF4] rounded-2xl p-3 md:p-4 text-center">
                   <div className="flex items-center justify-center space-x-2">
-                    <span className="text-2xl font-bold text-[#1E2A3A]">
+                    <span className="text-lg md:text-2xl font-bold text-[#1E2A3A]">
                       {typeof user.rating === 'number' ? user.rating.toFixed(1) : '—'}
                     </span>
-                    <svg className="w-6 h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
+                    <svg className="w-4 h-4 md:w-6 md:h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
-                  <p className="text-sm text-gray-600">{t('profile.rating', 'Рейтинг')}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('profile.rating', 'Рейтинг')}</p>
                 </div>
-                <div className="bg-[#E9EEF4] rounded-2xl p-4 text-center">
-                  <p className="text-2xl font-bold text-[#1E2A3A]">{reviews.length}</p>
-                  <p className="text-sm text-gray-600">{t('profile.reviews', 'Отзывов')}</p>
+                <div className="bg-[#E9EEF4] rounded-2xl p-3 md:p-4 text-center">
+                  <p className="text-lg md:text-2xl font-bold text-[#1E2A3A]">{reviews.length}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('profile.reviews', 'Отзывов')}</p>
                 </div>
               </div>
 
@@ -208,14 +212,14 @@ export default function UserProfile() {
                     )}
                   </div>
                 ) : (
-                  <div className="bg-[#E9EEF4] rounded-xl p-4 border-l-4 border-[#F4B942]">
+                  <div className="bg-[#E9EEF4] rounded-xl p-3 md:p-4 border-l-4 border-[#F4B942]">
                     <div className="flex items-start space-x-3">
-                      <svg className="w-6 h-6 text-[#F4B942] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 md:w-6 md:h-6 text-[#F4B942] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                       </svg>
                       <div>
-                        <h4 className="font-semibold text-[#1E2A3A] mb-1">Заполните профиль для лучших контактов</h4>
-                        <p className="text-gray-600 text-sm">Добавьте город и социальные сети, чтобы клиенты могли легко связаться с вами</p>
+                        <h4 className="font-semibold text-[#1E2A3A] mb-1 text-sm md:text-base">Заполните профиль для лучших контактов</h4>
+                        <p className="text-gray-600 text-xs md:text-sm">Добавьте город и социальные сети, чтобы клиенты могли легко связаться с вами</p>
                       </div>
                     </div>
                   </div>
@@ -226,11 +230,11 @@ export default function UserProfile() {
         </div>
 
         {/* Табы */}
-        <div className="mb-6">
+        <div className="mb-4 md:mb-6">
           <div className="flex space-x-2 bg-white rounded-2xl p-2 shadow-lg">
             <button
               onClick={() => setActiveTab('services')}
-              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              className={`flex-1 px-3 md:px-6 py-2 md:py-3 rounded-xl font-semibold transition-all duration-300 text-sm md:text-base ${
                 activeTab === 'services'
                   ? 'bg-[#F4B942] text-[#1E2A3A] shadow-lg'
                   : 'text-gray-600 hover:bg-[#E9EEF4]'
@@ -240,7 +244,7 @@ export default function UserProfile() {
             </button>
             <button
               onClick={() => setActiveTab('reviews')}
-              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              className={`flex-1 px-3 md:px-6 py-2 md:py-3 rounded-xl font-semibold transition-all duration-300 text-sm md:text-base ${
                 activeTab === 'reviews'
                   ? 'bg-[#F4B942] text-[#1E2A3A] shadow-lg'
                   : 'text-gray-600 hover:bg-[#E9EEF4]'
@@ -255,138 +259,102 @@ export default function UserProfile() {
         {activeTab === 'services' && (
           <div className="space-y-6">
             {services.length > 0 ? (
-              services.map((service) => (
-                <div
-                  key={service.id}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
-                >
-                  <Link to={`/services/${service.id}`} className="block">
-                    <div className="grid md:grid-cols-[300px_1fr] gap-6 p-6">
-                      {/* Изображение */}
-                      <div className="relative h-48 md:h-full bg-gray-200 rounded-xl overflow-hidden">
-                        {service.images && service.images[0] ? (
-                          <img
-                            src={service.images[0]}
-                            alt={service.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              services.map((service) => {
+                const serviceWithImage = { ...service, image: service.images?.[0] || service.image };
+                return (
+                  <div key={service.id}>
+                    <ServiceCard service={serviceWithImage} />
+                    {/* Отзывы для этой услуги */}
+                    {(() => {
+                      const serviceReviews = reviews.filter(review => {
+                        const reviewServiceId = review.service?.id || review.service;
+                        return reviewServiceId === service.id;
+                      });
+                      console.log(`Service ${service.id} (${service.title}) reviews:`, serviceReviews);
+                      return serviceReviews.length > 0;
+                    })() && (
+                      <div className="border-t border-gray-200 p-4 md:p-6 bg-linear-to-br from-[#E9EEF4] to-white mt-4 rounded-2xl">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="font-bold text-base md:text-lg text-[#1E2A3A] flex items-center">
+                            <svg className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
-                          </div>
-                        )}
-                      </div>
+                            {t('profile.reviewsForService', 'Отзывы об услуге')} ({reviews.filter(review => (review.service?.id || review.service) === service.id).length})
+                          </h4>
+                        </div>
+                        <div className="space-y-4">
+                          {reviews
+                            .filter(review => (review.service?.id || review.service) === service.id)
+                            .slice(0, 3)
+                            .map((review) => (
+                              <div
+                                key={review.id}
+                                className="bg-white rounded-xl p-4 md:p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
+                              >
+                                {/* Информация о пользователе */}
+                                {review.user && (
+                                  <div className="flex items-center space-x-3 mb-3">
+                                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#F4B942] to-[#e5a832] flex items-center justify-center shrink-0">
+                                      {review.user.avatar ? (
+                                        <img
+                                          src={review.user.avatar}
+                                          alt={review.user.username}
+                                          className="w-full h-full rounded-full object-cover"
+                                        />
+                                      ) : (
+                                        <span className="text-white font-semibold">
+                                          {review.user.username?.charAt(0).toUpperCase() || 'U'}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex-1">
+                                      <p className="font-semibold text-[#1E2A3A]">
+                                        {review.user.username || review.user.email}
+                                      </p>
+                                      <div className="flex items-center space-x-2">
+                                        {renderStars(review.rating)}
+                                        <span className="text-xs font-semibold text-[#1E2A3A]">
+                                          {review.rating}/5
+                                        </span>
+                                        <span className="text-xs text-gray-500">
+                                          {new Date(review.created_at).toLocaleDateString('ru-RU')}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
 
-                      {/* Информация об услуге */}
-                      <div className="flex flex-col">
-                        <h3 className="font-bold text-2xl text-[#1E2A3A] mb-3 hover:text-[#F4B942] transition-colors">
-                          {service.title}
-                        </h3>
-                        <p className="text-gray-600 mb-4 line-clamp-3">
-                          {service.description}
-                        </p>
-                        <div className="flex items-center justify-between mt-auto">
-                          <span className="text-[#F4B942] font-bold text-2xl">
-                            {service.price} сом
-                          </span>
-                          {service.rating && (
-                            <div className="flex items-center space-x-2">
-                              {renderStars(Math.round(service.rating))}
-                              <span className="text-sm text-gray-600 ml-1">
-                                ({service.reviews_count || 0})
-                              </span>
-                            </div>
+                                <p className="text-gray-700 leading-relaxed">
+                                  {review.comment}
+                                </p>
+                              </div>
+                            ))}
+                          {reviews.filter(review => (review.service?.id || review.service) === service.id).length > 3 && (
+                            <Link
+                              to={`/services/${service.id}#reviews`}
+                              className="inline-flex items-center space-x-2 text-[#F4B942] hover:text-[#e5a832] font-semibold transition-colors group"
+                            >
+                              <span>{t('profile.showAllReviews', 'Показать все отзывы')} ({reviews.filter(review => (review.service?.id || review.service) === service.id).length})</span>
+                              <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </Link>
                           )}
                         </div>
                       </div>
-                    </div>
-                  </Link>
-
-                  {/* Отзывы для этой услуги */}
-                  {reviews.filter(review => review.service?.id === service.id).length > 0 && (
-                    <div className="border-t border-gray-200 p-6 bg-linear-to-br from-[#E9EEF4] to-white">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-bold text-lg text-[#1E2A3A] flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                          </svg>
-                          {t('profile.reviewsForService', 'Отзывы об услуге')} ({reviews.filter(review => review.service?.id === service.id).length})
-                        </h4>
-                      </div>
-                      <div className="space-y-4">
-                        {reviews
-                          .filter(review => review.service?.id === service.id)
-                          .slice(0, 3)
-                          .map((review) => (
-                            <div
-                              key={review.id}
-                              className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
-                            >
-                              {/* Информация о пользователе */}
-                              {review.user && (
-                                <div className="flex items-center space-x-3 mb-3">
-                                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#F4B942] to-[#e5a832] flex items-center justify-center shrink-0">
-                                    {review.user.avatar ? (
-                                      <img
-                                        src={review.user.avatar}
-                                        alt={review.user.username}
-                                        className="w-full h-full rounded-full object-cover"
-                                      />
-                                    ) : (
-                                      <span className="text-white font-semibold">
-                                        {review.user.username?.charAt(0).toUpperCase() || 'U'}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <div className="flex-1">
-                                    <p className="font-semibold text-[#1E2A3A]">
-                                      {review.user.username || review.user.email}
-                                    </p>
-                                    <div className="flex items-center space-x-2">
-                                      {renderStars(review.rating)}
-                                      <span className="text-xs font-semibold text-[#1E2A3A]">
-                                        {review.rating}/5
-                                      </span>
-                                      <span className="text-xs text-gray-500">
-                                        {new Date(review.created_at).toLocaleDateString('ru-RU')}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                              
-                              <p className="text-gray-700 leading-relaxed">
-                                {review.comment}
-                              </p>
-                            </div>
-                          ))}
-                        {reviews.filter(review => review.service?.id === service.id).length > 3 && (
-                          <Link
-                            to={`/services/${service.id}#reviews`}
-                            className="inline-flex items-center space-x-2 text-[#F4B942] hover:text-[#e5a832] font-semibold transition-colors group"
-                          >
-                            <span>{t('profile.showAllReviews', 'Показать все отзывы')} ({reviews.filter(review => review.service?.id === service.id).length})</span>
-                            <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
+                    )}
+                  </div>
+                );
+              })
             ) : (
-              <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
-                <div className="w-24 h-24 bg-[#E9EEF4] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-12 h-12 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="text-center py-8 md:py-16 bg-white rounded-2xl shadow-lg">
+                <div className="w-16 h-16 md:w-24 md:h-24 bg-[#E9EEF4] rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                  <svg className="w-8 h-8 md:w-12 md:h-12 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">{t('profile.noServices', 'Нет услуг пока')}</h3>
-                <p className="text-gray-600">{t('profile.noServicesDesc', 'Этот пользователь еще не добавил услуг')}</p>
+                <h3 className="text-lg md:text-xl font-bold text-[#1E2A3A] mb-2">{t('profile.noServices', 'Нет услуг пока')}</h3>
+                <p className="text-gray-600 text-sm md:text-base">{t('profile.noServicesDesc', 'Этот пользователь еще не добавил услуг')}</p>
               </div>
             )}
           </div>
@@ -398,12 +366,12 @@ export default function UserProfile() {
               reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="bg-white rounded-2xl shadow-lg p-6"
+                  className="bg-white rounded-2xl shadow-lg p-4 md:p-6"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <Link
-                        to={`/services/${review.service?.id}`}
+                        to={`/services/${review.service?.id || review.service}`}
                         className="font-semibold text-[#1E2A3A] hover:text-[#F4B942] transition-colors"
                       >
                         {review.service?.title || t('profile.service', 'Услуга')}
@@ -423,14 +391,14 @@ export default function UserProfile() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
-                <div className="w-24 h-24 bg-[#E9EEF4] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-12 h-12 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="text-center py-8 md:py-16 bg-white rounded-2xl shadow-lg">
+                <div className="w-16 h-16 md:w-24 md:h-24 bg-[#E9EEF4] rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                  <svg className="w-8 h-8 md:w-12 md:h-12 text-[#1E2A3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">{t('profile.noReviews', 'Отзывов пока нет')}</h3>
-                <p className="text-gray-600">{t('profile.noReviewsDesc', 'Этот пользователь еще не оставлял отзывы')}</p>
+                <h3 className="text-lg md:text-xl font-bold text-[#1E2A3A] mb-2">{t('profile.noReviews', 'Отзывов пока нет')}</h3>
+                <p className="text-gray-600 text-sm md:text-base">{t('profile.noReviewsDesc', 'Этот пользователь еще не оставлял отзывы')}</p>
               </div>
             )}
           </div>

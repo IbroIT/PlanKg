@@ -165,13 +165,13 @@ export default function ServiceCard({ service, onFavoriteChange }) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-200 gap-3">
             <div className="text-[#F4B942] font-bold text-xl">
               {service.price_type === 'fixed' && service.price
-                ? `${service.price} ${t('service.currency')}`
+                ? `${service.price} ${t('service.currency', 'сом')}`
                 : t('service.negotiable')}
             </div>          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {(() => {
               console.log('ServiceCard service:', service);
               console.log('reviews_count:', service.reviews_count, 'type:', typeof service.reviews_count);
-              return service.rating > 0;
+              return true; // Always show rating
             })() && (
               <div className="flex items-center bg-[#E9EEF4] px-2 py-1 sm:px-3 rounded-full">
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-[#F4B942] fill-current mr-1" viewBox="0 0 20 20">

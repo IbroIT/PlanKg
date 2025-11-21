@@ -459,7 +459,7 @@ export default function AddService() {
             {config.suffix && (
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
                 <span className="font-semibold">
-                  {config.suffix === 'currency' ? t('service.currency') : config.suffix}
+                  {config.suffix === 'currency' ? t('service.currency', 'сом') : config.suffix}
                 </span>
               </div>
             )}
@@ -621,36 +621,33 @@ export default function AddService() {
   };
 
   return (
-    <div className="min-h-screen bg-[#E9EEF4] py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-[#E9EEF4] py-3 md:py-8">
+      <div className="container mx-auto px-2 md:px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="bg-linear-to-r from-[#1E2A3A] to-[#2a3f54] rounded-2xl shadow-2xl p-8 mb-8 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-4xl font-bold mb-2">{t('addService.title')}</h1>
-                <p className="text-gray-300 text-lg">
+          <div className="bg-linear-to-r from-[#1E2A3A] to-[#2a3f54] rounded-2xl shadow-2xl p-3 md:p-8 mb-6 md:mb-8 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4">
+              <div className="flex-1">
+                <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-2">{t('addService.title')}</h1>
+                <p className="text-gray-300 text-xs md:text-lg">
                   {t('addService.subtitle', 'Добавьте новую услугу и начните получать заказы')}
                 </p>
-              </div>
-              <div className="bg-[#F4B942] text-[#1E2A3A] px-4 py-2 rounded-full font-bold">
-                {t('addService.step')} 1/1
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="bg-white rounded-2xl shadow-lg p-3 md:p-8">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-8">
               {/* Category */}
               <div>
-                <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                   {t('addService.category')} *
                 </label>
                 <div className="relative">
                   <select
                     value={formData.category_id}
                     onChange={(e) => handleInputChange('category_id', e.target.value)}
-                    className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] appearance-none"
+                    className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] appearance-none text-sm md:text-base"
                     required
                   >
                     <option value="">{t('addService.selectCategory')}</option>
@@ -667,18 +664,18 @@ export default function AddService() {
               </div>
 
               {/* Language Tabs */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+              <div className="mb-4 md:mb-6">
+                <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                   {t('addService.serviceInfo')}
                 </h3>
                 
-                <div className="flex space-x-2 bg-[#E9EEF4] p-1 rounded-xl mb-6">
+                <div className="flex flex-wrap gap-1 md:gap-2 bg-[#E9EEF4] p-1 rounded-xl mb-4 md:mb-6">
                   {['ru', 'en', 'kg'].map((lang) => (
                     <button
                       key={lang}
                       type="button"
                       onClick={() => setCurrentLang(lang)}
-                      className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
+                      className={`flex-1 min-w-0 px-2 md:px-4 py-2 md:py-3 rounded-lg font-semibold transition-all text-xs md:text-sm ${
                         currentLang === lang 
                           ? 'bg-[#F4B942] text-[#1E2A3A] shadow-md' 
                           : 'text-gray-600 hover:text-[#1E2A3A]'
@@ -692,7 +689,7 @@ export default function AddService() {
                 {/* Translation Fields */}
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       {t('addService.serviceName')} *
                     </label>
                     <input
@@ -700,21 +697,21 @@ export default function AddService() {
                       placeholder={t('addService.serviceNamePlaceholder')}
                       value={formData.translations[currentLang].title}
                       onChange={(e) => handleTranslationChange(currentLang, 'title', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       {t('addService.serviceDescription')} *
                     </label>
                     <textarea
                       placeholder={t('addService.serviceDescriptionPlaceholder')}
                       value={formData.translations[currentLang].description}
                       onChange={(e) => handleTranslationChange(currentLang, 'description', e.target.value)}
-                      rows="4"
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 resize-none"
+                      rows="3 md:rows-4"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 resize-none text-sm md:text-base"
                       required
                     ></textarea>
                   </div>
@@ -723,11 +720,11 @@ export default function AddService() {
 
               {/* Price Type */}
               <div>
-                <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                   {t('addService.priceType')} *
                 </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label className={`relative flex items-center justify-center p-3 md:p-4 border-2 rounded-xl cursor-pointer transition-all ${
                     formData.price_type === 'fixed' 
                       ? 'border-[#F4B942] bg-[#F4B942]' 
                       : 'border-gray-200 hover:border-gray-300'
@@ -739,13 +736,13 @@ export default function AddService() {
                       onChange={(e) => handleInputChange('price_type', e.target.value)}
                       className="sr-only"
                     />
-                    <span className={`font-semibold ${
+                    <span className={`font-semibold text-sm md:text-base ${
                       formData.price_type === 'fixed' ? 'text-white' : 'text-gray-600'
                     }`}>
                       {t('addService.fixed')}
                     </span>
                   </label>
-                  <label className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                  <label className={`relative flex items-center justify-center p-3 md:p-4 border-2 rounded-xl cursor-pointer transition-all ${
                     formData.price_type === 'negotiable' 
                       ? 'border-[#F4B942] bg-[#F4B942]' 
                       : 'border-gray-200 hover:border-gray-300'
@@ -757,7 +754,7 @@ export default function AddService() {
                       onChange={(e) => handleInputChange('price_type', e.target.value)}
                       className="sr-only"
                     />
-                    <span className={`font-semibold ${
+                    <span className={`font-semibold text-sm md:text-base ${
                       formData.price_type === 'negotiable' ? 'text-white' : 'text-gray-600'
                     }`}>
                       {t('addService.negotiable')}
@@ -769,20 +766,20 @@ export default function AddService() {
               {/* Price Input */}
               {formData.price_type === 'fixed' && (
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
-                    {t('service.price')} ({t('service.currency')}) *
+                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
+                    {t('service.price')} ({t('service.currency', 'сом')}) *
                   </label>
                   <div className="relative max-w-xs">
                     <input
                       type="number"
                       value={formData.price}
                       onChange={(e) => handleInputChange('price', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] pl-12"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] pl-10 md:pl-12 text-sm md:text-base"
                       placeholder="0"
                       required
                     />
-                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
-                      <span className="font-semibold">{t('service.currency')}</span>
+                    <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+                      <span className="font-semibold text-sm md:text-base">{t('service.currency', 'сом')}</span>
                     </div>
                   </div>
                 </div>
@@ -791,10 +788,10 @@ export default function AddService() {
               {/* Category-specific fields */}
               {getCategoryFields().length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                  <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                     {t('addService.additionalInfo')}
                   </h3>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     {getCategoryFields().map(fieldName => renderField(fieldName))}
                   </div>
                 </div>
@@ -802,18 +799,18 @@ export default function AddService() {
 
               {/* Location */}
               <div>
-                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                   {t('addService.location')}
                 </h3>
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-4 md:gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       {t('auth.city')} *
                     </label>
                     <select
                       value={formData.city}
                       onChange={(e) => handleInputChange('city', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A]"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] text-sm md:text-base"
                       required
                     >
                       <option value="">{t('addService.selectCity')}</option>
@@ -850,67 +847,67 @@ export default function AddService() {
 
               {/* Contact Information */}
               <div>
-                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                   {t('addService.contactInfo')}
                 </h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       {t('addService.phone')}
                     </label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                       placeholder="+996 XXX XXX XXX"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       Email
                     </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                       placeholder="example@email.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       Instagram
                     </label>
                     <input
                       type="text"
                       value={formData.instagram}
                       onChange={(e) => handleInputChange('instagram', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                       placeholder="@username"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       WhatsApp
                     </label>
                     <input
                       type="text"
                       value={formData.whatsapp}
                       onChange={(e) => handleInputChange('whatsapp', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                       placeholder="+996 XXX XXX XXX или @username"
                     />
                   </div>
-                  <div className="lg:col-span-2">
-                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                       Telegram
                     </label>
                     <input
                       type="text"
                       value={formData.telegram}
                       onChange={(e) => handleInputChange('telegram', e.target.value)}
-                      className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                       placeholder="@username"
                     />
                   </div>
@@ -919,28 +916,28 @@ export default function AddService() {
 
               {/* Images */}
               <div>
-                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                   {t('addService.images')}
                 </h3>
                 
                 {/* Avatar */}
                 <div className="mb-6">
-                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-3">
+                  <label className="block text-sm font-semibold text-[#1E2A3A] mb-2 md:mb-3">
                     {t('addService.avatar', 'Аватарка сервиса')}
                   </label>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">
                     {t('addService.avatarHint', 'Загрузите основное изображение для вашего сервиса')}
                   </p>
                   <div className="text-center">
                     <label className="cursor-pointer group">
                       <div 
                         id="avatar-preview"
-                        className="w-32 h-32 mx-auto bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
+                        className="w-24 h-24 md:w-32 md:h-32 mx-auto bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
                       >
-                        <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 md:w-8 md:h-8 text-gray-400 mb-1 md:mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span className="text-sm text-gray-500">{t('addService.uploadAvatar', 'Загрузить аватарку')}</span>
+                        <span className="text-xs md:text-sm text-gray-500">{t('addService.uploadAvatar', 'Загрузить аватарку')}</span>
                       </div>
                       <input
                         type="file"
@@ -952,22 +949,22 @@ export default function AddService() {
                   </div>
                 </div>
                 
-                <p className="text-gray-600 text-sm mb-4">
+                <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">
                   {t('addService.imagesHint', 'Добавьте до 5 фотографий вашей услуги')}
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
                   {[1, 2, 3, 4, 5].map((num) => (
                     <div key={num} className="text-center">
                       <label className="cursor-pointer group">
                         <div 
                           id={`image${num}-preview`}
-                          className="w-full h-32 bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
+                          className="w-full h-24 md:h-32 bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
                         >
-                          <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 md:w-8 md:h-8 text-gray-400 mb-1 md:mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-sm text-gray-500">{t('addService.uploadImage')}</span>
+                          <span className="text-xs md:text-sm text-gray-500">{t('addService.uploadImage')}</span>
                         </div>
                         <input
                           type="file"
@@ -983,25 +980,25 @@ export default function AddService() {
 
               {/* Videos */}
               <div>
-                <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                   {t('addService.video')}
                 </h3>
-                <p className="text-gray-600 text-sm mb-4">
+                <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">
                   {t('addService.videoHint')}
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                   {[1, 2].map((num) => (
                     <div key={num} className="text-center">
                       <label className="cursor-pointer group">
                         <div 
                           id={`video${num}-preview`}
-                          className="w-full h-32 bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
+                          className="w-full h-24 md:h-32 bg-[#E9EEF4] rounded-xl border-2 border-dashed border-gray-300 group-hover:border-[#F4B942] transition-colors flex flex-col items-center justify-center mb-2 overflow-hidden"
                         >
-                          <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 md:w-8 md:h-8 text-gray-400 mb-1 md:mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-sm text-gray-500">{t('addService.uploadVideo')}</span>
+                          <span className="text-xs md:text-sm text-gray-500">{t('addService.uploadVideo')}</span>
                         </div>
                         <input
                           type="file"
@@ -1016,20 +1013,20 @@ export default function AddService() {
               </div>
 
               {/* Submit Buttons */}
-              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-4 md:pt-6 border-t border-gray-200">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-[#F4B942] text-[#1E2A3A] px-8 py-4 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="flex-1 bg-[#F4B942] text-[#1E2A3A] px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm md:text-base"
                 >
                   {loading ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-[#1E2A3A] border-t-transparent rounded-full animate-spin mr-2"></div>
+                      <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-[#1E2A3A] border-t-transparent rounded-full animate-spin mr-2"></div>
                       {t('common.loading')}
                     </>
                   ) : (
                     <>
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                       {t('addService.submit')}
@@ -1039,7 +1036,7 @@ export default function AddService() {
                 <button
                   type="button"
                   onClick={() => navigate('/profile')}
-                  className="flex-1 bg-white border-2 border-[#1E2A3A] text-[#1E2A3A] px-8 py-4 rounded-xl font-bold hover:bg-[#1E2A3A] hover:text-white transition-all duration-300"
+                  className="flex-1 bg-white border-2 border-[#1E2A3A] text-[#1E2A3A] px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold hover:bg-[#1E2A3A] hover:text-white transition-all duration-300 text-sm md:text-base"
                 >
                   {t('addService.cancel')}
                 </button>
@@ -1048,7 +1045,7 @@ export default function AddService() {
           </div>
 
           {/* Help Text */}
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <div className="mt-4 md:mt-6 text-center text-xs md:text-sm text-gray-600">
             <p>
               {t('addService.needHelp')}{' '}
               <a href="mailto:support@plan.kg" className="text-[#F4B942] font-semibold hover:underline">
@@ -1061,18 +1058,18 @@ export default function AddService() {
 
       {/* Language Modal */}
       {showLanguageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-xl z-50 flex items-center justify-center p-3 md:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-[#F4B942] rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-[#F4B942] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-[#1E2A3A] mb-2">
+              <h3 className="text-xl md:text-2xl font-bold text-[#1E2A3A] mb-2">
                 Расширить аудиторию?
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-sm md:text-base">
                 Хотите заполнить услугу на английском и кыргызском языках? Это поможет привлечь больше клиентов из разных стран.
               </p>
             </div>
@@ -1080,9 +1077,9 @@ export default function AddService() {
             <div className="space-y-3">
               <button
                 onClick={handleFillLanguages}
-                className="w-full bg-[#F4B942] text-[#1E2A3A] py-4 px-6 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
+                className="w-full bg-[#F4B942] text-[#1E2A3A] py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center text-sm md:text-base"
               >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 Заполнить на других языках
@@ -1090,9 +1087,9 @@ export default function AddService() {
 
               <button
                 onClick={handlePublishNow}
-                className="w-full bg-white border-2 border-[#1E2A3A] text-[#1E2A3A] py-4 px-6 rounded-xl font-bold hover:bg-[#1E2A3A] hover:text-white transition-all duration-300 flex items-center justify-center"
+                className="w-full bg-white border-2 border-[#1E2A3A] text-[#1E2A3A] py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold hover:bg-[#1E2A3A] hover:text-white transition-all duration-300 flex items-center justify-center text-sm md:text-base"
               >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 Опубликовать сейчас
@@ -1101,9 +1098,9 @@ export default function AddService() {
 
             <button
               onClick={() => setShowLanguageModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute top-3 md:top-4 right-3 md:right-4 text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

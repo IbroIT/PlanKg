@@ -74,9 +74,6 @@ export default function Register() {
                 </div>
               </div>
             </div>
-            <div className="bg-[#F4B942] text-[#1E2A3A] px-4 py-2 rounded-full font-bold">
-              {t('auth.step')} 1/1
-            </div>
           </div>
         </div>
 
