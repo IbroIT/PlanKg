@@ -434,7 +434,7 @@ export default function Home() {
       <FloatingAmberElements />
       
       {/* Hero Section */}
-      <section className="relative bg-linear-to-br from-[#1E2A3A] via-[#1A2432] to-[#151E2B] text-white py-16 md:py-24 lg:py-32">
+      <section className="relative bg-[#1E2A3A] text-white py-16 md:py-24 lg:py-32">
         {/* Amber accent elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 md:top-20 md:left-20 w-20 h-20 md:w-32 md:h-32 bg-[#F4B942] rounded-full blur-3xl animate-pulse-slow"></div>
@@ -540,25 +540,15 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-5 h-8 md:w-6 md:h-10 border-2 border-white/30 rounded-full flex justify-center backdrop-blur-sm">
-            <div className="w-1 h-2 md:h-3 bg-[#F4B942] rounded-full mt-1.5 md:mt-2 animate-pulse"></div>
-          </div>
-        </div>
       </section>
 
       {/* Categories Section */}
       <section className="py-12 md:py-16 lg:py-20 relative z-10">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
+          <div className="text-center  md:mb-1">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">
               {t('home.allCategories', 'Популярные категории')}
             </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
-              {t('home.categoriesDescription', 'Откройте для себя широкий спектр услуг в различных категориях')}
-            </p>
           </div>
 
           {loading ? (

@@ -14,7 +14,7 @@ export default function Footer() {
               <div className="w-10 h-10 bg-[#F4B942] rounded-lg flex items-center justify-center mr-3">
                 <span className="text-[#1E2A3A] font-bold text-lg">P</span>
               </div>
-              <h3 className="text-2xl font-bold text-white">Plan.kg</h3>
+              <h3 className="text-2xl font-bold text-white">PLAN</h3>
             </div>
             <p className="text-gray-300 leading-relaxed mb-4">
               {t('footer.about', 'Платформа для поиска и предоставления качественных услуг. Связываем клиентов с проверенными специалистами.')}

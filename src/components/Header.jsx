@@ -125,7 +125,6 @@ export default function Header() {
               <span className="text-2xl font-bold bg-linear-to-r from-white to-[#E9EEF4] bg-clip-text text-transparent">
                 Plan
               </span>
-              <span className="text-xs text-[#E9EEF4]/60 font-medium">{t('header.tagline')}</span>
             </div>
           </Link>
 
