@@ -192,6 +192,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "confirmDelete": "Are you sure you want to delete this service?",
+    "confirmDeleteDescription": "This action cannot be undone. The service will be permanently deleted.",
     "deleteSuccess": "Service deleted successfully",
     "deleteError": "Error deleting service"
   },

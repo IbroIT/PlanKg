@@ -49,6 +49,7 @@ export default function ServiceDetail() {
   const [activeTab, setActiveTab] = useState('photos');
   const [contactInitiated, setContactInitiated] = useState(false);
   const [showContactFeedback, setShowContactFeedback] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // City translation mapping
   const translateCity = (city) => {
@@ -127,11 +128,12 @@ export default function ServiceDetail() {
     }
   }, [contactInitiated]);
 
-  const handleDeleteService = async () => {
-    if (!window.confirm(t('service.confirmDelete', 'Вы уверены, что хотите удалить эту услугу?'))) {
-      return;
-    }
-    
+  const handleDeleteService = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteService = async () => {
+    setShowDeleteModal(false);
     try {
       await servicesAPI.deleteService(service.id);
       alert(t('service.deleteSuccess', 'Услуга успешно удалена'));
@@ -140,6 +142,10 @@ export default function ServiceDetail() {
       console.error('Error deleting service:', error);
       alert(t('service.deleteError', 'Ошибка при удалении услуги'));
     }
+  };
+
+  const cancelDeleteService = () => {
+    setShowDeleteModal(false);
   };
 
   if (loading) {
@@ -829,6 +835,41 @@ export default function ServiceDetail() {
             <p className="text-center text-gray-600 mt-4 text-sm">
               {t('service.contactFeedback')}
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center">
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">
+                {t('service.confirmDelete', 'Вы уверены, что хотите удалить эту услугу?')}
+              </h3>
+              <p className="text-gray-600 mb-6">
+                {t('service.confirmDeleteDescription', 'Это действие нельзя отменить. Услуга будет удалена навсегда.')}
+              </p>
+              <div className="flex space-x-3">
+                <button
+                  onClick={cancelDeleteService}
+                  className="flex-1 bg-gray-200 text-[#1E2A3A] py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+                >
+                  {t('service.cancel', 'Отмена')}
+                </button>
+                <button
+                  onClick={confirmDeleteService}
+                  className="flex-1 bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+                >
+                  {t('service.delete', 'Удалить')}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
