@@ -177,6 +177,8 @@ export default function EditService() {
   const [currentLang, setCurrentLang] = useState('ru');
   const [user, setUser] = useState(null);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteField, setDeleteField] = useState(null);
   const [formData, setFormData] = useState({
     translations: {
       ru: { 
@@ -778,42 +780,29 @@ export default function EditService() {
     const file = e.target.files[0];
     if (file) {
       setFormData({ ...formData, [field]: file });
-
-      // Preview image/video
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const previewElement = document.getElementById(`${field}-preview`);
-        if (previewElement) {
-          if (field.startsWith('video')) {
-            previewElement.innerHTML = `
-              <video src="${e.target.result}" class="w-full h-32 object-cover rounded-xl" controls></video>
-            `;
-          } else {
-            previewElement.innerHTML = `
-              <img src="${e.target.result}" alt="Preview" class="w-full h-32 object-cover rounded-xl" />
-            `;
-          }
-        }
-      };
-      reader.readAsDataURL(file);
+      // Note: Preview will be shown after form submission
+      // Direct DOM manipulation removed to avoid React conflicts
     }
   };
 
-  const handleRemoveMedia = async (field) => {
-    if (!window.confirm(t('editService.confirmDelete', 'Вы уверены, что хотите удалить этот файл?'))) {
-      return;
-    }
+  const handleRemoveMedia = (field) => {
+    setDeleteField(field);
+    setShowDeleteModal(true);
+  };
+
+  const confirmRemoveMedia = async () => {
+    if (!deleteField) return;
 
     try {
       // If it's an existing file (has URL), send delete request to server
-      if (formData[`${field}_url`]) {
+      if (formData[`${deleteField}_url`]) {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/services/${id}/remove-media/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           },
-          body: JSON.stringify({ field })
+          body: JSON.stringify({ field: deleteField })
         });
 
         if (!response.ok) {
@@ -821,28 +810,25 @@ export default function EditService() {
         }
       }
 
-      // Remove from formData
+      // Remove from formData - React will automatically update the UI
       const newFormData = { ...formData };
-      delete newFormData[field];
-      delete newFormData[`${field}_url`];
+      delete newFormData[deleteField];
+      delete newFormData[`${deleteField}_url`];
       setFormData(newFormData);
 
-      // Clear preview
-      const previewElement = document.getElementById(`${field}-preview`);
-      if (previewElement) {
-        previewElement.innerHTML = '';
-      }
-
-      // Clear file input
-      const fileInput = document.querySelector(`input[type="file"][accept*="${field.startsWith('video') ? 'video' : 'image'}"]`);
-      if (fileInput) {
-        fileInput.value = '';
-      }
+      // Close modal
+      setShowDeleteModal(false);
+      setDeleteField(null);
 
     } catch (error) {
       console.error('Error removing media:', error);
       alert(t('editService.deleteError', 'Ошибка при удалении файла'));
     }
+  };
+
+  const cancelRemoveMedia = () => {
+    setShowDeleteModal(false);
+    setDeleteField(null);
   };
 
   if (fetchLoading) {
@@ -1171,7 +1157,7 @@ export default function EditService() {
                     onChange={(e) => handleFileChange(e, 'avatar')}
                     className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                   />
-                  <div id="avatar-preview" className="mt-2">
+                  <div className="mt-2">
                     {formData.avatar_url && (
                       <div className="relative inline-block">
                         <img src={formData.avatar_url} alt="Current avatar" className="w-full h-32 object-cover rounded-xl" />
@@ -1206,7 +1192,7 @@ export default function EditService() {
                         onChange={(e) => handleFileChange(e, `image${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
-                      <div id={`image${num}-preview`} className="mt-2">
+                      <div className="mt-2">
                         {formData[`image${num}_url`] && (
                           <div className="relative inline-block">
                             <img src={formData[`image${num}_url`]} alt={`Current image ${num}`} className="w-full h-32 object-cover rounded-xl" />
@@ -1243,7 +1229,7 @@ export default function EditService() {
                         onChange={(e) => handleFileChange(e, `video${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
-                      <div id={`video${num}-preview`} className="mt-2">
+                      <div className="mt-2">
                         {formData[`video${num}_url`] && (
                           <div className="relative inline-block">
                             <video src={formData[`video${num}_url`]} className="w-full h-32 object-cover rounded-xl" controls></video>
@@ -1311,6 +1297,41 @@ export default function EditService() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-[#1E2A3A] mb-2">
+                {t('editService.confirmDeleteTitle', 'Подтверждение удаления')}
+              </h3>
+              <p className="text-gray-600 mb-6">
+                {t('editService.confirmDelete', 'Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.')}
+              </p>
+              <div className="flex space-x-3">
+                <button
+                  onClick={cancelRemoveMedia}
+                  className="flex-1 bg-gray-200 text-gray-800 px-4 py-3 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  {t('common.cancel', 'Отмена')}
+                </button>
+                <button
+                  onClick={confirmRemoveMedia}
+                  className="flex-1 bg-red-500 text-white px-4 py-3 rounded-xl font-semibold hover:bg-red-600 transition-colors"
+                >
+                  {t('service.delete', 'Удалить')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
