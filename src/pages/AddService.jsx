@@ -615,6 +615,14 @@ export default function AddService() {
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
+      // Check file size (30 MB limit)
+      const maxSize = 30 * 1024 * 1024; // 30 MB in bytes
+      if (file.size > maxSize) {
+        alert(t('service.fileSizeError', 'Размер файла не должен превышать 30 МБ'));
+        e.target.value = ''; // Clear the input
+        return;
+      }
+
       setFormData({ ...formData, [field]: file });
       
       // Preview image/video
@@ -952,6 +960,7 @@ export default function AddService() {
                     onChange={(e) => handleFileChange(e, 'avatar')}
                     className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                   />
+                  <p className="text-xs text-gray-500 mt-1">{t('service.fileSizeHint', 'Максимальный размер файла: 30 МБ')}</p>
                   <div id="avatar-preview" className="mt-2"></div>
                 </div>
 
@@ -968,6 +977,7 @@ export default function AddService() {
                         onChange={(e) => handleFileChange(e, `image${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
+                      <p className="text-xs text-gray-500 mt-1">{t('service.fileSizeHint', 'Максимальный размер файла: 30 МБ')}</p>
                       <div id={`image${num}-preview`} className="mt-2"></div>
                     </div>
                   ))}
@@ -986,6 +996,7 @@ export default function AddService() {
                         onChange={(e) => handleFileChange(e, `video${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
+                      <p className="text-xs text-gray-500 mt-1">{t('service.fileSizeHint', 'Максимальный размер файла: 30 МБ')}</p>
                       <div id={`video${num}-preview`} className="mt-2"></div>
                     </div>
                   ))}

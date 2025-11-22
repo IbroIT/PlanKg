@@ -204,7 +204,11 @@
     "archiveSuccess": "Кызмат ийгиликтүү архивделди",
     "archiveError": "Кызматты архивдөөдө ката кетти",
     "unarchiveSuccess": "Кызмат ийгиликтүү калыбына келтирилди",
-    "unarchiveError": "Кызматты калыбына келтирүүдө ката кетти"
+    "unarchiveError": "Кызматты калыбына келтирүүдө ката кетти",
+    "confirmDeleteTitle": "{{mediaType}} өчүрүү?",
+    "confirmDeleteMessage": "Бул {{mediaType}} өчүрүүгө ишенесиңби? Бул аракетти артка кайтарууга болбойт.",
+    "fileSizeError": "Файлдын өлчөмү 30 МБдан ашпоосу керек",
+    "fileSizeHint": "Файлдын максималдуу өлчөмү: 30 МБ"
   },
   "serviceSubmitted": {
     "title": "Сиздин каттоо кабыл алынды!",

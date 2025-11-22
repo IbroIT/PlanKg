@@ -205,7 +205,11 @@
     "archiveSuccess": "Услуга успешно архивирована",
     "archiveError": "Ошибка при архивировании услуги",
     "unarchiveSuccess": "Услуга успешно восстановлена",
-    "unarchiveError": "Ошибка при восстановлении услуги"
+    "unarchiveError": "Ошибка при восстановлении услуги",
+    "confirmDeleteTitle": "Удалить {{mediaType}}?",
+    "confirmDeleteMessage": "Вы уверены, что хотите удалить этот {{mediaType}}? Это действие нельзя отменить.",
+    "fileSizeError": "Размер файла не должен превышать 30 МБ",
+    "fileSizeHint": "Максимальный размер файла: 30 МБ"
   },
   "serviceSubmitted": {
     "title": "Ваша заявка принята!",

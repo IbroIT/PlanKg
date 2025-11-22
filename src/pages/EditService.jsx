@@ -779,6 +779,14 @@ export default function EditService() {
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
+      // Check file size (30 MB limit)
+      const maxSize = 30 * 1024 * 1024; // 30 MB in bytes
+      if (file.size > maxSize) {
+        alert(t('service.fileSizeError', 'Размер файла не должен превышать 30 МБ'));
+        e.target.value = ''; // Clear the input
+        return;
+      }
+
       setFormData({ ...formData, [field]: file });
       // Note: Preview will be shown after form submission
       // Direct DOM manipulation removed to avoid React conflicts
@@ -788,6 +796,13 @@ export default function EditService() {
   const handleRemoveMedia = (field) => {
     setDeleteField(field);
     setShowDeleteModal(true);
+  };
+
+  const getMediaTypeLabel = (field) => {
+    if (field === 'avatar') return t('addService.avatar');
+    if (field.startsWith('image')) return t('addService.image');
+    if (field.startsWith('video')) return t('addService.video');
+    return t('addService.media');
   };
 
   const confirmRemoveMedia = async () => {
@@ -1157,6 +1172,7 @@ export default function EditService() {
                     onChange={(e) => handleFileChange(e, 'avatar')}
                     className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                   />
+                  <p className="text-xs text-gray-500 mt-1">{t('service.fileSizeHint', 'Максимальный размер файла: 30 МБ')}</p>
                   <div className="mt-2">
                     {formData.avatar_url && (
                       <div className="relative inline-block">
@@ -1192,6 +1208,7 @@ export default function EditService() {
                         onChange={(e) => handleFileChange(e, `image${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
+                      <p className="text-xs text-gray-500 mt-1">{t('service.fileSizeHint', 'Максимальный размер файла: 30 МБ')}</p>
                       <div className="mt-2">
                         {formData[`image${num}_url`] && (
                           <div className="relative inline-block">
@@ -1229,6 +1246,7 @@ export default function EditService() {
                         onChange={(e) => handleFileChange(e, `video${num}`)}
                         className="w-full px-4 py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#F4B942] file:text-[#1E2A3A] hover:file:bg-[#e5a832]"
                       />
+                      <p className="text-xs text-gray-500 mt-1">{t('service.fileSizeHint', 'Максимальный размер файла: 30 МБ')}</p>
                       <div className="mt-2">
                         {formData[`video${num}_url`] && (
                           <div className="relative inline-block">
@@ -1309,10 +1327,10 @@ export default function EditService() {
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-[#1E2A3A] mb-2">
-                {t('editService.confirmDeleteTitle', 'Подтверждение удаления')}
+                {t('service.confirmDeleteTitle', { mediaType: getMediaTypeLabel(deleteField) })}
               </h3>
               <p className="text-gray-600 mb-6">
-                {t('editService.confirmDelete', 'Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.')}
+                {t('service.confirmDeleteMessage', { mediaType: getMediaTypeLabel(deleteField) })}
               </p>
               <div className="flex space-x-3">
                 <button

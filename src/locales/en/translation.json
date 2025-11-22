@@ -203,7 +203,11 @@
     "archiveSuccess": "Service archived successfully",
     "archiveError": "Error archiving service",
     "unarchiveSuccess": "Service restored successfully",
-    "unarchiveError": "Error restoring service"
+    "unarchiveError": "Error restoring service",
+    "confirmDeleteTitle": "Delete {{mediaType}}?",
+    "confirmDeleteMessage": "Are you sure you want to delete this {{mediaType}}? This action cannot be undone.",
+    "fileSizeError": "File size should not exceed 30 MB",
+    "fileSizeHint": "Maximum file size: 30 MB"
   },
   "serviceSubmitted": {
     "title": "Your application has been accepted!",
