@@ -357,13 +357,13 @@ export default function Header() {
                     onTouchMove={(e) => {
                       const touchY = e.touches[0].clientY;
                       const deltaY = Math.abs(touchY - touchStartY);
-                      if (deltaY > 10) { // Если движение больше 10px, считаем это прокруткой
+                      if (deltaY > 5) { // Уменьшили порог до 5px для более точного определения прокрутки
                         setIsScrolling(true);
                       }
                     }}
                     onTouchEnd={() => {
                       // Сбрасываем флаг через небольшую задержку
-                      setTimeout(() => setIsScrolling(false), 100);
+                      setTimeout(() => setIsScrolling(false), 150);
                     }}
                   >
                     {filteredCategories.map((category) => (
@@ -379,17 +379,16 @@ export default function Header() {
                             e.preventDefault();
                             setIsMenuOpen(false);
                             setIsCategoriesOpen(false);
-                            window.location.href = `/services?category=${category.id}`;
+                            navigate(`/services?category=${category.id}`);
                           }}
                           onClick={(e) => {
-                            if (isScrolling) {
+                            // Для десктопной версии оставляем обычный клик
+                            if (window.innerWidth >= 1280) {
                               e.preventDefault();
-                              return;
+                              setIsMenuOpen(false);
+                              setIsCategoriesOpen(false);
+                              navigate(`/services?category=${category.id}`);
                             }
-                            e.preventDefault();
-                            setIsMenuOpen(false);
-                            setIsCategoriesOpen(false);
-                            window.location.href = `/services?category=${category.id}`;
                           }}
                         >
                           <div className="flex items-center justify-between">
@@ -415,17 +414,16 @@ export default function Header() {
                                   e.preventDefault();
                                   setIsMenuOpen(false);
                                   setIsCategoriesOpen(false);
-                                  window.location.href = `/services?category=${sub.id}`;
+                                  navigate(`/services?category=${sub.id}`);
                                 }}
                                 onClick={(e) => {
-                                  if (isScrolling) {
+                                  // Для десктопной версии оставляем обычный клик
+                                  if (window.innerWidth >= 1280) {
                                     e.preventDefault();
-                                    return;
+                                    setIsMenuOpen(false);
+                                    setIsCategoriesOpen(false);
+                                    navigate(`/services?category=${sub.id}`);
                                   }
-                                  e.preventDefault();
-                                  setIsMenuOpen(false);
-                                  setIsCategoriesOpen(false);
-                                  window.location.href = `/services?category=${sub.id}`;
                                 }}
                               >
                                 {sub.name}
