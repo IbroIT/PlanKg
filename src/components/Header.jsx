@@ -325,7 +325,10 @@ export default function Header() {
             {/* Categories in Mobile */}
             <div className="space-y-3">
               <button 
-                onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsCategoriesOpen(!isCategoriesOpen);
+                }}
                 className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all duration-300 mobile-category-button"
               >
                 <div className="flex items-center space-x-3">
@@ -336,8 +339,28 @@ export default function Header() {
               </button>
               
               {isCategoriesOpen && (
-                <div className="space-y-3 bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <div className="relative mb-4">
+                <div 
+                  className="space-y-3 bg-white/5 rounded-2xl p-4 border border-white/10"
+                  onClick={(e) => {
+                    // Закрываем меню только если клик был на фоне, а не на контенте
+                    if (e.target === e.currentTarget) {
+                      setIsCategoriesOpen(false);
+                    }
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-lg font-semibold text-white">Категории</h4>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsCategoriesOpen(false);
+                      }}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200"
+                    >
+                      <FiX className="w-5 h-5 text-white" />
+                    </button>
+                  </div>
+                  <div className="relative mb-4" onClick={(e) => e.stopPropagation()}>
                     <FiSearch className="w-5 h-5 text-white/60 absolute left-3 top-1/2 transform -translate-y-1/2" />
                     <input 
                       type="text" 
@@ -345,6 +368,7 @@ export default function Header() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 bg-white/20 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#F4B942]/50 focus:border-transparent text-white placeholder-white/50"
+                      onClick={(e) => e.stopPropagation()}
                     />
                   </div>
                   
@@ -365,9 +389,10 @@ export default function Header() {
                       // Сбрасываем флаг через небольшую задержку
                       setTimeout(() => setIsScrolling(false), 150);
                     }}
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    {filteredCategories.map((category) => (
-                      <div key={category.id} className="space-y-2">
+                    {filteredCategories.map((category, index) => (
+                      <div key={category.id} className={`space-y-2 ${index < filteredCategories.length - 1 ? 'border-b border-white/10 pb-3 mb-3' : ''}`}>
                         <Link
                           to={`/services?category=${category.id}`}
                           className="block p-3 rounded-xl hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/20 mobile-menu-link"
@@ -382,20 +407,14 @@ export default function Header() {
                             navigate(`/services?category=${category.id}`);
                           }}
                           onClick={(e) => {
-                            // Для десктопной версии оставляем обычный клик
-                            if (window.innerWidth >= 1280) {
-                              e.preventDefault();
-                              setIsMenuOpen(false);
-                              setIsCategoriesOpen(false);
-                              navigate(`/services?category=${category.id}`);
-                            }
+                            e.preventDefault();
+                            setIsMenuOpen(false);
+                            setIsCategoriesOpen(false);
+                            navigate(`/services?category=${category.id}`);
                           }}
                         >
                           <div className="flex items-center justify-between">
                             <span className="font-semibold text-white">{category.name}</span>
-                            <span className="text-sm bg-white/20 px-2 py-1 rounded-lg text-white">
-                              {category.subcategories?.length || 0}
-                            </span>
                           </div>
                         </Link>
                         
@@ -417,13 +436,10 @@ export default function Header() {
                                   navigate(`/services?category=${sub.id}`);
                                 }}
                                 onClick={(e) => {
-                                  // Для десктопной версии оставляем обычный клик
-                                  if (window.innerWidth >= 1280) {
-                                    e.preventDefault();
-                                    setIsMenuOpen(false);
-                                    setIsCategoriesOpen(false);
-                                    navigate(`/services?category=${sub.id}`);
-                                  }
+                                  e.preventDefault();
+                                  setIsMenuOpen(false);
+                                  setIsCategoriesOpen(false);
+                                  navigate(`/services?category=${sub.id}`);
                                 }}
                               >
                                 {sub.name}
