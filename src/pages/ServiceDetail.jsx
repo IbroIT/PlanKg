@@ -260,12 +260,14 @@ export default function ServiceDetail() {
         review.id === updatedReview.id ? updatedReview : review
       )
     );
+    window.location.reload();
   };
 
   const handleReviewDelete = (reviewId) => {
     setReviews(prevReviews =>
       prevReviews.filter(review => review.id !== reviewId)
     );
+    window.location.reload();
   };
 
   if (loading) {

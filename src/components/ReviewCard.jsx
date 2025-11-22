@@ -53,6 +53,8 @@ export default function ReviewCard({ review, onReviewUpdate, onReviewDelete }) {
         onReviewUpdate(updatedReview);
       }
       alert(t('reviews.reviewUpdated'));
+      // Перезагружаем страницу для обновления данных
+      window.location.reload();
     } catch (error) {
       console.error('Error updating review:', error);
       alert(t('reviews.updateError'));
@@ -75,6 +77,8 @@ export default function ReviewCard({ review, onReviewUpdate, onReviewDelete }) {
         onReviewDelete(review.id);
       }
       alert(t('reviews.reviewDeleted'));
+      // Перезагружаем страницу для обновления данных
+      window.location.reload();
     } catch (error) {
       console.error('Error deleting review:', error);
       alert(t('reviews.deleteError'));
