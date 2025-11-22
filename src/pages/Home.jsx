@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { servicesAPI } from '../api/services';
+import ServiceCard from '../components/ServiceCard';
 import Logo from '/logo.png';
 // Deep Blue Particle Background
 const DeepBlueBackground = () => {
@@ -337,11 +338,75 @@ const LoadingSpinner = () => (
   </div>
 );
 
+// Top Services Card Component
+const TopServicesCard = ({ service, index, rank }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const getRankIcon = (rank) => {
+    switch (rank) {
+      case 1:
+        return (
+          <div className="absolute -top-2 -left-2 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg z-10">
+            <span className="text-white font-bold text-sm">🥇</span>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="absolute -top-2 -left-2 w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center shadow-lg z-10">
+            <span className="text-white font-bold text-sm">🥈</span>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="absolute -top-2 -left-2 w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center shadow-lg z-10">
+            <span className="text-white font-bold text-sm">🥉</span>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      className={`opacity-0 transform translate-y-8 ${
+        isVisible ? 'animate-fade-in-up' : ''
+      }`}
+      style={{ animationDelay: `${index * 150}ms` }}
+    >
+      <div className="relative">
+        {getRankIcon(rank)}
+        <ServiceCard service={service} />
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
+  const [topServices, setTopServices] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -395,12 +460,18 @@ export default function Home() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [categoriesData, servicesData] = await Promise.all([
+      const [categoriesData, servicesData, allServicesData] = await Promise.all([
         servicesAPI.getCategories(i18n.language),
         servicesAPI.getServices({ page_size: 8, lang: i18n.language }),
+        servicesAPI.getServices({ page_size: 100, ordering: '-rating', lang: i18n.language }),
       ]);
       setCategories(categoriesData);
       setServices(servicesData.results || servicesData);
+      // Filter services with rating > 0 and take top 3
+      const topRatedServices = (allServicesData.results || allServicesData)
+        .filter(service => service.rating && parseFloat(service.rating) > 0)
+        .slice(0, 3);
+      setTopServices(topRatedServices);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -599,6 +670,50 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Top Services Section */}
+      <section className="py-16 md:py-20 lg:py-24 relative z-10">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6">
+              {t('home.topServices', 'Топ услуг по рейтингу')}
+            </h2>
+            <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
+              {t('home.topServicesDescription', 'Лучшие услуги, оцененные нашими клиентами')}
+            </p>
+          </div>
+
+          {loading ? (
+            <LoadingSpinner />
+          ) : topServices.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {topServices.map((service, index) => (
+                <TopServicesCard
+                  key={service.id}
+                  service={service}
+                  index={index}
+                  rank={index + 1}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 md:py-16 bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg mx-4 md:mx-0 border border-white/20">
+              <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 bg-white/20 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+              </div>
+              <h3 className="text-lg md:text-xl font-semibold text-white mb-2">
+                {t('home.noTopServices', 'Топ услуг пока нет')}
+              </h3>
+              <p className="text-gray-300 mb-4 md:mb-6 text-sm md:text-base">
+                {t('home.noTopServicesDescription', 'Услуги появятся после получения отзывов')}
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
       <style jsx>{`
         @keyframes fadeInUp {
           from {

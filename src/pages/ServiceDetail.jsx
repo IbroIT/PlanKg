@@ -206,11 +206,23 @@ export default function ServiceDetail() {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+
+    // Frontend validation
+    if (reviewData.rating < 1 || reviewData.rating > 5) {
+      alert(t('service.invalidRating', 'Пожалуйста, выберите рейтинг от 1 до 5 звезд'));
+      return;
+    }
+
+    if (!reviewData.comment || reviewData.comment.trim().length < 10) {
+      alert(t('service.commentTooShort', 'Комментарий должен содержать минимум 10 символов'));
+      return;
+    }
+
     try {
       await reviewsAPI.createReview({
         service: service.id,
         rating: reviewData.rating,
-        comment: reviewData.comment,
+        comment: reviewData.comment.trim(),
       });
       setReviewData({ rating: 5, comment: '' });
       setShowReviewForm(false);
@@ -220,7 +232,25 @@ export default function ServiceDetail() {
       alert(t('service.reviewSubmitted', 'Отзыв успешно отправлен'));
     } catch (error) {
       console.error('Error submitting review:', error);
-      alert(t('service.reviewError', 'Ошибка при отправке отзыва'));
+
+      // Handle specific validation errors
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+
+        if (errorData.comment && Array.isArray(errorData.comment)) {
+          alert(errorData.comment[0]);
+        } else if (errorData.rating && Array.isArray(errorData.rating)) {
+          alert(errorData.rating[0]);
+        } else if (errorData.non_field_errors && Array.isArray(errorData.non_field_errors)) {
+          alert(errorData.non_field_errors[0]);
+        } else if (errorData.detail) {
+          alert(errorData.detail);
+        } else {
+          alert(t('service.reviewError', 'Ошибка при отправке отзыва'));
+        }
+      } else {
+        alert(t('service.reviewError', 'Ошибка при отправке отзыва'));
+      }
     }
   };
 
@@ -522,11 +552,36 @@ export default function ServiceDetail() {
                     </label>
                     <textarea
                       value={reviewData.comment}
-                      onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 500) {
+                          setReviewData({ ...reviewData, comment: e.target.value });
+                        }
+                      }}
                       rows="4"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F4B942]"
+                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                        reviewData.comment.trim().length < 10 && reviewData.comment.length > 0
+                          ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                          : 'border-gray-300 focus:ring-[#F4B942] focus:border-[#F4B942]'
+                      }`}
                       required
+                      placeholder={t('service.commentPlaceholder', 'Напишите подробный отзыв (минимум 10 символов)...')}
+                      maxLength="500"
                     ></textarea>
+                    <div className="flex justify-between items-center mt-1">
+                      <div className={`text-xs ${
+                        reviewData.comment.trim().length < 10
+                          ? 'text-red-500'
+                          : 'text-gray-500'
+                      }`}>
+                        {reviewData.comment.trim().length < 10
+                          ? t('service.commentTooShort', `Нужно еще ${10 - reviewData.comment.trim().length} символов`)
+                          : t('service.commentValid', 'Комментарий корректный')
+                        }
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {reviewData.comment.length}/500
+                      </div>
+                    </div>
                   </div>
                   <div className="flex space-x-3">
                     <button
