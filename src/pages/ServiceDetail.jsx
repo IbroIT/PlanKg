@@ -148,6 +148,62 @@ export default function ServiceDetail() {
     setShowDeleteModal(false);
   };
 
+  const handleArchiveService = async () => {
+    try {
+      await servicesAPI.archiveService(service.id);
+      alert(t('service.archiveSuccess', 'Услуга успешно архивирована'));
+      // Обновляем статус услуги
+      setService({ ...service, status: 'archived' });
+    } catch (error) {
+      console.error('Error archiving service:', error);
+      alert(t('service.archiveError', 'Ошибка при архивировании услуги'));
+    }
+  };
+
+  const handleUnarchiveService = async () => {
+    try {
+      await servicesAPI.unarchiveService(service.id);
+      alert(t('service.unarchiveSuccess', 'Услуга успешно восстановлена'));
+      // Обновляем статус услуги на pending для модерации
+      setService({ ...service, status: 'pending' });
+    } catch (error) {
+      console.error('Error unarchiving service:', error);
+      alert(t('service.unarchiveError', 'Ошибка при восстановлении услуги'));
+    }
+  };
+
+  const handleShareClick = async () => {
+    const shareData = {
+      title: service.title,
+      text: service.description,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        alert(t('service.linkCopied', 'Ссылка скопирована в буфер обмена'));
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = shareData.url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert(t('service.linkCopied', 'Ссылка скопирована в буфер обмена'));
+      }
+    }
+  };
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     try {
@@ -197,19 +253,41 @@ export default function ServiceDetail() {
           <div className="lg:col-span-2">
             {/* Service Info */}
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-              <div className="flex items-start gap-6">
-                <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-[#1E2A3A] mb-4">
-                    {service.title}
-                  </h1>
+                  <div className="flex items-start gap-6">
+                    <div className="flex-1">
+                      <h1 className="text-3xl font-bold text-[#1E2A3A] mb-4">
+                        {service.title}
+                      </h1>
 
-                  {service.category && (
-                    <div className="inline-block bg-[#E9EEF4] px-4 py-2 rounded-lg mb-4">
-                      <span className="text-[#1E2A3A] font-medium">{service.category.name}</span>
-                    </div>
-                  )}
+                      <div className="flex items-center gap-4 mb-4">
+                        {service.category && (
+                          <div className="inline-block bg-[#E9EEF4] px-4 py-2 rounded-lg">
+                            <span className="text-[#1E2A3A] font-medium">{service.category.name}</span>
+                          </div>
+                        )}
 
-                  <div className="flex items-center mb-6">
+                        {/* Status Badge - only for pending services */}
+                        {service.status === 'pending' && (
+                          <div className="inline-block bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded-lg">
+                            <div className="flex items-center">
+                              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <span className="font-medium">{t('service.pending')}</span>
+                            </div>
+                          </div>
+                        )}
+                        {service.status === 'archived' && (
+                          <div className="inline-block bg-gray-100 border border-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                            <div className="flex items-center">
+                              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                              </svg>
+                              <span className="font-medium">{t('service.archived')}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>                  <div className="flex items-center mb-6">
                     {service.rating > 0 && (
                       <div className="flex items-center mr-6">
                         <svg className="w-6 h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
@@ -520,17 +598,18 @@ export default function ServiceDetail() {
                   : t('service.negotiable')}
               </div>
 
-              {/* Status Badge */}
-              {service.status === 'pending' && (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg mb-4 text-sm">
-                  <div className="flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{t('service.pending')}</span>
-                  </div>
-                </div>
-              )}
+              {/* Share Button */}
+              <div className="mb-4">
+                <button
+                  onClick={handleShareClick}
+                  className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                  </svg>
+                  {t('service.share', 'Поделиться')}
+                </button>
+              </div>
 
               {/* Edit and Delete Buttons for Owner */}
               {(() => {
@@ -561,6 +640,27 @@ export default function ServiceDetail() {
                         </svg>
                         {t('service.delete', 'Удалить')}
                       </button>
+                      {service.status !== 'archived' ? (
+                        <button
+                          onClick={handleArchiveService}
+                          className="inline-flex items-center bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center"
+                        >
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                          </svg>
+                          {t('service.archive', 'Архивировать')}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleUnarchiveService}
+                          className="inline-flex items-center bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center"
+                        >
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                          {t('service.unarchive', 'Восстановить')}
+                        </button>
+                      )}
                     </div>
                   );
                 }

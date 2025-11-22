@@ -83,6 +83,16 @@ export const servicesAPI = {
     await api.delete(`/services/${id}/delete/`);
   },
   
+  archiveService: async (id) => {
+    const response = await api.patch(`/services/${id}/archive/`);
+    return response.data;
+  },
+  
+  unarchiveService: async (id) => {
+    const response = await api.patch(`/services/${id}/unarchive/`);
+    return response.data;
+  },
+  
   getMyServices: async (lang = 'ru') => {
     const response = await api.get(`/services/my/?lang=${lang}`);
     return response.data;

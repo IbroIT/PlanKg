@@ -42,29 +42,86 @@ export default function ServiceCard({ service, onFavoriteChange }) {
     navigate(`/services/${service.id}`);
   };
 
+  const handleShareClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const shareData = {
+      title: service.title,
+      text: service.description,
+      url: `${window.location.origin}/services/${service.id}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        alert(t('service.linkCopied', 'Ссылка скопирована в буфер обмена'));
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = shareData.url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert(t('service.linkCopied', 'Ссылка скопирована в буфер обмена'));
+      }
+    }
+  };
+
   return (
     <div
       onClick={handleCardClick}
       className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden h-full relative border border-gray-100 hover:border-[#F4B942] hover:border-opacity-30 cursor-pointer"
     >
-      <button
-        onClick={handleFavoriteClick}
-        className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:scale-110 transition-all duration-300 group-hover:bg-[#F4B942] group-hover:bg-opacity-10"
-        disabled={isTogglingFavorite}
-      >
-        <svg
-          className={isFavorited ? 'w-5 h-5 text-red-500 fill-current' : 'w-5 h-5 text-gray-400 group-hover:text-white'}
-          fill={isFavorited ? "currentColor" : "none"}
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      <div className="absolute top-4 right-4 z-10 flex gap-2">
+        <button
+          onClick={handleShareClick}
+          className="bg-white rounded-full p-2 shadow-lg hover:scale-110 transition-all duration-300 group-hover:bg-[#F4B942] group-hover:bg-opacity-10"
+          title={t('service.share', 'Поделиться')}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      </button>
+          <svg
+            className="w-5 h-5 text-gray-400 group-hover:text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+          </svg>
+        </button>
+        <button
+          onClick={handleFavoriteClick}
+          className="bg-white rounded-full p-2 shadow-lg hover:scale-110 transition-all duration-300 group-hover:bg-[#F4B942] group-hover:bg-opacity-10"
+          disabled={isTogglingFavorite}
+        >
+          <svg
+            className={isFavorited ? 'w-5 h-5 text-red-500 fill-current' : 'w-5 h-5 text-gray-400 group-hover:text-white'}
+            fill={isFavorited ? "currentColor" : "none"}
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
+      </div>
 
       {service.status === 'pending' && (
         <div className="absolute top-4 left-4 z-10 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
           {t('service.pending')}
+        </div>
+      )}
+
+      {service.status === 'archived' && (
+        <div className="absolute top-4 left-4 z-10 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
+          {t('service.archived')}
         </div>
       )}
 

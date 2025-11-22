@@ -530,11 +530,17 @@ export default function Profile() {
                         <ServiceCard service={service} />
                         {service.status !== 'approved' && (
                           <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold z-10 ${
-                            service.status === 'pending' 
-                              ? 'bg-yellow-500 text-white' 
+                            service.status === 'pending'
+                              ? 'bg-yellow-500 text-white'
+                              : service.status === 'archived'
+                              ? 'bg-red-500 text-white'
                               : 'bg-red-500 text-white'
                           }`}>
-                            {service.status === 'pending' ? t('profile.pendingStatus') : t('profile.rejectedStatus')}
+                            {service.status === 'pending'
+                              ? t('profile.pendingStatus')
+                              : service.status === 'archived'
+                              ? t('service.archived')
+                              : t('profile.rejectedStatus')}
                           </div>
                         )}
                       </div>
