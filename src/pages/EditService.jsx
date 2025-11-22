@@ -799,6 +799,52 @@ export default function EditService() {
     }
   };
 
+  const handleRemoveMedia = async (field) => {
+    if (!window.confirm(t('editService.confirmDelete', 'Вы уверены, что хотите удалить этот файл?'))) {
+      return;
+    }
+
+    try {
+      // If it's an existing file (has URL), send delete request to server
+      if (formData[`${field}_url`]) {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/services/${id}/remove-media/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify({ field })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to remove media from server');
+        }
+      }
+
+      // Remove from formData
+      const newFormData = { ...formData };
+      delete newFormData[field];
+      delete newFormData[`${field}_url`];
+      setFormData(newFormData);
+
+      // Clear preview
+      const previewElement = document.getElementById(`${field}-preview`);
+      if (previewElement) {
+        previewElement.innerHTML = '';
+      }
+
+      // Clear file input
+      const fileInput = document.querySelector(`input[type="file"][accept*="${field.startsWith('video') ? 'video' : 'image'}"]`);
+      if (fileInput) {
+        fileInput.value = '';
+      }
+
+    } catch (error) {
+      console.error('Error removing media:', error);
+      alert(t('editService.deleteError', 'Ошибка при удалении файла'));
+    }
+  };
+
   if (fetchLoading) {
     return (
       <div className="min-h-screen bg-[#E9EEF4] flex items-center justify-center">
@@ -1132,6 +1178,16 @@ export default function EditService() {
                         <span className="absolute top-2 right-2 bg-[#F4B942] text-[#1E2A3A] text-xs px-2 py-1 rounded">
                           {t('editService.currentImage', 'Текущее изображение')}
                         </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMedia('avatar')}
+                          className="absolute top-2 left-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                          title={t('service.delete', 'Удалить')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -1157,6 +1213,16 @@ export default function EditService() {
                             <span className="absolute top-2 right-2 bg-[#F4B942] text-[#1E2A3A] text-xs px-2 py-1 rounded">
                               {t('editService.currentImage', 'Текущее изображение')}
                             </span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveMedia(`image${num}`)}
+                              className="absolute top-2 left-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                              title={t('service.delete', 'Удалить')}
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
                           </div>
                         )}
                       </div>
@@ -1184,6 +1250,16 @@ export default function EditService() {
                             <span className="absolute top-2 right-2 bg-[#F4B942] text-[#1E2A3A] text-xs px-2 py-1 rounded">
                               {t('editService.currentVideo', 'Текущее видео')}
                             </span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveMedia(`video${num}`)}
+                              className="absolute top-2 left-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                              title={t('service.delete', 'Удалить')}
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
                           </div>
                         )}
                       </div>
