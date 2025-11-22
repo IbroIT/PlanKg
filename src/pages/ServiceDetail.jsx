@@ -148,6 +148,26 @@ export default function ServiceDetail() {
     setShowDeleteModal(false);
   };
 
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    try {
+      await reviewsAPI.createReview({
+        service: service.id,
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+      });
+      setReviewData({ rating: 5, comment: '' });
+      setShowReviewForm(false);
+      // Refresh reviews
+      const updatedReviews = await reviewsAPI.getServiceReviews(id);
+      setReviews(updatedReviews);
+      alert(t('service.reviewSubmitted', 'Отзыв успешно отправлен'));
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert(t('service.reviewError', 'Ошибка при отправке отзыва'));
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#E9EEF4] flex items-center justify-center">
