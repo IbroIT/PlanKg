@@ -188,7 +188,12 @@
     "contactSuccess": "Were you able to reach an agreement?",
     "contactFeedback": "Thank you for your feedback!",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this service?",
+    "deleteSuccess": "Service deleted successfully",
+    "deleteError": "Error deleting service"
   },
   "serviceSubmitted": {
     "title": "Your application has been accepted!",
