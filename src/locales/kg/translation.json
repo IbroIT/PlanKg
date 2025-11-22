@@ -181,6 +181,7 @@
     "leaveFirstReview": "Биринчи пикирди калтыруу",
     "hour": "саат",
     "instagram": "Instagram",
+    "twoGis": "2GIS",
     "cancel": "Жокко чыгаруу",
     "videoNotSupported": "Сиздин браузериңиз видео тегин колдобойт.",
     "videos": "Видеолор",
@@ -415,6 +416,7 @@
     "uploadVideo": "Видео жүктөө",
     "selectCity": "Шаар тандаңыз",
     "phone": "Телефон",
+    "twoGis": "2GIS",
     "videoHint": "Кызматыңыздын 2ге чейин видеосун кошуңуз"
   },
   "filters": {

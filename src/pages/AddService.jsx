@@ -200,6 +200,7 @@ export default function AddService() {
     instagram: '',
     whatsapp: '',
     telegram: '',
+    two_gis_link: '',
     capacity: '',
     average_check: '',
     event_duration: '',
@@ -297,7 +298,8 @@ export default function AddService() {
           email: userData.email || '',
           instagram: userData.instagram || '',
           whatsapp: userData.whatsapp || '',
-          telegram: userData.telegram || ''
+          telegram: userData.telegram || '',
+          two_gis_link: userData.two_gis_link || ''
         }));
       }
     } catch (error) {
@@ -540,6 +542,7 @@ export default function AddService() {
       instagram: formData.instagram,
       whatsapp: formData.whatsapp,
       telegram: formData.telegram,
+      two_gis_link: formData.two_gis_link,
       avatar: formData.avatar,
       image1: formData.image1,
       image2: formData.image2,
@@ -914,6 +917,18 @@ export default function AddService() {
                       value={formData.telegram}
                       onChange={(e) => handleInputChange('telegram', e.target.value)}
                       placeholder="@username"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
+                      {t('addService.twoGis')}
+                    </label>
+                    <input
+                      type="url"
+                      value={formData.two_gis_link}
+                      onChange={(e) => handleInputChange('two_gis_link', e.target.value)}
+                      placeholder="https://2gis.kg/..."
                       className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                     />
                   </div>

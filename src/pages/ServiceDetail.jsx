@@ -352,7 +352,7 @@ export default function ServiceDetail() {
               )}
 
               {/* Contact Information */}
-              {(service.phone || service.email || service.website || service.instagram || service.facebook) && (
+              {(service.phone || service.email || service.website || service.instagram || service.facebook || service.two_gis_link) && (
                 <div className="border-t border-gray-200 mt-6 pt-6">
                   <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
                     {t('service.contact')}
@@ -392,6 +392,12 @@ export default function ServiceDetail() {
                       <a href={`https://facebook.com/${service.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
                         <span className="mr-3">👤</span>
                         {service.facebook}
+                      </a>
+                    )}
+                    {service.two_gis_link && (
+                      <a href={service.two_gis_link} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
+                        <span className="mr-3 text-lg">🗺️</span>
+                        {t('service.twoGis')}
                       </a>
                     )}
                   </div>

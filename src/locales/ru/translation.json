@@ -182,6 +182,7 @@
     "leaveFirstReview": "Оставить первый отзыв",
     "hour": "час",
     "instagram": "Instagram",
+    "twoGis": "2GIS",
     "cancel": "Отменить",
     "videoNotSupported": "Ваш браузер не поддерживает видео.",
     "videos": "Видео",
@@ -404,6 +405,7 @@
     "uploadVideo": "Загрузить видео",
     "selectCity": "Выберите город",
     "phone": "Телефон",
+    "twoGis": "2GIS",
     "videoHint": "Добавьте до 2 видео вашей услуги"
   },
   "filters": {

@@ -180,6 +180,7 @@
     "leaveFirstReview": "Leave the first review",
     "hour": "hour",
     "instagram": "Instagram",
+    "twoGis": "2GIS",
     "cancel": "Cancel",
     "videoNotSupported": "Your browser does not support the video tag.",
     "videos": "Videos",
@@ -414,6 +415,7 @@
     "uploadVideo": "Upload video",
     "selectCity": "Select city",
     "phone": "Phone",
+    "twoGis": "2GIS",
     "videoHint": "Add up to 2 videos of your service"
   },
   "filters": {

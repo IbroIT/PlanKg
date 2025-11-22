@@ -29,7 +29,7 @@ export const servicesAPI = {
     
     // Add optional fields
     const optionalFields = [
-      'price', 'district', 'phone', 'email', 'website', 'instagram', 'facebook',
+      'price', 'district', 'phone', 'email', 'website', 'instagram', 'facebook', 'two_gis_link',
       'capacity', 'average_check', 'event_duration', 'additional_services',
       'experience_years', 'hourly_rate', 'gender', 'image1', 'image2', 'image3',
       'image4', 'image5', 'video1', 'video2', 'additional_fields', 'equipment_type',

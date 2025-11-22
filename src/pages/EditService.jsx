@@ -248,6 +248,7 @@ export default function EditService() {
     instagram: '',
     whatsapp: '',
     telegram: '',
+    two_gis_link: '',
     capacity: '',
     average_check: '',
     event_duration: '',
@@ -432,6 +433,7 @@ export default function EditService() {
         instagram: serviceData.instagram || '',
         whatsapp: serviceData.whatsapp || '',
         telegram: serviceData.telegram || '',
+        two_gis_link: serviceData.two_gis_link || '',
         capacity: serviceData.capacity || '',
         average_check: serviceData.average_check || '',
         event_duration: serviceData.event_duration || '',
@@ -732,7 +734,7 @@ export default function EditService() {
     // Add common additional fields
     const additionalFields = [
       'capacity', 'average_check', 'event_duration', 'additional_services',
-      'experience_years', 'hourly_rate', 'gender'
+      'experience_years', 'hourly_rate', 'gender', 'two_gis_link'
     ];
     additionalFields.forEach(field => {
       if (formData[field] !== null && formData[field] !== undefined && formData[field] !== '') {
@@ -1088,6 +1090,18 @@ export default function EditService() {
                       value={formData.telegram}
                       onChange={(e) => handleInputChange('telegram', e.target.value)}
                       placeholder="@username"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
+                      {t('addService.twoGis')}
+                    </label>
+                    <input
+                      type="url"
+                      value={formData.two_gis_link}
+                      onChange={(e) => handleInputChange('two_gis_link', e.target.value)}
+                      placeholder="https://2gis.kg/..."
                       className="w-full px-3 py-2 md:px-4 md:py-3 bg-[#E9EEF4] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F4B942] text-[#1E2A3A] placeholder-gray-500 text-sm md:text-base"
                     />
                   </div>
