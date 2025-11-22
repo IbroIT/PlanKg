@@ -32,6 +32,8 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [touchStartY, setTouchStartY] = useState(0);
   const categoriesRef = useRef(null);
 
   useEffect(() => {
@@ -346,19 +348,44 @@ export default function Header() {
                     />
                   </div>
                   
-                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                  <div 
+                    className="space-y-2 max-h-60 overflow-y-auto"
+                    onTouchStart={(e) => {
+                      setTouchStartY(e.touches[0].clientY);
+                      setIsScrolling(false);
+                    }}
+                    onTouchMove={(e) => {
+                      const touchY = e.touches[0].clientY;
+                      const deltaY = Math.abs(touchY - touchStartY);
+                      if (deltaY > 10) { // Если движение больше 10px, считаем это прокруткой
+                        setIsScrolling(true);
+                      }
+                    }}
+                    onTouchEnd={() => {
+                      // Сбрасываем флаг через небольшую задержку
+                      setTimeout(() => setIsScrolling(false), 100);
+                    }}
+                  >
                     {filteredCategories.map((category) => (
                       <div key={category.id} className="space-y-2">
                         <Link
                           to={`/services?category=${category.id}`}
                           className="block p-3 rounded-xl hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/20 mobile-menu-link"
                           onTouchEnd={(e) => {
+                            if (isScrolling) {
+                              e.preventDefault();
+                              return;
+                            }
                             e.preventDefault();
                             setIsMenuOpen(false);
                             setIsCategoriesOpen(false);
                             window.location.href = `/services?category=${category.id}`;
                           }}
                           onClick={(e) => {
+                            if (isScrolling) {
+                              e.preventDefault();
+                              return;
+                            }
                             e.preventDefault();
                             setIsMenuOpen(false);
                             setIsCategoriesOpen(false);
@@ -381,12 +408,20 @@ export default function Header() {
                                 to={`/services?category=${sub.id}`}
                                 className="block p-2 text-sm text-white rounded-lg hover:bg-white/10 transition-all duration-200 mobile-menu-link"
                                 onTouchEnd={(e) => {
+                                  if (isScrolling) {
+                                    e.preventDefault();
+                                    return;
+                                  }
                                   e.preventDefault();
                                   setIsMenuOpen(false);
                                   setIsCategoriesOpen(false);
                                   window.location.href = `/services?category=${sub.id}`;
                                 }}
                                 onClick={(e) => {
+                                  if (isScrolling) {
+                                    e.preventDefault();
+                                    return;
+                                  }
                                   e.preventDefault();
                                   setIsMenuOpen(false);
                                   setIsCategoriesOpen(false);
