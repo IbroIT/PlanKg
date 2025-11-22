@@ -48,7 +48,8 @@
     "qualityServices": "Жогорку сапаттагы кызматтар",
     "qualityServicesDesc": "Текшерилген адистер жана мыкты пикирлер",
     "securePayments": "Коопсуз төлөмдөр",
-    "securePaymentsDesc": "Корголгон транзакциялар жана кепилдиктер"
+    "securePaymentsDesc": "Корголгон транзакциялар жана кепилдиктер",
+    "topServices": "Рейтинг боюнча топ кызматтар"
   },
   "service": {
     "negotiable": "Сүйлөшүүгө",

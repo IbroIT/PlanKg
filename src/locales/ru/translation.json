@@ -48,7 +48,8 @@
     "qualityServices": "Качественные услуги",
     "qualityServicesDesc": "Проверенные специалисты и отличные отзывы",
     "securePayments": "Безопасные платежи",
-    "securePaymentsDesc": "Защищенные транзакции и гарантии"
+    "securePaymentsDesc": "Защищенные транзакции и гарантии",
+    "topServices": "Топ услуг по рейтингу"
   },
   "service": {
     "negotiable": "По договоренности",

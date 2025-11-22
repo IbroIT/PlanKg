@@ -678,9 +678,6 @@ export default function Home() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6">
               {t('home.topServices', 'Топ услуг по рейтингу')}
             </h2>
-            <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
-              {t('home.topServicesDescription', 'Лучшие услуги, оцененные нашими клиентами')}
-            </p>
           </div>
 
           {loading ? (

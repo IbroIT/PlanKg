@@ -48,7 +48,8 @@
     "qualityServices": "Quality Services",
     "qualityServicesDesc": "Verified specialists and excellent reviews",
     "securePayments": "Secure Payments",
-    "securePaymentsDesc": "Protected transactions and guarantees"
+    "securePaymentsDesc": "Protected transactions and guarantees",
+    "topServices": "Top services by rating"
   },
   "service": {
     "negotiable": "Negotiable",
