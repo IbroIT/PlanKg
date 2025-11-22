@@ -254,6 +254,20 @@ export default function ServiceDetail() {
     }
   };
 
+  const handleReviewUpdate = (updatedReview) => {
+    setReviews(prevReviews =>
+      prevReviews.map(review =>
+        review.id === updatedReview.id ? updatedReview : review
+      )
+    );
+  };
+
+  const handleReviewDelete = (reviewId) => {
+    setReviews(prevReviews =>
+      prevReviews.filter(review => review.id !== reviewId)
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#E9EEF4] flex items-center justify-center">
@@ -605,7 +619,7 @@ export default function ServiceDetail() {
               <div className="space-y-4 mt-6">
                 {reviews.length > 0 ? (
                   <>
-                    {reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
+                    {reviews.map((review) => <ReviewCard key={review.id} review={review} onReviewUpdate={handleReviewUpdate} onReviewDelete={handleReviewDelete} />)}
                   </>
                 ) : (
                   <div className="text-center py-16 bg-[#E9EEF4] rounded-xl">
