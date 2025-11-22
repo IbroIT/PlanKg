@@ -148,7 +148,7 @@ const GeometricPattern = () => {
 // Floating Amber Elements
 const FloatingAmberElements = () => {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block">
       {/* Large amber glow */}
       <div className="absolute top-1/3 -left-40 w-80 h-80">
         <div className="absolute w-full h-full bg-[#F4B942] rounded-full blur-3xl opacity-5 animate-pulse-slow" />
@@ -436,7 +436,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-[#1E2A3A] text-white py-16 md:py-24 lg:py-32">
         {/* Amber accent elements */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 hidden md:block">
           <div className="absolute top-10 left-10 md:top-20 md:left-20 w-20 h-20 md:w-32 md:h-32 bg-[#F4B942] rounded-full blur-3xl animate-pulse-slow"></div>
           <div className="absolute bottom-10 right-10 md:bottom-20 md:right-20 w-24 h-24 md:w-48 md:h-48 bg-[#F4B942] rounded-full blur-3xl animate-pulse-medium"></div>
         </div>
@@ -543,9 +543,9 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-12 md:py-16 lg:py-20 relative z-10">
+      <section className="py-0 md:py-16 lg:py-20 relative z-10 -mt-8 md:mt-0">
         <div className="container mx-auto px-4">
-          <div className="text-center  md:mb-1">
+          <div className="text-center mt-6 md:mt-0 md:mb-1">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">
               {t('home.allCategories', 'Популярные категории')}
             </h2>
