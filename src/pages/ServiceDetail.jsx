@@ -7,7 +7,7 @@ import { reviewsAPI } from '../api/reviews';
 import { isAuthenticated } from '../api/auth';
 import ReviewCard from '../components/ReviewCard';
 import { FaMoneyBillWave, FaCalendarAlt, FaHeart, FaCamera, FaClock, FaMicrophone, FaUser, FaMapMarkerAlt, FaUtensils, FaMusic, FaCar, FaHome, FaBirthdayCake, FaTools, FaUsers, FaShieldAlt, FaMagic, FaVideo, FaStar, FaPhone, FaInstagram, FaFacebook } from 'react-icons/fa';
-
+import twogislogo from '../assets/2gis.jpg';
 const translateVideoFormat = (format, t) => {
   const translations = {
     'hd': t('service.videoFormatOptions.hd'),
@@ -396,7 +396,7 @@ export default function ServiceDetail() {
                     )}
                     {service.two_gis_link && (
                       <a href={service.two_gis_link} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <span className="mr-3 text-lg">🗺️</span>
+                        <img src={twogislogo} alt="2GIS" className="w-5 h-5 mr-3" />
                         {t('service.twoGis')}
                       </a>
                     )}
