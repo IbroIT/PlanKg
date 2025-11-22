@@ -533,8 +533,8 @@
     "tryChangingFilters": "Try changing the filters or search query"
   },
   "privacy": {
-    "title": "Privacy Policy and Terms of Use",
-    "intro": "These Privacy Policy and Terms of Use regulate the procedure for collecting, storing, processing and using users' personal data, as well as the rules for using the online platform plan.kg (hereinafter referred to as the \"Platform\").",
+    "title": "Privacy Policy",
+    "intro": "This Privacy Policy regulates the procedure for collecting, storing, processing and using users' personal data, as well as the rules for using the online platform plan.kg (hereinafter referred to as the \"Platform\").",
     "consent": "By using the site and services of plan.kg, you confirm your consent to these terms. If you do not agree - please stop using the Platform.",
     "sections": {
       "general": {
@@ -595,18 +595,13 @@
         "2": "6.2. Cost and payment terms are published separately.",
         "3": "6.3. Payment is not refundable after service activation."
       },
-      "cookies": {
-        "title": "7. Cookies and analytics",
-        "1": "7.1. The Platform uses cookies to improve user experience.",
-        "2": "7.2. Collection of anonymized data is carried out for statistics and service optimization."
-      },
       "changes": {
-        "title": "8. Terms change",
-        "1": "8.1. The Administration has the right to make changes to these Terms without prior notice.",
-        "2": "8.2. The current version is always posted on the plan.kg website."
+        "title": "7. Terms change",
+        "1": "7.1. The Administration has the right to make changes to these Terms without prior notice.",
+        "2": "7.2. The current version is always posted on the plan.kg website."
       },
       "contact": {
-        "title": "9. Contact information",
+        "title": "8. Contact information",
         "text": "For questions about data processing and Platform usage, you can contact the administration:",
         "email": "service2aces@gmail.com",
         "phone": "+996 500 691 995"
@@ -614,7 +609,7 @@
     }
   },
   "terms": {
-    "title": "Terms of Use (extended legal edition)",
+    "title": "Terms of Use",
     "sections": {
       "legalStatus": {
         "title": "1. Legal status of the Platform",
@@ -716,5 +711,89 @@
         "Service promotion in one place"
       ]
     }
+  },
+  "cookies": {
+    "title": "Cookie Usage Policy",
+    "intro": "Our platform uses cookies to improve user experience, ensure security, and provide personalized content.",
+    "consent": "Collection of anonymized data is carried out for statistics and service optimization. You can manage your cookie preferences in the settings.",
+    "whatAreCookies": {
+      "title": "What are Cookies?",
+      "content": "Cookies are small text files that are saved on your device when you visit websites. They help the site remember your preferences, improve performance, and provide personalized content."
+    },
+    "types": {
+      "title": "Types of Cookies We Use",
+      "necessary": {
+        "title": "Necessary Cookies",
+        "description": "These cookies are essential for the website to function properly and cannot be disabled.",
+        "items": [
+          "User authentication",
+          "Session security",
+          "Language and region memory",
+          "Technical site support"
+        ]
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "Help us understand how visitors interact with the site by collecting anonymous information for statistics and improving user experience.",
+        "items": [
+          "Number of visitors",
+          "Popular pages",
+          "Time spent on site",
+          "Traffic sources"
+        ]
+      },
+      "marketing": {
+        "title": "Marketing Cookies",
+        "description": "Used to display relevant advertising and marketing content. They may track your visits to various websites.",
+        "items": [
+          "Personalized advertising",
+          "Advertising campaigns",
+          "Social networks",
+          "Behavioral targeting"
+        ]
+      },
+      "preferences": {
+        "title": "Preference Cookies",
+        "description": "Allow the site to remember your settings and preferences, such as language, region, or personalized display parameters.",
+        "items": [
+          "Language selection",
+          "Theme design",
+          "Font size",
+          "Personal settings"
+        ]
+      }
+    },
+    "management": {
+      "title": "Cookie Management",
+      "content": "You can manage your cookie preferences at any time:",
+      "methods": [
+        "Using the consent banner at the bottom of the page",
+        "Changing settings in your browser"
+      ],
+      "note": "Please note that disabling certain types of cookies may affect the functionality of the site and user experience."
+    },
+    "thirdParty": {
+      "title": "Third-party Cookies",
+      "content": "Some cookies are set by third parties, such as:",
+      "services": [
+        "Google Analytics - for analytics and statistics",
+        "Google Maps - for displaying maps and geolocation",
+        "Social networks - for integration with Facebook, Instagram, etc.",
+        "Payment systems - for secure payment processing"
+      ]
+    },
+    "contact": {
+      "title": "Contact",
+      "content": "If you have any questions about cookie usage, please contact us:",
+      "email": "service2aces@gmail.com",
+      "phone": "+996 500 691 995"
+    }
+  },
+  "cookieBanner": {
+    "title": "🍪 Cookies & Analytics",
+    "description": "Our platform uses cookies to improve user experience. Collection of anonymized data is carried out for statistics and service optimization.",
+    "learnMore": "Learn more about cookies →",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

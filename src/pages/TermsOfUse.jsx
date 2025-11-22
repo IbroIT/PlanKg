@@ -74,13 +74,6 @@ export default function TermsOfUse() {
                 <p>{terms.sections.jurisdiction['2']}</p>
               </div>
             </section>
-
-            {/* Last Update */}
-            <div className="mt-12 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-              <p className="text-blue-800 font-medium">
-                {terms.lastUpdate}
-              </p>
-            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import Header from './components/Header';
 import CategoryMenu from './components/CategoryMenu';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import CookieBanner from './components/CookieBanner';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import ServiceDetail from './pages/ServiceDetail';
@@ -19,6 +20,7 @@ import UserProfile from './pages/UserProfile';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import FAQ from './pages/FAQ';
+import CookiePolicy from './pages/CookiePolicy';
 import './App.css';
 
 function App() {
@@ -46,9 +48,11 @@ function App() {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfUse />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
           </Routes>
         </main>
         <Footer />
+        <CookieBanner />
       </div>
     </Router>
   );
