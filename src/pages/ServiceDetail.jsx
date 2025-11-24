@@ -823,7 +823,7 @@ export default function ServiceDetail() {
               })()}
 
               {/* Provider Info */}
-              {service.user && (
+              {service.user && service.category?.slug !== 'category-4' && (
                 <div className="border-t border-gray-200 pt-6">
                   <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4">
                     {t('service.provider')}
