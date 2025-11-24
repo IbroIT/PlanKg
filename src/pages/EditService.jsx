@@ -263,15 +263,27 @@ export default function EditService() {
     image3: null,
     image4: null,
     image5: null,
+    image6: null,
+    image7: null,
+    image8: null,
+    image9: null,
+    image10: null,
     image1_url: null,
     image2_url: null,
     image3_url: null,
     image4_url: null,
     image5_url: null,
+    image6_url: null,
+    image7_url: null,
+    image8_url: null,
+    image9_url: null,
+    image10_url: null,
     video1: null,
     video2: null,
+    video3: null,
     video1_url: null,
     video2_url: null,
+    video3_url: null,
     // Category-specific fields
     shooting_hour_price: '',
     full_day_price: '',
@@ -448,15 +460,27 @@ export default function EditService() {
         image3: null,
         image4: null,
         image5: null,
-        image1_url: serviceData.images?.[0] || null, // Store existing image URLs for preview
-        image2_url: serviceData.images?.[1] || null,
-        image3_url: serviceData.images?.[2] || null,
-        image4_url: serviceData.images?.[3] || null,
-        image5_url: serviceData.images?.[4] || null,
+        image6: null,
+        image7: null,
+        image8: null,
+        image9: null,
+        image10: null,
+        image1_url: serviceData.images?.[0] || serviceData.image1 || null, // Store existing image URLs for preview
+        image2_url: serviceData.images?.[1] || serviceData.image2 || null,
+        image3_url: serviceData.images?.[2] || serviceData.image3 || null,
+        image4_url: serviceData.images?.[3] || serviceData.image4 || null,
+        image5_url: serviceData.images?.[4] || serviceData.image5 || null,
+        image6_url: serviceData.images?.[5] || serviceData.image6 || null,
+        image7_url: serviceData.images?.[6] || serviceData.image7 || null,
+        image8_url: serviceData.images?.[7] || serviceData.image8 || null,
+        image9_url: serviceData.images?.[8] || serviceData.image9 || null,
+        image10_url: serviceData.images?.[9] || serviceData.image10 || null,
         video1: null,
         video2: null,
-        video1_url: serviceData.videos?.[0] || null, // Store existing video URLs for preview
-        video2_url: serviceData.videos?.[1] || null,
+        video3: null,
+        video1_url: serviceData.videos?.[0] || serviceData.video1 || null, // Store existing video URLs for preview
+        video2_url: serviceData.videos?.[1] || serviceData.video2 || null,
+        video3_url: serviceData.videos?.[2] || serviceData.video3 || null,
         // Category-specific fields
         shooting_hour_price: serviceData.shooting_hour_price || '',
         full_day_price: serviceData.full_day_price || '',
@@ -721,8 +745,14 @@ export default function EditService() {
       image3: formData.image3,
       image4: formData.image4,
       image5: formData.image5,
+      image6: formData.image6,
+      image7: formData.image7,
+      image8: formData.image8,
+      image9: formData.image9,
+      image10: formData.image10,
       video1: formData.video1,
       video2: formData.video2,
+      video3: formData.video3,
     };
 
     // Add category-specific fields
@@ -1197,7 +1227,7 @@ export default function EditService() {
 
                 {/* Images */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                  {[1, 2, 3, 4, 5].map(num => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                     <div key={num}>
                       <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
                         {t('addService.image')} {num}
@@ -1235,7 +1265,7 @@ export default function EditService() {
 
                 {/* Videos */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[1, 2].map(num => (
+                  {[1, 2, 3].map(num => (
                     <div key={num}>
                       <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
                         {t('addService.video')} {num}

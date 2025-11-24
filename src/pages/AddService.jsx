@@ -213,8 +213,14 @@ export default function AddService() {
     image3: null,
     image4: null,
     image5: null,
+    image6: null,
+    image7: null,
+    image8: null,
+    image9: null,
+    image10: null,
     video1: null,
     video2: null,
+    video3: null,
     // Category-specific fields
     shooting_hour_price: '',
     full_day_price: '',
@@ -549,8 +555,14 @@ export default function AddService() {
       image3: formData.image3,
       image4: formData.image4,
       image5: formData.image5,
+      image6: formData.image6,
+      image7: formData.image7,
+      image8: formData.image8,
+      image9: formData.image9,
+      image10: formData.image10,
       video1: formData.video1,
       video2: formData.video2,
+      video3: formData.video3,
     };
 
     console.log('Submitting formData:', submitData);
@@ -966,7 +978,7 @@ export default function AddService() {
 
                 {/* Images */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                  {[1, 2, 3, 4, 5].map(num => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                     <div key={num}>
                       <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
                         {t('addService.image')} {num}
@@ -985,7 +997,7 @@ export default function AddService() {
 
                 {/* Videos */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[1, 2].map(num => (
+                  {[1, 2, 3].map(num => (
                     <div key={num}>
                       <label className="block text-sm font-semibold text-[#1E2A3A] mb-2">
                         {t('addService.video')} {num}

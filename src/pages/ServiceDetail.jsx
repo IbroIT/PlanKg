@@ -51,6 +51,16 @@ export default function ServiceDetail() {
   const [showContactFeedback, setShowContactFeedback] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  // Helper function to validate URLs
+  const isValidUrl = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
   // City translation mapping
   const translateCity = (city) => {
     return t(`cities.${city || 'bishkek'}`);
@@ -90,7 +100,81 @@ export default function ServiceDetail() {
       ]);
       console.log('Service data:', serviceData);
       console.log('Service avatar:', serviceData.avatar);
-      setService(serviceData);
+      
+      // Process images and videos to include all available files
+      const processedServiceData = { ...serviceData };
+      
+      console.log('Raw images array:', processedServiceData.images);
+      console.log('Raw videos array:', processedServiceData.videos);
+      
+      // Log individual image and video fields
+      for (let i = 1; i <= 10; i++) {
+        const imageField = `image${i}`;
+        if (processedServiceData[imageField]) {
+          console.log(`Found ${imageField}:`, processedServiceData[imageField]);
+        }
+      }
+      for (let i = 1; i <= 3; i++) {
+        const videoField = `video${i}`;
+        if (processedServiceData[videoField]) {
+          console.log(`Found ${videoField}:`, processedServiceData[videoField]);
+        }
+      }
+      
+      // Collect all images from arrays and individual fields
+      const allImages = [];
+      
+      // First, add images from the images array if it exists
+      if (processedServiceData.images && Array.isArray(processedServiceData.images)) {
+        processedServiceData.images.forEach(img => {
+          if (img && typeof img === 'string' && img.trim()) {
+            allImages.push(img.trim());
+          }
+        });
+      }
+      
+      // Then add individual image fields if they exist and aren't already in the array
+      for (let i = 1; i <= 10; i++) {
+        const imageField = `image${i}`;
+        const imageUrl = processedServiceData[imageField];
+        if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !allImages.includes(imageUrl.trim())) {
+          allImages.push(imageUrl.trim());
+        }
+      }
+      
+      // Remove duplicates and filter out empty/null values
+      processedServiceData.images = [...new Set(allImages.filter(img => img && img.trim()))];
+      
+      // Collect all videos from arrays and individual fields
+      const allVideos = [];
+      
+      // First, add videos from the videos array if it exists
+      if (processedServiceData.videos && Array.isArray(processedServiceData.videos)) {
+        processedServiceData.videos.forEach(vid => {
+          if (vid && typeof vid === 'string' && vid.trim()) {
+            allVideos.push(vid.trim());
+          }
+        });
+      }
+      
+      // Then add individual video fields if they exist and aren't already in the array
+      for (let i = 1; i <= 3; i++) {
+        const videoField = `video${i}`;
+        const videoUrl = processedServiceData[videoField];
+        if (videoUrl && typeof videoUrl === 'string' && videoUrl.trim() && !allVideos.includes(videoUrl.trim())) {
+          allVideos.push(videoUrl.trim());
+        }
+      }
+      
+      // Remove duplicates and filter out empty/null values
+      processedServiceData.videos = [...new Set(allVideos.filter(vid => vid && vid.trim()))];
+      
+      console.log('Final images array:', processedServiceData.images);
+      console.log('Final videos array:', processedServiceData.videos);
+      console.log('Total images found:', processedServiceData.images.length);
+      console.log('Total videos found:', processedServiceData.videos.length);
+      
+      setService(processedServiceData);
       setReviews(reviewsData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -837,7 +921,7 @@ export default function ServiceDetail() {
               )}
 
               {/* Gallery in sidebar */}
-              {(service.images && service.images.length > 0) || (service.videos && service.videos.length > 0) ? (
+              {((service.images && service.images.length > 0) || (service.videos && service.videos.length > 0)) && (
                 <div className="border-t border-gray-200 pt-6">
                   <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4 flex items-center">
                     <svg className="w-5 h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -872,13 +956,17 @@ export default function ServiceDetail() {
                   
                   <div className="grid grid-cols-1 gap-3">
                     {/* Images */}
-                    {activeTab === 'photos' && service.images && service.images.map((image, index) => (
+                    {activeTab === 'photos' && service.images && service.images.length > 0 && service.images.map((image, index) => (
                       <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square" onClick={() => openImageModal(index)}>
                         <img
                           src={image}
                           alt={`${service.title} ${index + 1}`}
                           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                           loading="lazy"
+                          onError={(e) => {
+                            console.error('Failed to load image:', image);
+                            e.target.style.display = 'none';
+                          }}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
                           <div className="backdrop-blur-sm bg-white/20 rounded-full p-3">
@@ -894,7 +982,7 @@ export default function ServiceDetail() {
                     ))}
                     
                     {/* Videos */}
-                    {activeTab === 'videos' && service.videos && service.videos.map((video, index) => (
+                    {activeTab === 'videos' && service.videos && service.videos.length > 0 && service.videos.map((video, index) => (
                       <div key={`video-${index}`} className="relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square">
                         <video
                           controls
@@ -918,9 +1006,28 @@ export default function ServiceDetail() {
                         </div>
                       </div>
                     ))}
+                    
+                    {/* No content message */}
+                    {activeTab === 'photos' && (!service.images || service.images.length === 0) && (
+                      <div className="text-center py-8 text-gray-500">
+                        <svg className="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p>{t('service.noPhotos', 'Нет фотографий')}</p>
+                      </div>
+                    )}
+                    
+                    {activeTab === 'videos' && (!service.videos || service.videos.length === 0) && (
+                      <div className="text-center py-8 text-gray-500">
+                        <svg className="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <p>{t('service.noVideos', 'Нет видео')}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : null}
+              )}
 
 
             </div>
