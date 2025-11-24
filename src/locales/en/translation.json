@@ -208,7 +208,8 @@
     "confirmDeleteTitle": "Delete {{mediaType}}?",
     "confirmDeleteMessage": "Are you sure you want to delete this {{mediaType}}? This action cannot be undone.",
     "fileSizeError": "File size should not exceed 30 MB",
-    "fileSizeHint": "Maximum file size: 30 MB"
+    "fileSizeHint": "Maximum file size: 30 MB",
+    "availabilityCalendar": "Availability Calendar"
   },
   "serviceSubmitted": {
     "title": "Your application has been accepted!",
@@ -836,6 +837,12 @@
     "stopEditing": "Stop editing",
     "clickToToggle": "Click to toggle status",
     "editingInstructions": "First click - booked (red), second click - available (green)",
-    "addServiceInstructions": "First click - booked (red), second click - available (green)"
+    "addServiceInstructions": "First click - booked (red), second click - available (green)",
+    "howItWorks": "How the calendar works:",
+    "firstClick": "First click - booked (red)",
+    "secondClick": "Second click - available (green)",
+    "grayColor": "Gray - no information",
+    "redColor": "Red - booked",
+    "greenColor": "Green - available"
   }
 }

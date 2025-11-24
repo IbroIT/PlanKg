@@ -126,28 +126,28 @@ export default function AvailabilityCalendar({ service, onAvailabilityChange }) 
 
   const days = getDaysInMonth(currentDate);
   const monthNames = [
-    t('calendar.january', 'Январь'),
-    t('calendar.february', 'Февраль'),
-    t('calendar.march', 'Март'),
-    t('calendar.april', 'Апрель'),
-    t('calendar.may', 'Май'),
-    t('calendar.june', 'Июнь'),
-    t('calendar.july', 'Июль'),
-    t('calendar.august', 'Август'),
-    t('calendar.september', 'Сентябрь'),
-    t('calendar.october', 'Октябрь'),
-    t('calendar.november', 'Ноябрь'),
-    t('calendar.december', 'Декабрь')
+    t('calendar.january', 'January'),
+    t('calendar.february', 'February'),
+    t('calendar.march', 'March'),
+    t('calendar.april', 'April'),
+    t('calendar.may', 'May'),
+    t('calendar.june', 'June'),
+    t('calendar.july', 'July'),
+    t('calendar.august', 'August'),
+    t('calendar.september', 'September'),
+    t('calendar.october', 'October'),
+    t('calendar.november', 'November'),
+    t('calendar.december', 'December')
   ];
 
   const dayNames = [
-    t('calendar.sunday', 'Вс'),
-    t('calendar.monday', 'Пн'),
-    t('calendar.tuesday', 'Вт'),
-    t('calendar.wednesday', 'Ср'),
-    t('calendar.thursday', 'Чт'),
-    t('calendar.friday', 'Пт'),
-    t('calendar.saturday', 'Сб')
+    t('calendar.sunday', 'Sun'),
+    t('calendar.monday', 'Mon'),
+    t('calendar.tuesday', 'Tue'),
+    t('calendar.wednesday', 'Wed'),
+    t('calendar.thursday', 'Thu'),
+    t('calendar.friday', 'Fri'),
+    t('calendar.saturday', 'Sat')
   ];
 
   // Check if user is the owner of the service
@@ -170,7 +170,7 @@ export default function AvailabilityCalendar({ service, onAvailabilityChange }) 
                 : 'bg-[#F4B942] text-[#1E2A3A] hover:bg-[#e5a832]'
             }`}
           >
-            {editingMode ? t('calendar.stopEditing', 'Завершить редактирование') : t('calendar.editCalendar', 'Редактировать календарь')}
+            {editingMode ? t('calendar.stopEditing', 'Stop editing') : t('calendar.editCalendar', 'Edit calendar')}
           </button>
         )}
       </div>
@@ -179,15 +179,15 @@ export default function AvailabilityCalendar({ service, onAvailabilityChange }) 
       <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-4 md:mb-6 text-xs md:text-sm">
         <div className="flex items-center">
           <div className="w-3 h-3 md:w-4 md:h-4 bg-green-100 border border-green-300 rounded mr-2"></div>
-          <span>{t('calendar.available', 'Свободно')}</span>
+          <span>{t('calendar.available', 'Available')}</span>
         </div>
         <div className="flex items-center">
           <div className="w-3 h-3 md:w-4 md:h-4 bg-red-100 border border-red-300 rounded mr-2"></div>
-          <span>{t('calendar.booked', 'Занято')}</span>
+          <span>{t('calendar.booked', 'Booked')}</span>
         </div>
         <div className="flex items-center">
           <div className="w-3 h-3 md:w-4 md:h-4 bg-gray-100 border border-gray-300 rounded mr-2"></div>
-          <span>{t('calendar.noInfo', 'Нет информации')}</span>
+          <span>{t('calendar.noInfo', 'No info')}</span>
         </div>
       </div>
 
@@ -271,7 +271,7 @@ export default function AvailabilityCalendar({ service, onAvailabilityChange }) 
               key={index}
               className={cellClass}
               onClick={() => !isPast && editingMode && isOwner && !isLoading && toggleAvailability(date)}
-              title={editingMode && !isPast && isOwner ? t('calendar.clickToToggle', 'Нажмите чтобы изменить статус') : ''}
+              title={editingMode && !isPast && isOwner ? t('calendar.clickToToggle', 'Click to toggle status') : ''}
             >
               {date.getDate()}
               {isLoading && editingMode && (
@@ -287,12 +287,12 @@ export default function AvailabilityCalendar({ service, onAvailabilityChange }) 
       {editingMode && (
         <div className="mt-3 md:mt-4 p-3 md:p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm md:text-sm text-blue-800 mb-2 font-medium">
-            <strong>Как работает календарь:</strong>
+            <strong>{t('calendar.howItWorks', 'How the calendar works:')}</strong>
           </p>
           <ul className="text-xs md:text-sm text-blue-800 space-y-1">
-            <li>• Первый клик по дате - отмечает как <span className="text-red-600 font-semibold">занято</span> (красный цвет)</li>
-            <li>• Второй клик по дате - отмечает как <span className="text-green-600 font-semibold">свободно</span> (зеленый цвет)</li>
-            <li>• Серый цвет - нет информации о доступности</li>
+            <li>• {t('calendar.firstClick', 'First click - booked (red)')} <span className="text-red-600 font-semibold">{t('calendar.booked', 'booked')}</span> ({t('calendar.redColor', 'red color')})</li>
+            <li>• {t('calendar.secondClick', 'Second click - available (green)')} <span className="text-green-600 font-semibold">{t('calendar.available', 'available')}</span> ({t('calendar.greenColor', 'green color')})</li>
+            <li>• {t('calendar.grayColor', 'Gray - no information')}</li>
           </ul>
         </div>
       )}
