@@ -447,11 +447,11 @@ export default function ServiceDetail() {
                 </div>
 
                 {service.avatar && (
-                  <div className="w-48 h-48 md:w-64 md:h-64 rounded-lg overflow-hidden shadow-lg shrink-0 mx-auto md:mx-0">
+                  <div className="max-w-48 max-h-48 md:max-w-64 md:max-h-64 rounded-lg overflow-hidden shadow-lg shrink-0 mx-auto md:mx-0">
                     <img
                       src={service.avatar}
                       alt={service.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 )}
@@ -961,11 +961,11 @@ export default function ServiceDetail() {
                       {t('service.videos', 'Видео')} ({service.videos ? service.videos.length : 0})
                     </button>
                   </div>
-                  
+        
                   <div className="grid grid-cols-1 gap-2 md:gap-3">
                     {/* Images */}
                     {activeTab === 'photos' && service.images && service.images.length > 0 && service.images.map((image, index) => (
-                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-lg md:rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square" onClick={() => openImageModal(index)}>
+                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden transition-all duration-500" onClick={() => openImageModal(index)}>
                         <img
                           src={image}
                           alt={`${service.title} ${index + 1}`}
@@ -982,9 +982,6 @@ export default function ServiceDetail() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                             </svg>
                           </div>
-                        </div>
-                        <div className="absolute bottom-1 md:bottom-2 left-1 md:left-2 bg-black/70 backdrop-blur-sm text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded-full text-xs font-medium">
-                          {index + 1}
                         </div>
                       </div>
                     ))}
@@ -1045,71 +1042,117 @@ export default function ServiceDetail() {
 
       {/* Image Modal */}
       {showImageModal && service.images && service.images.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-2 md:p-4" onClick={() => setShowImageModal(false)}>
-          <div className="relative max-w-4xl max-h-full p-2 md:p-4">
-            {/* Close button */}
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={() => setShowImageModal(false)}>
+          {/* Close button */}
+          <button
+            onClick={() => setShowImageModal(false)}
+            className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200 z-10"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Prev button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition-all duration-200 z-10"
+          >
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Next button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition-all duration-200 z-10"
+          >
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Navigation buttons */}
+          <button
+            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition-all duration-200 z-10"
+          >
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-75 transition-all duration-200 z-10"
+          >
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Action buttons */}
+          <div className="absolute bottom-4 left-4 flex space-x-2 z-10">
             <button
-              onClick={() => setShowImageModal(false)}
-              className="absolute top-2 md:top-4 right-2 md:right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200 z-10"
+              onClick={(e) => {
+                e.stopPropagation();
+                const shareData = {
+                  title: service.title,
+                  text: `${service.title} - ${t('service.photo')} ${currentImageIndex + 1}`,
+                  url: service.images[currentImageIndex],
+                };
+                if (navigator.share) {
+                  navigator.share(shareData);
+                } else {
+                  navigator.clipboard.writeText(shareData.url);
+                  alert(t('service.linkCopied', 'Ссылка скопирована в буфер обмена'));
+                }
+              }}
+              className="text-white bg-black/50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200"
+              title={t('service.share', 'Поделиться')}
             >
               <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
               </svg>
             </button>
+          </div>
 
-            {/* Main image */}
+          {/* Image counter */}
+          <div className="absolute top-4 left-4 bg-black/50 text-white px-3 md:px-4 py-1 md:py-2 rounded-full text-sm z-10">
+            {currentImageIndex + 1} / {service.images.length}
+          </div>
+
+          {/* Thumbnail strip */}
+          <div className="absolute bottom-4 right-4 flex space-x-1 md:space-x-2 bg-black bg-opacity-50 rounded-lg p-1 md:p-2 z-10">
+            {service.images.slice(Math.max(0, currentImageIndex - 2), Math.min(service.images.length, currentImageIndex + 3)).map((image, index) => {
+              const actualIndex = Math.max(0, currentImageIndex - 2) + index;
+              return (
+                <button
+                  key={actualIndex}
+                  onClick={(e) => { e.stopPropagation(); goToImage(actualIndex); }}
+                  className={`w-10 h-10 md:w-12 md:h-12 rounded overflow-hidden border-2 transition-all duration-200 ${
+                    actualIndex === currentImageIndex ? 'border-[#F4B942]' : 'border-transparent'
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${actualIndex + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Main image container */}
+          <div className="flex items-center justify-center h-full p-4">
             <img
               src={service.images[currentImageIndex]}
               alt={`${service.title} ${currentImageIndex + 1}`}
               className="max-w-full max-h-full object-contain"
               onClick={(e) => e.stopPropagation()}
             />
-
-            {/* Modal navigation */}
-            <button
-              onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2 md:p-3 rounded-full hover:bg-opacity-75 transition-all duration-200"
-            >
-              <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <button
-              onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2 md:p-3 rounded-full hover:bg-opacity-75 transition-all duration-200"
-            >
-              <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Image counter in modal */}
-            <div className="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 md:px-4 py-1 md:py-2 rounded-full text-sm">
-              {currentImageIndex + 1} / {service.images.length}
-            </div>
-
-            {/* Thumbnail strip */}
-            <div className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-1 md:space-x-2 bg-black bg-opacity-50 rounded-lg p-1 md:p-2">
-              {service.images.slice(Math.max(0, currentImageIndex - 2), Math.min(service.images.length, currentImageIndex + 3)).map((image, index) => {
-                const actualIndex = Math.max(0, currentImageIndex - 2) + index;
-                return (
-                  <button
-                    key={actualIndex}
-                    onClick={(e) => { e.stopPropagation(); goToImage(actualIndex); }}
-                    className={`w-10 h-10 md:w-12 md:h-12 rounded overflow-hidden border-2 transition-all duration-200 ${
-                      actualIndex === currentImageIndex ? 'border-[#F4B942]' : 'border-transparent'
-                    }`}
-                  >
-                    <img
-                      src={image}
-                      alt={`Thumbnail ${actualIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                );
-              })}
-            </div>
           </div>
         </div>
       )}
