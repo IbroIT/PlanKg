@@ -527,7 +527,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className={`max-w-2xl mx-auto transition-all duration-300 relative z-50 ${
+            <div className={`max-w-2xl mx-auto transition-all duration-300 relative z-99999 ${
               isSearchFocused ? 'scale-105' : 'scale-100'
             }`}>
               <form onSubmit={handleSearch} className="relative">
@@ -563,7 +563,7 @@ export default function Home() {
               {/* Search Suggestions */}
               {showSuggestions && suggestions.length > 0 && (
                 <div 
-                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 max-h-80 overflow-y-auto z-10000"
+                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 max-h-80 overflow-y-auto z-99999"
                   onMouseDown={() => setIsClickingSuggestion(true)}
                   onMouseUp={() => setIsClickingSuggestion(false)}
                   onMouseLeave={() => setShowSuggestions(false)}
@@ -614,7 +614,7 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-0 md:py-16 lg:py-20 relative z-10 -mt-8 md:mt-0">
+      <section className="py-0 md:py-16 lg:py-20 relative -mt-8 md:mt-0">
         <div className="container mx-auto px-4">
           <div className="text-center mt-6 md:mt-0 md:mb-1">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">
@@ -672,7 +672,7 @@ export default function Home() {
       </section>
 
       {/* Top Services Section */}
-      <section className="py-16 md:py-20 lg:py-24 relative z-10">
+      <section className="py-16 md:py-20 lg:py-24 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 md:mb-6">
