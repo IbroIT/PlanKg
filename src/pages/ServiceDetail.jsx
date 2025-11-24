@@ -8,6 +8,7 @@ import { isAuthenticated } from '../api/auth';
 import ReviewCard from '../components/ReviewCard';
 import { FaMoneyBillWave, FaCalendarAlt, FaHeart, FaCamera, FaClock, FaMicrophone, FaUser, FaMapMarkerAlt, FaUtensils, FaMusic, FaCar, FaHome, FaBirthdayCake, FaTools, FaUsers, FaShieldAlt, FaMagic, FaVideo, FaStar, FaPhone, FaInstagram, FaFacebook } from 'react-icons/fa';
 import twogislogo from '../assets/2gis.jpg';
+import AvailabilityCalendar from '../components/AvailabilityCalendar';
 const translateVideoFormat = (format, t) => {
   const translations = {
     'hd': t('service.videoFormatOptions.hd'),
@@ -376,77 +377,77 @@ export default function ServiceDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#E9EEF4] py-8">
+    <div className="min-h-screen bg-[#E9EEF4] py-4 md:py-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Service Info */}
-            <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-                  <div className="flex items-start gap-6">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 md:p-6 mb-4 md:mb-6">
+                  <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
                     <div className="flex-1">
-                      <h1 className="text-3xl font-bold text-[#1E2A3A] mb-4">
+                      <h1 className="text-2xl md:text-3xl font-bold text-[#1E2A3A] mb-3 md:mb-4">
                         {service.title}
                       </h1>
 
-                      <div className="flex items-center gap-4 mb-4">
+                      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-3 md:mb-4">
                         {service.category && (
-                          <div className="inline-block bg-[#E9EEF4] px-4 py-2 rounded-lg">
-                            <span className="text-[#1E2A3A] font-medium">{service.category.name}</span>
+                          <div className="inline-block bg-[#E9EEF4] px-3 md:px-4 py-1 md:py-2 rounded-lg">
+                            <span className="text-[#1E2A3A] font-medium text-sm">{service.category.name}</span>
                           </div>
                         )}
 
                         {/* Status Badge - only for pending services */}
                         {service.status === 'pending' && (
-                          <div className="inline-block bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded-lg">
+                          <div className="inline-block bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 md:px-4 py-1 md:py-2 rounded-lg">
                             <div className="flex items-center">
-                              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <span className="font-medium">{t('service.pending')}</span>
+                              <span className="font-medium text-sm">{t('service.pending')}</span>
                             </div>
                           </div>
                         )}
                         {service.status === 'archived' && (
-                          <div className="inline-block bg-gray-100 border border-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                          <div className="inline-block bg-gray-100 border border-gray-400 text-gray-700 px-3 md:px-4 py-1 md:py-2 rounded-lg">
                             <div className="flex items-center">
-                              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                               </svg>
-                              <span className="font-medium">{t('service.archived')}</span>
+                              <span className="font-medium text-sm">{t('service.archived')}</span>
                             </div>
                           </div>
                         )}
-                      </div>                  <div className="flex items-center mb-6">
+                      </div>                  <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 md:mb-6 gap-2">
                     {service.rating > 0 && (
-                      <div className="flex items-center mr-6">
-                        <svg className="w-6 h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
+                      <div className="flex items-center mr-0 sm:mr-6">
+                        <svg className="w-5 h-5 md:w-6 md:h-6 text-[#F4B942] fill-current" viewBox="0 0 20 20">
                           <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                         </svg>
-                        <span className="ml-2 text-lg font-semibold text-[#1E2A3A]">
+                        <span className="ml-2 text-base md:text-lg font-semibold text-[#1E2A3A]">
                           {service.rating ? Number(service.rating).toFixed(1) : '0.0'}
                         </span>
-                        <span className="ml-1 text-gray-500">
+                        <span className="ml-1 text-gray-500 text-sm">
                           ({service.reviews_count || 0} {t('service.reviews')})
                         </span>
                       </div>
                     )}
-                    <div className="flex items-center text-gray-500">
+                    <div className="flex items-center text-gray-500 text-sm">
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-200 pt-6">
-                    <h2 className="text-xl font-semibold text-[#1E2A3A] mb-3">
+                  <div className="border-t border-gray-200 pt-4 md:pt-6">
+                    <h2 className="text-lg md:text-xl font-semibold text-[#1E2A3A] mb-3">
                       {t('service.description')}
                     </h2>
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
                       {service.description}
                     </p>
                   </div>
                 </div>
 
                 {service.avatar && (
-                  <div className="w-64 h-64 rounded-lg overflow-hidden shadow-lg shrink-0">
+                  <div className="w-48 h-48 md:w-64 md:h-64 rounded-lg overflow-hidden shadow-lg shrink-0 mx-auto md:mx-0">
                     <img
                       src={service.avatar}
                       alt={service.title}
@@ -458,31 +459,31 @@ export default function ServiceDetail() {
 
               {/* Individual Provider Specific Info */}
               {(service.experience_years || service.hourly_rate) && (
-                <div className="border-t border-gray-200 mt-6 pt-6">
-                  <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
+                <div className="border-t border-gray-200 mt-4 md:mt-6 pt-4 md:pt-6">
+                  <h2 className="text-lg md:text-xl font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                     {t('service.specialistInfo')}
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                     {service.experience_years && (
-                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                      <div className="bg-[#E9EEF4] p-3 md:p-4 rounded-lg">
                         <div className="flex items-center text-gray-600 mb-1">
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-sm">{t('service.experienceYears')}</span>
+                          <span className="text-xs md:text-sm">{t('service.experienceYears')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
+                        <p className="text-lg md:text-xl font-bold text-[#1E2A3A]">{service.experience_years} {t('service.years')}</p>
                       </div>
                     )}
                     {service.hourly_rate && (
-                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                      <div className="bg-[#E9EEF4] p-3 md:p-4 rounded-lg">
                         <div className="flex items-center text-gray-600 mb-1">
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <span className="text-sm">{t('service.hourlyRate')}</span>
+                          <span className="text-xs md:text-sm">{t('service.hourlyRate')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}/{t('service.hour')}</p>
+                        <p className="text-lg md:text-xl font-bold text-[#1E2A3A]">{service.hourly_rate} {t('service.currency', 'сом')}/{t('service.hour')}</p>
                       </div>
                     )}
                   </div>
@@ -491,42 +492,42 @@ export default function ServiceDetail() {
 
               {/* Lighting/Sound/Stage Equipment Specific Info */}
               {(service.lighting_type || service.sound_system || service.stage_setup) && (
-                <div className="border-t border-gray-200 mt-6 pt-6">
-                  <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
+                <div className="border-t border-gray-200 mt-4 md:mt-6 pt-4 md:pt-6">
+                  <h2 className="text-lg md:text-xl font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                     {t('service.equipmentInfo')}
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
                     {service.lighting_type && (
-                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                      <div className="bg-[#E9EEF4] p-3 md:p-4 rounded-lg">
                         <div className="flex items-center text-gray-600 mb-1">
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                           </svg>
-                          <span className="text-sm">{t('service.lightingType')}</span>
+                          <span className="text-xs md:text-sm">{t('service.lightingType')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.lighting_type}</p>
+                        <p className="text-lg md:text-xl font-bold text-[#1E2A3A]">{service.lighting_type}</p>
                       </div>
                     )}
                     {service.sound_system && (
-                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                      <div className="bg-[#E9EEF4] p-3 md:p-4 rounded-lg">
                         <div className="flex items-center text-gray-600 mb-1">
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                           </svg>
-                          <span className="text-sm">{t('service.soundSystem')}</span>
+                          <span className="text-xs md:text-sm">{t('service.soundSystem')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.sound_system}</p>
+                        <p className="text-lg md:text-xl font-bold text-[#1E2A3A]">{service.sound_system}</p>
                       </div>
                     )}
                     {service.stage_setup && (
-                      <div className="bg-[#E9EEF4] p-4 rounded-lg">
+                      <div className="bg-[#E9EEF4] p-3 md:p-4 rounded-lg">
                         <div className="flex items-center text-gray-600 mb-1">
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                           </svg>
-                          <span className="text-sm">{t('service.stageSetup')}</span>
+                          <span className="text-xs md:text-sm">{t('service.stageSetup')}</span>
                         </div>
-                        <p className="text-xl font-bold text-[#1E2A3A]">{service.stage_setup ? t('common.yes') : t('common.no')}</p>
+                        <p className="text-lg md:text-xl font-bold text-[#1E2A3A]">{service.stage_setup ? t('common.yes') : t('common.no')}</p>
                       </div>
                     )}
                   </div>
@@ -535,50 +536,50 @@ export default function ServiceDetail() {
 
               {/* Contact Information */}
               {(service.phone || service.email || service.website || service.instagram || service.facebook || service.two_gis_link) && (
-                <div className="border-t border-gray-200 mt-6 pt-6">
-                  <h2 className="text-xl font-semibold text-[#1E2A3A] mb-4">
+                <div className="border-t border-gray-200 mt-4 md:mt-6 pt-4 md:pt-6">
+                  <h2 className="text-lg md:text-xl font-semibold text-[#1E2A3A] mb-3 md:mb-4">
                     {t('service.contact')}
                   </h2>
-                  <div className="space-y-3">
+                  <div className="space-y-2 md:space-y-3">
                     {service.phone && (
-                      <a href={`tel:${service.phone}`} className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <a href={`tel:${service.phone}`} className="flex items-center text-gray-700 hover:text-[#F4B942] transition text-sm md:text-base">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                         {service.phone}
                       </a>
                     )}
                     {service.email && (
-                      <a href={`mailto:${service.email}`} className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <a href={`mailto:${service.email}`} className="flex items-center text-gray-700 hover:text-[#F4B942] transition text-sm md:text-base">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                         {service.email}
                       </a>
                     )}
                     {service.website && (
-                      <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition text-sm md:text-base">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                         </svg>
                         {t('service.website')}
                       </a>
                     )}
                     {service.instagram && (
-                      <a href={`https://instagram.com/${service.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <FaInstagram className="w-5 h-5 mr-3" />
+                      <a href={`https://instagram.com/${service.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition text-sm md:text-base">
+                        <FaInstagram className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" />
                         @{service.instagram}
                       </a>
                     )}
                     {service.facebook && (
-                      <a href={`https://facebook.com/${service.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <span className="mr-3">👤</span>
+                      <a href={`https://facebook.com/${service.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition text-sm md:text-base">
+                        <span className="mr-2 md:mr-3">👤</span>
                         {service.facebook}
                       </a>
                     )}
                     {service.two_gis_link && (
-                      <a href={service.two_gis_link} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition">
-                        <img src={twogislogo} alt="2GIS" className="w-5 h-5 mr-3" />
+                      <a href={service.two_gis_link} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-[#F4B942] transition text-sm md:text-base">
+                        <img src={twogislogo} alt="2GIS" className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" />
                         {t('service.twoGis')}
                       </a>
                     )}
@@ -586,9 +587,9 @@ export default function ServiceDetail() {
                 </div>
               )}
 
-              <div className="border-t border-gray-200 mt-6 pt-6">
-                <div className="flex items-center text-gray-700 mb-3">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="border-t border-gray-200 mt-4 md:mt-6 pt-4 md:pt-6">
+                <div className="flex items-center text-gray-700 mb-3 text-sm md:text-base">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -600,11 +601,18 @@ export default function ServiceDetail() {
 
 
 
+            {/* Availability Calendar - only for venues category */}
+            {service.category?.slug === 'category-4' && (
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 md:p-6 mt-4 md:mt-6">
+                <AvailabilityCalendar service={service} onAvailabilityChange={() => {}} />
+              </div>
+            )}
+
             {/* Reviews */}
-            <div id="reviews" className="bg-white rounded-xl shadow-md p-6 mt-6">
-              <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#F4B942]">
-                <h2 className="text-3xl font-bold text-[#1E2A3A] flex items-center">
-                  <svg className="w-8 h-8 mr-3 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div id="reviews" className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 md:p-6 mt-4 md:mt-6">
+              <div className="flex justify-between items-center mb-4 md:mb-6 pb-2 md:pb-4 border-b-2 border-[#F4B942]">
+                <h2 className="text-2xl md:text-3xl font-bold text-[#1E2A3A] flex items-center">
+                  <svg className="w-6 h-6 md:w-8 md:h-8 mr-2 md:mr-3 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                   {t('service.reviews')} ({reviews.length})
@@ -612,7 +620,7 @@ export default function ServiceDetail() {
                 {isAuthenticated() && (
                   <button
                     onClick={() => setShowReviewForm(!showReviewForm)}
-                    className="bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    className="bg-[#F4B942] text-[#1E2A3A] px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 text-sm md:text-base"
                   >
                     {showReviewForm ? t('service.cancel') : t('service.addReview', 'Оставить отзыв')}
                   </button>
@@ -621,12 +629,12 @@ export default function ServiceDetail() {
 
               {/* Review Form */}
               {showReviewForm && (
-                <form onSubmit={handleSubmitReview} className="mb-6 p-4 bg-[#E9EEF4] rounded-lg">
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                <form onSubmit={handleSubmitReview} className="mb-4 md:mb-6 p-3 md:p-4 bg-[#E9EEF4] rounded-lg">
+                  <div className="mb-3 md:mb-4">
+                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
                       {t('service.rating')}
                     </label>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-1 md:space-x-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
                           key={star}
@@ -635,7 +643,7 @@ export default function ServiceDetail() {
                           className="focus:outline-none"
                         >
                           <svg
-                            className={`w-8 h-8 ${
+                            className={`w-6 h-6 md:w-8 md:h-8 ${
                               star <= reviewData.rating ? 'text-[#F4B942] fill-current' : 'text-gray-300'
                             }`}
                             viewBox="0 0 20 20"
@@ -646,8 +654,8 @@ export default function ServiceDetail() {
                       ))}
                     </div>
                   </div>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="mb-3 md:mb-4">
+                    <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
                       {t('service.comment', { defaultValue: 'Comment' })}
                     </label>
                     <textarea
@@ -657,8 +665,8 @@ export default function ServiceDetail() {
                           setReviewData({ ...reviewData, comment: e.target.value });
                         }
                       }}
-                      rows="4"
-                      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                      rows="3 md:rows-4"
+                      className={`w-full px-3 md:px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors text-sm md:text-base ${
                         reviewData.comment.trim().length < 10 && reviewData.comment.length > 0
                           ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                           : 'border-gray-300 focus:ring-[#F4B942] focus:border-[#F4B942]'
@@ -683,17 +691,17 @@ export default function ServiceDetail() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex space-x-3">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                     <button
                       type="submit"
-                      className="bg-[#F4B942] text-[#1E2A3A] px-6 py-2 rounded-lg font-semibold hover:bg-[#e5a832] transition"
+                      className="bg-[#F4B942] text-[#1E2A3A] px-4 md:px-6 py-2 md:py-2 rounded-lg font-semibold hover:bg-[#e5a832] transition flex-1 text-sm md:text-base"
                     >
                       {t('addService.submit')}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowReviewForm(false)}
-                      className="bg-gray-200 text-[#1E2A3A] px-6 py-2 rounded-lg hover:bg-gray-300 transition"
+                      className="bg-gray-200 text-[#1E2A3A] px-4 md:px-6 py-2 md:py-2 rounded-lg hover:bg-gray-300 transition flex-1 text-sm md:text-base"
                     >
                       {t('addService.cancel')}
                     </button>
@@ -702,24 +710,24 @@ export default function ServiceDetail() {
               )}
 
               {/* Reviews List */}
-              <div className="space-y-4 mt-6">
+              <div className="space-y-3 md:space-y-4 mt-4 md:mt-6">
                 {reviews.length > 0 ? (
                   <>
                     {reviews.map((review) => <ReviewCard key={review.id} review={review} onReviewUpdate={handleReviewUpdate} onReviewDelete={handleReviewDelete} />)}
                   </>
                 ) : (
-                  <div className="text-center py-16 bg-[#E9EEF4] rounded-xl">
-                    <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                      <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="text-center py-8 md:py-16 bg-[#E9EEF4] rounded-xl">
+                    <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-lg">
+                      <svg className="w-6 h-6 md:w-12 md:h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">{t('service.noReviewsYet')}</h3>
-                    <p className="text-gray-600 mb-6">{t('service.beFirstToReview')}</p>
+                    <h3 className="text-lg md:text-xl font-bold text-[#1E2A3A] mb-2">{t('service.noReviewsYet')}</h3>
+                    <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">{t('service.beFirstToReview')}</p>
                     {isAuthenticated() && !showReviewForm && (
                       <button
                         onClick={() => setShowReviewForm(true)}
-                        className="bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl"
+                        className="bg-[#F4B942] text-[#1E2A3A] px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
                       >
                         {t('service.leaveFirstReview')}
                       </button>
@@ -733,19 +741,19 @@ export default function ServiceDetail() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             {/* Price & Contact */}
-            <div className="bg-white rounded-xl shadow-md p-6 sticky top-4">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 md:p-6 sticky top-4">
               {/* Logo for venues/restaurants */}
               {service.logo && (
-                <div className="mb-6 border-b border-gray-200 pb-6">
+                <div className="mb-4 md:mb-6 border-b border-gray-200 pb-4 md:pb-6">
                   <img
                     src={service.logo}
                     alt={service.title}
-                    className="w-full h-32 object-contain"
+                    className="w-full h-24 md:h-32 object-contain"
                   />
                 </div>
               )}
 
-              <div className="text-3xl font-bold text-[#F4B942] mb-6">
+              <div className="text-2xl md:text-3xl font-bold text-[#F4B942] mb-4 md:mb-6">
                 {service.price_type === 'hourly' && service.hourly_rate
                   ? `${service.hourly_rate} ${t('service.currency', 'сом')}/${t('service.hour')}`
                   : service.price_type === 'fixed' && service.price
@@ -754,12 +762,12 @@ export default function ServiceDetail() {
               </div>
 
               {/* Share Button */}
-              <div className="mb-4">
+              <div className="mb-3 md:mb-4">
                 <button
                   onClick={handleShareClick}
-                  className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                  className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 w-full justify-center text-sm md:text-base"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
                   {t('service.share', 'Поделиться')}
@@ -774,13 +782,13 @@ export default function ServiceDetail() {
 
                 if (isOwner) {
                   return (
-                    <div className="mb-4 space-y-3">
+                    <div className="mb-3 md:mb-4 space-y-2 md:space-y-3">
                       {canEdit && (
                         <Link
                           to={`/edit-service/${service.id}`}
-                          className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-6 py-3 rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center"
+                          className="inline-flex items-center bg-[#F4B942] text-[#1E2A3A] px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-[#e5a832] transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center text-sm md:text-base"
                         >
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                           {t('service.edit', 'Редактировать')}
@@ -788,9 +796,9 @@ export default function ServiceDetail() {
                       )}
                       <button
                         onClick={handleDeleteService}
-                        className="inline-flex items-center bg-red-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center"
+                        className="inline-flex items-center bg-red-500 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center text-sm md:text-base"
                       >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                         {t('service.delete', 'Удалить')}
@@ -798,9 +806,9 @@ export default function ServiceDetail() {
                       {service.status !== 'archived' ? (
                         <button
                           onClick={handleArchiveService}
-                          className="inline-flex items-center bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center"
+                          className="inline-flex items-center bg-yellow-500 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center text-sm md:text-base"
                         >
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                           </svg>
                           {t('service.archive', 'Архивировать')}
@@ -808,9 +816,9 @@ export default function ServiceDetail() {
                       ) : (
                         <button
                           onClick={handleUnarchiveService}
-                          className="inline-flex items-center bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center"
+                          className="inline-flex items-center bg-green-500 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-bold hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl w-full justify-center text-sm md:text-base"
                         >
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                           </svg>
                           {t('service.unarchive', 'Восстановить')}
@@ -922,19 +930,19 @@ export default function ServiceDetail() {
 
               {/* Gallery in sidebar */}
               {((service.images && service.images.length > 0) || (service.videos && service.videos.length > 0)) && (
-                <div className="border-t border-gray-200 pt-6">
-                  <h3 className="text-lg font-semibold text-[#1E2A3A] mb-4 flex items-center">
-                    <svg className="w-5 h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="border-t border-gray-200 pt-4 md:pt-6">
+                  <h3 className="text-base md:text-lg font-semibold text-[#1E2A3A] mb-3 md:mb-4 flex items-center">
+                    <svg className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#F4B942]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     {t('service.gallery', 'Галерея')}
                   </h3>
                   
                   {/* Tabs */}
-                  <div className="flex mb-4 bg-[#E9EEF4] rounded-lg p-1">
+                  <div className="flex mb-3 md:mb-4 bg-[#E9EEF4] rounded-lg p-1">
                     <button
                       onClick={() => setActiveTab('photos')}
-                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 py-1.5 md:py-2 px-2 md:px-4 rounded-md text-xs md:text-sm font-medium transition-all duration-200 ${
                         activeTab === 'photos'
                           ? 'bg-white text-[#1E2A3A] shadow-sm'
                           : 'text-gray-600 hover:text-[#1E2A3A]'
@@ -944,7 +952,7 @@ export default function ServiceDetail() {
                     </button>
                     <button
                       onClick={() => setActiveTab('videos')}
-                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 py-1.5 md:py-2 px-2 md:px-4 rounded-md text-xs md:text-sm font-medium transition-all duration-200 ${
                         activeTab === 'videos'
                           ? 'bg-white text-[#1E2A3A] shadow-sm'
                           : 'text-gray-600 hover:text-[#1E2A3A]'
@@ -954,10 +962,10 @@ export default function ServiceDetail() {
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 gap-2 md:gap-3">
                     {/* Images */}
                     {activeTab === 'photos' && service.images && service.images.length > 0 && service.images.map((image, index) => (
-                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square" onClick={() => openImageModal(index)}>
+                      <div key={`image-${index}`} className="relative group cursor-pointer overflow-hidden rounded-lg md:rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square" onClick={() => openImageModal(index)}>
                         <img
                           src={image}
                           alt={`${service.title} ${index + 1}`}
@@ -969,13 +977,13 @@ export default function ServiceDetail() {
                           }}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-                          <div className="backdrop-blur-sm bg-white/20 rounded-full p-3">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="backdrop-blur-sm bg-white/20 rounded-full p-2 md:p-3">
+                            <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                             </svg>
                           </div>
                         </div>
-                        <div className="absolute bottom-2 left-2 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
+                        <div className="absolute bottom-1 md:bottom-2 left-1 md:left-2 bg-black/70 backdrop-blur-sm text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded-full text-xs font-medium">
                           {index + 1}
                         </div>
                       </div>
@@ -983,7 +991,7 @@ export default function ServiceDetail() {
                     
                     {/* Videos */}
                     {activeTab === 'videos' && service.videos && service.videos.length > 0 && service.videos.map((video, index) => (
-                      <div key={`video-${index}`} className="relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square">
+                      <div key={`video-${index}`} className="relative group overflow-hidden rounded-lg md:rounded-xl shadow-md hover:shadow-xl transition-all duration-500 aspect-square">
                         <video
                           controls
                           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
@@ -994,14 +1002,14 @@ export default function ServiceDetail() {
                           {t('service.videoNotSupported')}
                         </video>
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center pointer-events-none">
-                          <div className="backdrop-blur-sm bg-white/20 rounded-full p-4">
-                            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <div className="backdrop-blur-sm bg-white/20 rounded-full p-2 md:p-4">
+                            <svg className="w-6 h-6 md:w-10 md:h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z"/>
                             </svg>
                           </div>
                         </div>
-                        <div className="absolute top-2 right-2 bg-linear-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                          <FaVideo className="w-3 h-3 inline mr-1" />
+                        <div className="absolute top-1 md:top-2 right-1 md:right-2 bg-linear-to-r from-red-500 to-pink-500 text-white px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs font-bold shadow-lg">
+                          <FaVideo className="w-2 h-2 md:w-3 md:h-3 inline mr-1" />
                           {t('service.video')}
                         </div>
                       </div>
@@ -1009,20 +1017,20 @@ export default function ServiceDetail() {
                     
                     {/* No content message */}
                     {activeTab === 'photos' && (!service.images || service.images.length === 0) && (
-                      <div className="text-center py-8 text-gray-500">
-                        <svg className="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="text-center py-6 md:py-8 text-gray-500">
+                        <svg className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <p>{t('service.noPhotos', 'Нет фотографий')}</p>
+                        <p className="text-xs md:text-sm">{t('service.noPhotos', 'Нет фотографий')}</p>
                       </div>
                     )}
                     
                     {activeTab === 'videos' && (!service.videos || service.videos.length === 0) && (
-                      <div className="text-center py-8 text-gray-500">
-                        <svg className="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="text-center py-6 md:py-8 text-gray-500">
+                        <svg className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
-                        <p>{t('service.noVideos', 'Нет видео')}</p>
+                        <p className="text-xs md:text-sm">{t('service.noVideos', 'Нет видео')}</p>
                       </div>
                     )}
                   </div>
@@ -1037,18 +1045,18 @@ export default function ServiceDetail() {
 
       {/* Image Modal */}
       {showImageModal && service.images && service.images.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center" onClick={() => setShowImageModal(false)}>
-          <div className="relative max-w-4xl max-h-full p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-2 md:p-4" onClick={() => setShowImageModal(false)}>
+          <div className="relative max-w-4xl max-h-full p-2 md:p-4">
             {/* Close button */}
             <button
               onClick={() => setShowImageModal(false)}
-              className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200 z-10"
+              className="absolute top-2 md:top-4 right-2 md:right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-200 z-10"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            
+
             {/* Main image */}
             <img
               src={service.images[currentImageIndex]}
@@ -1056,40 +1064,40 @@ export default function ServiceDetail() {
               className="max-w-full max-h-full object-contain"
               onClick={(e) => e.stopPropagation()}
             />
-            
+
             {/* Modal navigation */}
             <button
               onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-3 rounded-full hover:bg-opacity-75 transition-all duration-200"
+              className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2 md:p-3 rounded-full hover:bg-opacity-75 transition-all duration-200"
             >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            
+
             <button
               onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-3 rounded-full hover:bg-opacity-75 transition-all duration-200"
+              className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 p-2 md:p-3 rounded-full hover:bg-opacity-75 transition-all duration-200"
             >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
-            
+
             {/* Image counter in modal */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm">
+            <div className="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 md:px-4 py-1 md:py-2 rounded-full text-sm">
               {currentImageIndex + 1} / {service.images.length}
             </div>
-            
+
             {/* Thumbnail strip */}
-            <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-black bg-opacity-50 rounded-lg p-2">
+            <div className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-1 md:space-x-2 bg-black bg-opacity-50 rounded-lg p-1 md:p-2">
               {service.images.slice(Math.max(0, currentImageIndex - 2), Math.min(service.images.length, currentImageIndex + 3)).map((image, index) => {
                 const actualIndex = Math.max(0, currentImageIndex - 2) + index;
                 return (
                   <button
                     key={actualIndex}
                     onClick={(e) => { e.stopPropagation(); goToImage(actualIndex); }}
-                    className={`w-12 h-12 rounded overflow-hidden border-2 transition-all duration-200 ${
+                    className={`w-10 h-10 md:w-12 md:h-12 rounded overflow-hidden border-2 transition-all duration-200 ${
                       actualIndex === currentImageIndex ? 'border-[#F4B942]' : 'border-transparent'
                     }`}
                   >
@@ -1108,15 +1116,15 @@ export default function ServiceDetail() {
 
       {/* Contact Feedback Modal */}
       {showContactFeedback && (
-        <div className="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center">
-          <div className="bg-white bg-opacity-50 backdrop-blur-sm rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
-            <h3 className="text-xl font-bold text-[#1E2A3A] mb-4 text-center">
+        <div className="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 md:p-6 max-w-sm md:max-w-md w-full mx-4 shadow-2xl">
+            <h3 className="text-lg md:text-xl font-bold text-[#1E2A3A] mb-3 md:mb-4 text-center">
               {t('service.contactSuccess')}
             </h3>
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 md:space-x-4">
               <button
                 onClick={() => setShowContactFeedback(false)}
-                className="flex-1 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition"
+                className="flex-1 bg-green-500 text-white py-2 md:py-3 rounded-lg font-semibold hover:bg-green-600 transition text-sm md:text-base"
               >
                 {t('service.yes')}
               </button>
@@ -1125,12 +1133,12 @@ export default function ServiceDetail() {
                   setShowContactFeedback(false);
                   navigate('/services');
                 }}
-                className="flex-1 bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+                className="flex-1 bg-red-500 text-white py-2 md:py-3 rounded-lg font-semibold hover:bg-red-600 transition text-sm md:text-base"
               >
                 {t('service.no')}
               </button>
             </div>
-            <p className="text-center text-gray-600 mt-4 text-sm">
+            <p className="text-center text-gray-600 mt-3 md:mt-4 text-xs md:text-sm">
               {t('service.contactFeedback')}
             </p>
           </div>
@@ -1139,30 +1147,30 @@ export default function ServiceDetail() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center">
-          <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+        <div className="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 md:p-6 max-w-sm md:max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                <svg className="w-6 h-6 md:w-8 md:h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-[#1E2A3A] mb-2">
+              <h3 className="text-lg md:text-xl font-bold text-[#1E2A3A] mb-2">
                 {t('service.confirmDelete', 'Вы уверены, что хотите удалить эту услугу?')}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-4 md:mb-6 text-sm">
                 {t('service.confirmDeleteDescription', 'Это действие нельзя отменить. Услуга будет удалена навсегда.')}
               </p>
-              <div className="flex space-x-3">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                 <button
                   onClick={cancelDeleteService}
-                  className="flex-1 bg-gray-200 text-[#1E2A3A] py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+                  className="flex-1 bg-gray-200 text-[#1E2A3A] py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-300 transition text-sm md:text-base"
                 >
                   {t('service.cancel', 'Отмена')}
                 </button>
                 <button
                   onClick={confirmDeleteService}
-                  className="flex-1 bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+                  className="flex-1 bg-red-500 text-white py-2 md:py-3 rounded-lg font-semibold hover:bg-red-600 transition text-sm md:text-base"
                 >
                   {t('service.delete', 'Удалить')}
                 </button>

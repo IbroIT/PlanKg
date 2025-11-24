@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../api/auth';
 import { servicesAPI } from '../api/services';
+import AvailabilityCalendar from '../components/AvailabilityCalendar';
+import AddServiceCalendar from '../components/AddServiceCalendar';
 
 // Category-specific fields mapping (using slugs as keys)
 const CATEGORY_FIELDS = {
@@ -21,8 +23,7 @@ const CATEGORY_FIELDS = {
     'time_limit'
   ],
   'category-4': [
-    'capacity', 'stage_available', 'sound_available', 'parking_available',
-    'projector_available', 'decor_available', 'menu_available', 'working_hours'
+    // Removed: capacity, stage_available, sound_available, parking_available, projector_available, decor_available, menu_available, working_hours
   ],
   'category-5': [
     'minimum_order', 'services_offered', 'wedding_decor_price',
@@ -94,15 +95,7 @@ const FIELD_CONFIG = {
   dress_code: { label: 'addService.fields.dress_code', type: 'text' },
   time_limit: { label: 'addService.fields.time_limit', type: 'text' },
 
-  // Venue fields
-  capacity: { label: 'addService.fields.capacity', type: 'number' },
-  stage_available: { label: 'addService.fields.stage_available', type: 'boolean' },
-  sound_available: { label: 'addService.fields.sound_available', type: 'boolean' },
-  parking_available: { label: 'addService.fields.parking_available', type: 'boolean' },
-  projector_available: { label: 'addService.fields.projector_available', type: 'boolean' },
-  decor_available: { label: 'addService.fields.decor_available', type: 'boolean' },
-  menu_available: { label: 'addService.fields.menu_available', type: 'boolean' },
-  working_hours: { label: 'addService.fields.working_hours', type: 'text' },
+  // Venue fields - removed: capacity, stage_available, sound_available, parking_available, projector_available, decor_available, menu_available, working_hours
 
   // Florist/Decorator fields
   services_offered: { label: 'addService.fields.services_offered', type: 'textarea' },
@@ -175,6 +168,7 @@ export default function AddService() {
   const [currentLang, setCurrentLang] = useState('ru');
   const [user, setUser] = useState(null);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [availability, setAvailability] = useState([]);
   const [formData, setFormData] = useState({
     translations: {
       ru: { 
@@ -201,7 +195,6 @@ export default function AddService() {
     whatsapp: '',
     telegram: '',
     two_gis_link: '',
-    capacity: '',
     average_check: '',
     event_duration: '',
     additional_services: '',
@@ -223,28 +216,6 @@ export default function AddService() {
     video3: null,
     // Category-specific fields
     shooting_hour_price: '',
-    full_day_price: '',
-    love_story_price: '',
-    portfolio_photos_count: '',
-    delivery_time_days: '',
-    shooting_style: '',
-    second_operator: false,
-    drone_available: false,
-    video_format: 'hd',
-    sound_recording: false,
-    montage_included: false,
-    video_presentation: '',
-    languages: '',
-    dress_code: '',
-    time_limit: '',
-    stage_available: false,
-    sound_available: false,
-    parking_available: false,
-    projector_available: false,
-    decor_available: false,
-    menu_available: false,
-    working_hours: '',
-    services_offered: '',
     wedding_decor_price: '',
     custom_calculation: false,
     cuisine_type: '',
@@ -359,7 +330,7 @@ export default function AddService() {
 
   const handleInputChange = (field, value) => {
     // Check if this is a translatable text field
-    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 
                                'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
                                'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
                                'equipment_type', 'rental_duration', 'license_number'];
@@ -386,7 +357,7 @@ export default function AddService() {
     if (!config) return null;
 
     // For translatable text fields, use translations
-    const translatableFields = ['additional_services', 'languages', 'dress_code', 'working_hours', 
+    const translatableFields = ['additional_services', 'languages', 'dress_code', 
                                'services_offered', 'cuisine_type', 'music_genre', 'repertoire', 
                                'show_type', 'stage_requirements', 'character_type', 'vehicle_type', 
                                'equipment_type', 'rental_duration', 'license_number'];
@@ -531,10 +502,10 @@ export default function AddService() {
       };
     });
     
-    await submitService();
+    await submitService(availability);
   };
 
-  const submitService = async () => {
+  const submitService = async (availabilityData = availability) => {
     setLoading(true);
 
     const submitData = {
@@ -567,9 +538,41 @@ export default function AddService() {
 
     console.log('Submitting formData:', submitData);
     console.log('Avatar in formData:', formData.avatar);
+    console.log('Availability data before service creation:', availabilityData);
 
     try {
-      await servicesAPI.createService(submitData);
+      const createdService = await servicesAPI.createService(submitData);
+      console.log('Service created successfully:', createdService);
+      
+      // If this is a venue (category-4) and we have availability data, save it
+      const selectedCategory = categories.find(cat => cat.id.toString() === formData.category_id.toString());
+      console.log('Selected category:', selectedCategory);
+      console.log('Category slug:', selectedCategory?.slug);
+      console.log('Availability length:', availabilityData.length);
+      
+      if (selectedCategory?.slug === 'category-4' && availabilityData.length > 0) {
+        console.log('Saving availability data for new service:', createdService.id);
+        console.log('Availability entries to save:', availabilityData);
+        
+        // Save each availability entry
+        for (const avail of availabilityData) {
+          try {
+            console.log('Saving availability entry:', avail);
+            const result = await servicesAPI.createAvailability({
+              service: createdService.id,
+              date: avail.date,
+              is_available: avail.is_available
+            });
+            console.log('Availability saved successfully:', result);
+          } catch (error) {
+            console.error('Error saving availability:', error);
+            // Continue with other availability entries even if one fails
+          }
+        }
+      } else {
+        console.log('Not saving availability - category slug:', selectedCategory?.slug, 'availability length:', availabilityData.length);
+      }
+      
       navigate('/service-submitted');
     } catch (error) {
       console.error('Error creating service:', error);
@@ -608,13 +611,13 @@ export default function AddService() {
       };
     });
     setShowLanguageModal(false);
-    // Need to wait for state update, so use setTimeout
-    setTimeout(() => submitService(), 0);
+    // Pass current availability data directly to submitService
+    submitService(availability);
   };
 
   const handleFillLanguages = () => {
     setShowLanguageModal(false);
-    // Switch to English tab
+    // Switch to English tab and pass current availability data
     setCurrentLang('en');
   };
 
@@ -873,6 +876,39 @@ export default function AddService() {
                   </div>
                 </div>
               )}
+
+              {/* Availability Calendar - only for venues category */}
+              {(() => {
+                const selectedCategory = categories.find(cat => cat.id.toString() === formData.category_id.toString());
+                return selectedCategory?.slug === 'category-4' && (
+                  <div className="bg-white rounded-xl shadow-md p-6 mt-6">
+                    <h3 className="text-xl font-semibold text-[#1E2A3A] mb-4">
+                      {t('service.availabilityCalendar', 'Календарь доступности')}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {t('calendar.addServiceInstructions', 'Настройте доступность дат для вашего заведения. Нажмите на дату чтобы изменить её статус.')}
+                    </p>
+
+                    {/* Legend */}
+                    <div className="flex items-center gap-4 mb-6 text-sm">
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-green-100 border border-green-300 rounded mr-2"></div>
+                        <span>{t('calendar.available', 'Свободно')}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-red-100 border border-red-300 rounded mr-2"></div>
+                        <span>{t('calendar.booked', 'Занято')}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded mr-2"></div>
+                        <span>{t('calendar.noInfo', 'Нет информации')}</span>
+                      </div>
+                    </div>
+
+                    <AddServiceCalendar availability={availability} setAvailability={setAvailability} />
+                  </div>
+                );
+              })()}
 
               {/* Contact Info */}
               <div>

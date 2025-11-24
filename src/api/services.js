@@ -98,4 +98,20 @@ export const servicesAPI = {
     const response = await api.get(`/services/my/?lang=${lang}`);
     return response.data;
   },
+  
+  // Availability API
+  getAvailability: async (serviceId) => {
+    const response = await api.get(`/availability/?service_id=${serviceId}`);
+    return response.data;
+  },
+  
+  createAvailability: async (data) => {
+    const response = await api.post('/availability/create/', data);
+    return response.data;
+  },
+  
+  updateAvailability: async (id, data) => {
+    const response = await api.put(`/availability/${id}/update/`, data);
+    return response.data;
+  },
 };

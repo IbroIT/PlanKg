@@ -793,6 +793,35 @@
     "learnMore": "Подробнее о cookies →",
     "accept": "Принять",
     "decline": "Отклонить"
-  }
+  },
   
+  "calendar": {
+    "january": "Январь",
+    "february": "Февраль",
+    "march": "Март",
+    "april": "Апрель",
+    "may": "Май",
+    "june": "Июнь",
+    "july": "Июль",
+    "august": "Август",
+    "september": "Сентябрь",
+    "october": "Октябрь",
+    "november": "Ноябрь",
+    "december": "Декабрь",
+    "sunday": "Вс",
+    "monday": "Пн",
+    "tuesday": "Вт",
+    "wednesday": "Ср",
+    "thursday": "Чт",
+    "friday": "Пт",
+    "saturday": "Сб",
+    "available": "Свободно",
+    "booked": "Занято",
+    "noInfo": "Нет информации",
+    "editCalendar": "Редактировать календарь",
+    "stopEditing": "Завершить редактирование",
+    "clickToToggle": "Нажмите чтобы изменить статус",
+    "editingInstructions": "Первый клик - занято (красный), второй клик - свободно (зеленый)",
+    "addServiceInstructions": "Первый клик - занято (красный), второй клик - свободно (зеленый)"
+  }
 }
