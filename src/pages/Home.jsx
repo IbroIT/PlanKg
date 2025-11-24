@@ -365,19 +365,19 @@ const TopServicesCard = ({ service, index, rank }) => {
       case 1:
         return (
           <div className="absolute -top-2 -left-2 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg z-10">
-            <span className="text-white font-bold text-sm">🥇</span>
+            <span className="text-white font-bold text-sm">{rank}</span>
           </div>
         );
       case 2:
         return (
           <div className="absolute -top-2 -left-2 w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center shadow-lg z-10">
-            <span className="text-white font-bold text-sm">🥈</span>
+            <span className="text-white font-bold text-sm">{rank}</span>
           </div>
         );
       case 3:
         return (
           <div className="absolute -top-2 -left-2 w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center shadow-lg z-10">
-            <span className="text-white font-bold text-sm">🥉</span>
+            <span className="text-white font-bold text-sm">{rank}</span>
           </div>
         );
       default:
@@ -393,10 +393,7 @@ const TopServicesCard = ({ service, index, rank }) => {
       }`}
       style={{ animationDelay: `${index * 150}ms` }}
     >
-      <div className="relative">
-        {getRankIcon(rank)}
-        <ServiceCard service={service} />
-      </div>
+      <ServiceCard service={service} />
     </div>
   );
 };
